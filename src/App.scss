@@ -1,0 +1,58 @@
+i.ms {
+  border-radius: 50%;
+  color: #0d0f0f;
+  padding: 1.5pt;
+  box-shadow: -.5pt .5pt black;
+  margin-left: 1pt;
+  margin-right: 1pt;
+
+  &.green {
+    background-color: #a3c095;
+  }
+
+  &.blue {
+    background-color: #c1d7e9;
+  }
+
+  &.black {
+    background-color: #c5c0d2;
+  }
+
+  &.white {
+    background-color: #fbf8de;
+  }
+
+  &.red {
+    background-color: #e79c72;
+  }
+
+  &.colorless {
+    background-color: #cabdcb;
+  }
+
+  // &.ms-x,
+  // &.ms-0,
+  // &.ms-1,
+  // &.ms-2,
+  // &.ms-3,
+  // &.ms-4,
+  // &.ms-5,
+  // &.ms-6,
+  // &.ms-7,
+  // &.ms-8,
+  // &.ms-9,
+  // &.ms-10,
+  // &.ms-11,
+  // &.ms-12,
+  // &.ms-13,
+  // &.ms-14,
+  // &.ms-15,
+  // &.ms-16,
+  // &.ms-17,
+  // &.ms-18,
+  // &.ms-19,
+  // &.ms-20 {
+  //   font-size: 8pt;
+  //   padding: 1pt;
+  // }
+}

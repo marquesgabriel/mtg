@@ -1,0 +1,218 @@
+@use 'sass:color';
+// colors
+
+// W
+$white: #fcfaef;
+// B
+$black: #28261d;
+// U
+$blue: #3f57a5;
+// R
+$red: #da3832;
+// G
+$green: #2f734d;
+
+$colorless: #95a3b0;
+
+// WB
+$orzhov: aaa;
+// WU
+$azorius: aaa;
+// WR
+$boros: aaa;
+// WG
+$selesnya: aaa;
+// BU
+$dimir: aaa;
+// BR
+$rakdos: aaa;
+// BG
+$golgari: aaa;
+// UR
+$izzet: aaa;
+// UG
+$simic: aaa;
+// RG
+$grrul: aaa;
+
+
+
+.card-wrapper {
+  display: block;
+  position: relative;
+
+  background-color: black;
+  border: solid 3mm black;
+
+  z-index: 6;
+
+  &.white-border {
+    background-color: white;
+    border: solid 3mm white;
+  }
+
+  height: 3.5in;
+  width: 2.5in;
+  border-radius: 3mm;
+
+  .card-inner {
+    display: block;
+    border-top-left-radius: 1mm;
+    border-top-right-radius: 1mm;
+    border-bottom-left-radius: 10mm;
+    border-bottom-right-radius: 10mm;
+    background-color: white;
+    height: 82mm;
+
+    overflow: hidden;
+    z-index: 5;
+
+    .card-image {
+      position: absolute;
+      top: 8mm;
+      height: 41mm;
+      width: 54mm;
+      left: 7%;
+      border: outset 3px gray;
+      // border-top-left-radius: 70% 50%;
+      // border-top-right-radius: 70% 50%;
+
+      z-index: 4;
+
+      .image-inner {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        // border: solid 1px black;
+        // border-top-left-radius: 77% 53%;
+        // border-top-right-radius: 77% 53%;
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .card-image-full {
+      position: relative;
+      height: 100%;
+      width: 100%;
+
+      z-index: 4;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: white;
+    background-color: teal;
+
+    &.card-name {
+      position: absolute;
+      top: 1mm;
+      left: 3%;
+      width: 92%;
+
+      z-index: 8;
+    }
+
+    &.card-type {
+      position: absolute;
+      bottom: 33mm;
+      left: 3%;
+      width: 92%;
+      z-index: 8;
+    }
+
+    &.card-description {
+      position: absolute;
+      bottom: 6.8mm;
+      left: 5%;
+      width: 90%;
+      height: 28mm;
+      z-index: 7;
+      background-color: rgba(255, 255, 125, .98);
+      color: black;
+      text-align: left;
+
+      &>div {
+        padding: .5em;
+      }
+    }
+
+    &.card-pw {
+      position: absolute;
+      bottom: 4mm;
+      right: 3%;
+      width: 20%;
+      z-index: 8;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px gray;
+    // border-top-left-radius: 6% 42%;
+    // border-bottom-left-radius: 6% 42%;
+    // border-top-right-radius: 6% 42%;
+    // border-bottom-right-radius: 6% 42%;
+
+    &>div {
+      border: solid 1px black;
+      // border-top-left-radius: 4% 42%;
+      // border-bottom-left-radius: 4% 42%;
+      // border-top-right-radius: 4% 42%;
+      // border-bottom-right-radius: 4% 42%;
+    }
+  }
+}
+
+
+.card-inner.white {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
