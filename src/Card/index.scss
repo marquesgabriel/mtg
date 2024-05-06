@@ -14,6 +14,8 @@ $green: #2f734d;
 
 $colorless: #95a3b0;
 
+$multicolor: #e0cc84;
+
 // WB
 $orzhov: aaa;
 // WU
@@ -33,7 +35,7 @@ $izzet: aaa;
 // UG
 $simic: aaa;
 // RG
-$grrul: aaa;
+$gruul: aaa;
 
 
 
@@ -59,6 +61,10 @@ $grrul: aaa;
         font-style: italic;
       }
     }
+
+    div.card-footer {
+      color: white;
+    }
   }
 
   &.white-border {
@@ -73,6 +79,10 @@ $grrul: aaa;
       & .flavor {
         font-style: italic;
       }
+    }
+
+    div.card-footer {
+      color: black;
     }
   }
 
@@ -164,12 +174,23 @@ $grrul: aaa;
 
   }
 
+  div.card-footer {
+    width: 100%;
+    font-size: 5pt;
+    position: absolute;
+    bottom: -1mm;
+    right: 0mm;
+
+    p {
+      margin: 0;
+      text-align: right;
+    }
+  }
+
   .card-name,
   .card-description,
   .card-type,
   .card-pw {
-    color: white;
-    background-color: teal;
 
     &.card-name,
     &.card-type {
@@ -215,7 +236,6 @@ $grrul: aaa;
       width: 90%;
       height: 28mm;
       z-index: 7;
-      background-color: rgba(255, 255, 125, .98);
       color: black;
       text-align: left;
       font-size: 9.5pt;
@@ -233,10 +253,6 @@ $grrul: aaa;
       width: 20%;
       z-index: 8;
       text-align: center;
-    }
-
-    &.card-footer {
-      color: white;
     }
   }
 
@@ -258,8 +274,10 @@ $grrul: aaa;
 }
 
 
-.card-inner.white {
-  background-color: $white;
+.card-wrapper.white {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -279,98 +297,89 @@ $grrul: aaa;
     &.card-description {
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
-    }
-
-    &.card-footer {
-      color: white;
-    }
-  }
-
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
     }
   }
 }
 
-.card-inner.black {
-  background-color: $white;
+.card-wrapper.black {
+  .card-inner {
+    background-color: $black;
 
-  .card-image {
-    border: outset 3px $white;
+    &>.rounded-sides-inset {
+      border-color: $black;
 
-    .image-inner {
-      border: solid 1px black;
+      &>div {
+        border-color: white;
+      }
     }
   }
 
-  .card-name,
+  .card-image {
+    border: outset 3px $black;
+
+    .image-inner {
+      border: solid 1px white;
+    }
+  }
+
+  .card-name {
+    background: $black;
+    color: white;
+  }
+
   .card-description,
   .card-type,
   .card-pw {
     color: black;
-    background-color: $white;
+    background-color: color.adjust(#000, $lightness: 60%);
 
+    &.card-type,
     &.card-description {
-      background-color: color.adjust($white, $alpha: -0.02);
-      color: black;
-    }
-
-    &.card-footer {
-      color: white;
-    }
-  }
-
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
+      background-color: color.adjust(#000, $lightness: 60%, $alpha: -0.1);
     }
   }
 }
 
-.card-inner.green {
-  background-color: $white;
+.card-wrapper.green {
+  .card-inner {
+    background-color: $green;
 
-  .card-image {
-    border: outset 3px $white;
-
-    .image-inner {
-      border: solid 1px black;
+    &>.rounded-sides-inset {
+      border-color: $green;
     }
   }
 
-  .card-name,
+  .card-image {
+    border: outset 3px $green;
+
+    .image-inner {
+      border: solid 1px white;
+    }
+  }
+
+  .card-name {
+    background: radial-gradient(circle, black 0%, $green 75%);
+    color: white;
+  }
+
   .card-description,
   .card-type,
   .card-pw {
     color: black;
-    background-color: $white;
+    background-color: color.adjust($green, $lightness: 55%);
 
+    &.card-type,
     &.card-description {
-      background-color: color.adjust($white, $alpha: -0.02);
-      color: black;
-    }
-
-    &.card-footer {
-      color: white;
+      background-color: color.adjust($green, $lightness: 55%, $alpha: -0.1);
     }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.blue {
-  background-color: $white;
+.card-wrapper.blue {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -391,23 +400,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.red {
-  background-color: $white;
+.card-wrapper.red {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -428,23 +428,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.azorius {
-  background-color: $white;
+.card-wrapper.azorius {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -465,23 +456,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.boros {
-  background-color: $white;
+.card-wrapper.boros {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -502,23 +484,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.dimir {
-  background-color: $white;
+.card-wrapper.dimir {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -539,23 +512,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.gruul {
-  background-color: $white;
+.card-wrapper.gruul {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -576,23 +540,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.izzet {
-  background-color: $white;
+.card-wrapper.izzet {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -613,23 +568,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.orzhov {
-  background-color: $white;
+.card-wrapper.orzhov {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -650,23 +596,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.rakdos {
-  background-color: $white;
+.card-wrapper.rakdos {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -687,23 +624,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.selesnya {
-  background-color: $white;
+.card-wrapper.selesnya {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -724,23 +652,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.simic {
-  background-color: $white;
+.card-wrapper.simic {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -761,23 +680,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.colorless {
-  background-color: $white;
+.card-wrapper.colorless {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -798,23 +708,14 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }
 
-.card-inner.multicolor {
-  background-color: $white;
+.card-wrapper.multicolor {
+  .card-inner {
+    background-color: $white;
+  }
 
   .card-image {
     border: outset 3px $white;
@@ -835,17 +736,6 @@ $grrul: aaa;
       background-color: color.adjust($white, $alpha: -0.02);
       color: black;
     }
-
-    &.card-footer {
-      color: white;
-    }
   }
 
-  .rounded-sides-inset {
-    border: inset 3px $white;
-
-    &>div {
-      border: solid 1px black;
-    }
-  }
 }

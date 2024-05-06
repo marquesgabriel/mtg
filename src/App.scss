@@ -98,3 +98,21 @@ i.ms {
   //   padding: 1pt;
   // }
 }
+
+
+i.ms.ms-text {
+  background-color: transparent;
+  box-shadow: none;
+
+  &.white {
+    color: black;
+  }
+
+  &.black {
+    color: white;
+  }
+}
+
+.card-renderer {
+  background-color: lightgray;
+}

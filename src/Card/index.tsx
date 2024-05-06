@@ -1,9 +1,10 @@
 import Cropper from "react-easy-crop";
+import moment from 'moment';
 import './index.scss';
 
 const TokenCard = ({ formik, image, crop, zoom, setCrop, onCropComplete, setZoom, description }: any) => {
-  return (<div className={`card-wrapper ${formik.values.cardBorder}-border`}>
-    <div className={`card-inner ${formik.values.cardColor}`}>
+  return (<div className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
+    <div className={`card-inner`}>
       <div className={formik.values.cardImageSize === 'classic' ? `card-image` : `card-image-full`}>
         <div className='image-inner'>
           <Cropper
@@ -37,8 +38,13 @@ const TokenCard = ({ formik, image, crop, zoom, setCrop, onCropComplete, setZoom
         </div>
       </div> : null}
       <div className='card-footer'>
-        <div>
-          2024
+        <div className="d-flex justify-content-between">
+          <p className="text-left">
+            A01 {formik.values.artist ? <i className={`ms ms-text ms-artist-nib ${formik.values.cardBorder}`} /> : null} {formik.values.artist && formik.values.artist}
+          </p>
+          <p className="text-right">
+            not © {moment().year()} Artificialis
+          </p>
         </div>
       </div>
     </div>

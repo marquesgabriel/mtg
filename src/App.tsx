@@ -69,13 +69,14 @@ function App() {
     superType: yup.string().nullable(),
     type: yup.string().required("This field is required"),
     subType: yup.string().nullable(),
-    description: yup.string().required("This field is required"),
+    description: yup.string().nullable(),
+    artist: yup.string().nullable(),
     power: yup.string().nullable(),
     toughness: yup.string().nullable(),
     image: yup.string().required("This field is required"),
-    "cardBorder": yup.string().required("This field is required"),
-    "cardColor": yup.string().required("This field is required"),
-    "cardImageSize": yup.string().required("This field is required")
+    cardBorder: yup.string().required("This field is required"),
+    cardColor: yup.string().required("This field is required"),
+    cardImageSize: yup.string().required("This field is required")
   })
 
   const formik = useFormik({
@@ -85,12 +86,13 @@ function App() {
       type: "",
       subType: "",
       description: "",
+      artist: "",
       power: "",
       toughness: "",
       image: "",
-      "cardBorder": "black",
-      "cardColor": "colorless",
-      "cardImageSize": "full-art"
+      cardBorder: "black",
+      cardColor: "colorless",
+      cardImageSize: "full-art"
     },
     validationSchema: form,
     onSubmit: values => {
@@ -298,6 +300,23 @@ function App() {
                     error={formik.touched.toughness && Boolean(formik.errors.toughness)}
                     helperText={formik.touched.toughness && formik.errors.toughness}
                   />
+                </div>
+                <div className='row'>
+                  <div className='col-12'>
+                    <TextField
+                      fullWidth
+                      label="Artist"
+                      variant="standard"
+                      id="artist"
+                      name="artist"
+                      multiline={true}
+                      value={formik.values.artist}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      error={formik.touched.artist && Boolean(formik.errors.artist)}
+                      helperText={formik.touched.artist && formik.errors.artist}
+                    />
+                  </div>
                 </div>
               </div>
             </form>
