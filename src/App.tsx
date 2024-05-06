@@ -5,6 +5,8 @@ import * as yup from "yup";
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import './App.scss';
 import TokenCard from './Card';
@@ -86,6 +88,24 @@ function App() {
       alert(JSON.stringify(values, null, 2));
     },
   });
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
+
+  const handlePickedImage = (event: any)=>{
+    console.log(event.target.files)
+    setImage(URL.createObjectURL(event.target.files[0]))
+  }
+
   return (
     <div className="row">
       <div className="card-inputs col col-lg-6 col-md-12">
@@ -147,18 +167,21 @@ function App() {
                   helperText={formik.touched.subType && formik.errors.subType}
                 />
               </div>
-              <div className='col col-12'>
-                <TextField
-                  label="Description"
-                  variant="standard"
-                  id="description"
-                  name="description"
-                  value={formik.values.description}
-                  onChange={(e) => { formik.handleChange(e); parseDescription(e) }}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.description && Boolean(formik.errors.description)}
-                  helperText={formik.touched.description && formik.errors.description}
-                />
+              <div className='row'>
+                <div className='col col-12'>
+                  <TextField
+                    label="Description"
+                    variant="standard"
+                    id="description"
+                    name="description"
+                    multiline={true}
+                    value={formik.values.description}
+                    onChange={(e) => { formik.handleChange(e); parseDescription(e) }}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.description && Boolean(formik.errors.description)}
+                    helperText={formik.touched.description && formik.errors.description}
+                  />
+                </div>
               </div>
               <div className='col col-3'>
                 <TextField
@@ -186,16 +209,19 @@ function App() {
                   helperText={formik.touched.toughness && formik.errors.toughness}
                 />
               </div>
+              <div className='col col-12'>
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload file
+                <VisuallyHiddenInput accept='image/jpeg, image/png' onChange={handlePickedImage} type="file" />
+              </Button>
+              </div>
             </div>
-            {/* <label htmlFor="image">Card Image</label> */}
-            {/* <input
-              id="image"
-              name="image"
-              type="image"
-              onChange={formik.handleChange}
-            /> */}
-
-            {/* <Button type="submit" image='contained'>Save</Button> */}
           </form>
         </FormikProvider>
       </div>
