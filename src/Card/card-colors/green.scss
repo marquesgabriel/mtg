@@ -1,0 +1,35 @@
+.card-wrapper.green {
+    .card-inner {
+        background-color: $green;
+
+        &>.rounded-sides-inset {
+            border-color: $green;
+        }
+    }
+
+    .card-image {
+        border: outset 3px $green;
+
+        .image-inner {
+            border: solid 1px white;
+        }
+    }
+
+    .card-name {
+        background: radial-gradient(circle, black 0%, $green 75%);
+        color: white;
+    }
+
+    .card-description,
+    .card-type,
+    .card-pw {
+        color: black;
+        background-color: color.adjust($green, $lightness: 55%);
+
+        &.card-type,
+        &.card-description {
+            background-color: color.adjust($green, $lightness: 55%, $alpha: -0.1);
+        }
+    }
+
+}

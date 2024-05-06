@@ -1,0 +1,43 @@
+.card-wrapper.colorless {
+    .card-inner {
+        background-color: $colorless;
+
+        &>.rounded-sides-inset {
+                border-color: $colorless;
+        
+                &>div {
+                    border-color: black;
+                }
+            }
+    }
+
+    .card-image {
+        border: outset 3px $colorless;
+
+        .image-inner {
+            border: solid 1px black;
+        }
+    }
+
+    .card-name {
+        background: radial-gradient(circle, black 0%, $colorless 75%);
+
+        &>div {
+            color: white;
+        }
+    }
+
+    .card-name,
+    .card-description,
+    .card-type,
+    .card-pw {
+        color: black;
+        background-color: $colorless-bg;
+
+        &.card-description,&.card-type {
+            background-color: color.adjust($colorless-bg, $alpha: -0.1);
+            color: black;
+        }
+    }
+
+}

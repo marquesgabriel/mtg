@@ -81,14 +81,14 @@ function App() {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      superType: "",
-      type: "",
-      subType: "",
+      name: "rat",
+      superType: "token",
+      type: "creture",
+      subType: "rat",
       description: "",
       artist: "",
-      power: "",
-      toughness: "",
+      power: "1",
+      toughness: "1",
       image: "",
       cardBorder: "black",
       cardColor: "colorless",
@@ -121,8 +121,6 @@ function App() {
     <div className='container'>
       <div className="row">
         <div className="card-inputs col-lg-6 col-md-12">
-          {/* TODO create form using formik */}
-          {/* TODO create file upload file */}
           {/* TODO create guide for special symbols */}
           <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
@@ -172,7 +170,7 @@ function App() {
                     <MenuItem value="orzhov">White/Black</MenuItem>
                     <MenuItem value="rakdos">Red/Black</MenuItem>
                     <MenuItem value="selesnya">White/Green</MenuItem>
-                    <MenuItem value="simic">blue-green</MenuItem>
+                    <MenuItem value="simic">Blue/Green</MenuItem>
                     <MenuItem value="colorless" defaultChecked>Colorless</MenuItem>
                     <MenuItem value="multicolor">Multicolor</MenuItem>
                   </Select>

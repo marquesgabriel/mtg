@@ -1,0 +1,38 @@
+.card-wrapper.black {
+    .card-inner {
+        background-color: $black;
+
+        &>.rounded-sides-inset {
+            border-color: $black;
+
+            &>div {
+                border-color: white;
+            }
+        }
+    }
+
+    .card-image {
+        border: outset 3px $black;
+
+        .image-inner {
+            border: solid 1px white;
+        }
+    }
+
+    .card-name {
+        background: $black;
+        color: white;
+    }
+
+    .card-description,
+    .card-type,
+    .card-pw {
+        color: black;
+        background-color: $black-bg;
+
+        &.card-type,
+        &.card-description {
+            background-color: color.adjust($black-bg, $alpha: -0.1);
+        }
+    }
+}
