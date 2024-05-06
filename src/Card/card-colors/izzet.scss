@@ -1,6 +1,6 @@
 .card-wrapper.izzet {
     .card-inner {
-        background-color: linear-gradient(90deg, $blue 0%, $red 100%);
+        background: linear-gradient(90deg, $blue 0%, $red 100%);
 
         &>.rounded-sides-inset {
             border-color: $red;

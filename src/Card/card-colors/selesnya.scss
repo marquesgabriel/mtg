@@ -1,6 +1,6 @@
 .card-wrapper.selesnya {
     .card-inner {
-        background-color: linear-gradient(90deg, $green 0%, $white 100%);
+        background: linear-gradient(90deg, $green 0%, $white 100%);
 
         &>.rounded-sides-inset {
             border-color: $white;

@@ -83,7 +83,7 @@ function App() {
     initialValues: {
       name: "rat",
       superType: "token",
-      type: "creture",
+      type: "creature",
       subType: "rat",
       description: "",
       artist: "",

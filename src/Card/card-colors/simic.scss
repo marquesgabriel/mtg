@@ -1,6 +1,8 @@
 .card-wrapper.simic {
     .card-inner {
-        background-color: linear-gradient(90deg, $green 0%, $blue 100%);
+        background-position: center;
+        background-repeat: no-repeat;
+        background: url('../../assets/imgs/texture2.png'), linear-gradient(90deg, $green 0%, $blue 100%);
 
         &>.rounded-sides-inset {
             border-color: $blue;

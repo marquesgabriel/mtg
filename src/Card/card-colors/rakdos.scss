@@ -1,6 +1,6 @@
 .card-wrapper.rakdos {
     .card-inner {
-        background-color: linear-gradient(90deg, $black 0%, $red 100%);
+        background: linear-gradient(90deg, $black 0%, $red 100%);
 
         &>.rounded-sides-inset {
             border-color: $red;
