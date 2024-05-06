@@ -40,15 +40,70 @@ $grrul: aaa;
 .card-wrapper {
   display: block;
   position: relative;
-
-  background-color: black;
-  border: solid 3mm black;
-
   z-index: 6;
+
+  &.black-border {
+    background-color: black;
+    border: solid 3mm black;
+    font-family: 'Beleren';
+
+    & .card-name {
+      font-family: 'BelerenCaps';
+    }
+
+    & .card-description {
+      font-family: 'Plantin';
+      font-weight: normal;
+
+      & .flavor {
+        font-style: italic;
+      }
+    }
+  }
 
   &.white-border {
     background-color: white;
     border: solid 3mm white;
+    font-family: 'Medieval';
+
+    & .card-description {
+      font-family: 'Plantin';
+      font-weight: normal;
+
+      & .flavor {
+        font-style: italic;
+      }
+    }
+  }
+
+  &.silver-border {
+    background-color: rgb(192, 182, 182);
+    border: solid 3mm rgb(192, 182, 182);
+    font-family: 'Beleren';
+
+    & .card-description {
+      font-family: 'Plantin';
+      font-weight: normal;
+
+      & .flavor {
+        font-style: italic;
+      }
+    }
+  }
+
+  &.golden-border {
+    background-color: rgb(175, 167, 118);
+    border: solid 3mm rgb(175, 167, 118);
+    font-family: 'Beleren';
+
+    & .card-description {
+      font-family: 'Plantin';
+      font-weight: normal;
+
+      & .flavor {
+        font-style: italic;
+      }
+    }
   }
 
   height: 3.5in;
@@ -116,21 +171,41 @@ $grrul: aaa;
     color: white;
     background-color: teal;
 
+    &.card-name,
+    &.card-type {
+      text-transform: capitalize;
+    }
+
     &.card-name {
       position: absolute;
       top: 1mm;
       left: 3%;
       width: 92%;
-
+      text-align: center;
       z-index: 8;
+      font-size: 12pt;
+
+      &>div {
+        padding: .15em;
+      }
     }
 
     &.card-type {
       position: absolute;
       bottom: 33mm;
       left: 3%;
-      width: 92%;
+      width: 92.2%;
       z-index: 8;
+      text-align: left;
+      font-size: 10pt;
+
+      &.descriptionless {
+        bottom: 11mm;
+      }
+
+      &>div {
+        padding: .15em;
+      }
     }
 
     &.card-description {
@@ -143,9 +218,11 @@ $grrul: aaa;
       background-color: rgba(255, 255, 125, .98);
       color: black;
       text-align: left;
+      font-size: 9.5pt;
 
       &>div {
         padding: .5em;
+        text-align: justify;
       }
     }
 
@@ -155,6 +232,7 @@ $grrul: aaa;
       right: 3%;
       width: 20%;
       z-index: 8;
+      text-align: center;
     }
 
     &.card-footer {
@@ -181,6 +259,561 @@ $grrul: aaa;
 
 
 .card-inner.white {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.black {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.green {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.blue {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.red {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.azorius {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.boros {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.dimir {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.gruul {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.izzet {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.orzhov {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.rakdos {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.selesnya {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.simic {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.colorless {
+  background-color: $white;
+
+  .card-image {
+    border: outset 3px $white;
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white;
+
+    &.card-description {
+      background-color: color.adjust($white, $alpha: -0.02);
+      color: black;
+    }
+
+    &.card-footer {
+      color: white;
+    }
+  }
+
+  .rounded-sides-inset {
+    border: inset 3px $white;
+
+    &>div {
+      border: solid 1px black;
+    }
+  }
+}
+
+.card-inner.multicolor {
   background-color: $white;
 
   .card-image {

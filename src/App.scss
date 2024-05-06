@@ -1,3 +1,45 @@
+@font-face {
+  font-family: 'BelerenCaps';
+  src: url('../public/fonts/belerensmallcaps-bold.ttf'), format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Beleren';
+  src: url('../public/fonts/beleren-bold_P1.01.ttf'), format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Medieval';
+  src: url('../public/fonts/MagicMedieval.ttf'), format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Matrix';
+  src: url('../public/fonts/ModMatrix.ttf'), format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Plantin';
+  src: url('../public/fonts/mplantin.ttf'), format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Plantin';
+  src: url('../public/fonts/mplantinit.ttf'), format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
 i.ms {
   border-radius: 50%;
   color: #0d0f0f;

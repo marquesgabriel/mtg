@@ -5,6 +5,9 @@ import * as yup from "yup";
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -69,7 +72,10 @@ function App() {
     description: yup.string().required("This field is required"),
     power: yup.string().nullable(),
     toughness: yup.string().nullable(),
-    image: yup.string().required("This field is required")
+    image: yup.string().required("This field is required"),
+    "cardBorder": yup.string().required("This field is required"),
+    "cardColor": yup.string().required("This field is required"),
+    "cardImageSize": yup.string().required("This field is required")
   })
 
   const formik = useFormik({
@@ -81,7 +87,10 @@ function App() {
       description: "",
       power: "",
       toughness: "",
-      image: ""
+      image: "",
+      "cardBorder": "black",
+      "cardColor": "colorless",
+      "cardImageSize": "full-art"
     },
     validationSchema: form,
     onSubmit: values => {
@@ -101,132 +110,204 @@ function App() {
     width: 1,
   });
 
-  const handlePickedImage = (event: any)=>{
+  const handlePickedImage = (event: any) => {
     console.log(event.target.files)
     setImage(URL.createObjectURL(event.target.files[0]))
   }
 
   return (
-    <div className="row">
-      <div className="card-inputs col col-lg-6 col-md-12">
-        {/* TODO create form using formik */}
-        {/* TODO create file upload file */}
-        {/* TODO create guide for special symbols */}
-        <FormikProvider value={formik}>
-          <form onSubmit={formik.handleSubmit}>
-            <div className="row">
-              <div className='col col-12'>
-                <TextField
-                  label="Card Name"
-                  variant="standard"
-                  id="name"
-                  name="name"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.name && Boolean(formik.errors.name)}
-                  helperText={formik.touched.name && formik.errors.name}
-                />
-              </div>
-              <div className='col col-4'>
-                <TextField
-                  label="Supertype"
-                  variant="standard"
-                  id="superType"
-                  name="superType"
-                  value={formik.values.superType}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.superType && Boolean(formik.errors.superType)}
-                  helperText={formik.touched.superType && formik.errors.superType}
-                />
-              </div>
-              <div className='col col-4'>
-                <TextField
-                  label="Type"
-                  variant="standard"
-                  id="type"
-                  name="type"
-                  value={formik.values.type}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.type && Boolean(formik.errors.type)}
-                  helperText={formik.touched.type && formik.errors.type}
-                />
-              </div>
-              <div className='col col-4'>
-                <TextField
-                  label="Subtype"
-                  variant="standard"
-                  id="subType"
-                  name="subType"
-                  value={formik.values.subType}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.subType && Boolean(formik.errors.subType)}
-                  helperText={formik.touched.subType && formik.errors.subType}
-                />
-              </div>
-              <div className='row'>
-                <div className='col col-12'>
-                  <TextField
-                    label="Description"
+    <div className='container'>
+      <div className="row">
+        <div className="card-inputs col-lg-6 col-md-12">
+          {/* TODO create form using formik */}
+          {/* TODO create file upload file */}
+          {/* TODO create guide for special symbols */}
+          <FormikProvider value={formik}>
+            <form onSubmit={formik.handleSubmit}>
+              <div className="row">
+                <div className='col-6'>
+                  <InputLabel id="cardBorder">Card Border</InputLabel>
+                  <Select
+                    fullWidth
+                    label="Card Border"
                     variant="standard"
-                    id="description"
-                    name="description"
-                    multiline={true}
-                    value={formik.values.description}
-                    onChange={(e) => { formik.handleChange(e); parseDescription(e) }}
+                    id="cardBorder"
+                    name="cardBorder"
+                    value={formik.values.cardBorder}
+                    onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.description && Boolean(formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                  >
+                    <MenuItem value="white">White</MenuItem>
+                    <MenuItem value="black" defaultChecked>Black</MenuItem>
+                    <MenuItem value="silver" disabled>Silver</MenuItem>
+                    <MenuItem value="golden" disabled>Golden</MenuItem>
+                  </Select>
+                </div>
+                <div className='col-6'>
+                  <InputLabel id="cardColor">Card Color</InputLabel>
+                  <Select
+                    fullWidth
+                    label="Card Color"
+                    variant="standard"
+                    id="cardColor"
+                    name="cardColor"
+                    value={formik.values.cardColor}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                  >
+                    <MenuItem value="white">White</MenuItem>
+                    <MenuItem value="black">Black</MenuItem>
+                    <MenuItem value="green">Green</MenuItem>
+                    <MenuItem value="blue">Blue</MenuItem>
+                    <MenuItem value="red">Red</MenuItem>
+                    <MenuItem value="azorius">Blue/White</MenuItem>
+                    <MenuItem value="boros">Red/White</MenuItem>
+                    <MenuItem value="dimir">Blue/Black</MenuItem>
+                    <MenuItem value="gruul">Red/Green</MenuItem>
+                    <MenuItem value="izzet">Blue/Red</MenuItem>
+                    <MenuItem value="orzhov">White/Black</MenuItem>
+                    <MenuItem value="rakdos">Red/Black</MenuItem>
+                    <MenuItem value="selesnya">White/Green</MenuItem>
+                    <MenuItem value="simic">blue-green</MenuItem>
+                    <MenuItem value="colorless" defaultChecked>Colorless</MenuItem>
+                    <MenuItem value="multicolor">Multicolor</MenuItem>
+                  </Select>
+                </div>
+                <div className='col-6'>
+                  <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Upload file
+                    <VisuallyHiddenInput accept='image/jpeg, image/png' onChange={handlePickedImage} type="file" />
+                  </Button>
+                </div>
+                <div className='col-6'>
+                  <InputLabel id="cardImageSize">Image Size</InputLabel>
+                  <Select
+                    fullWidth
+                    label="Image Size"
+                    variant="standard"
+                    id="cardImageSize"
+                    name="cardImageSize"
+                    value={formik.values.cardImageSize}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                  >
+                    <MenuItem value="full-art" defaultChecked>Full Art</MenuItem>
+                    <MenuItem value="classic">Classic</MenuItem>
+                  </Select>
+                </div>
+                <div className='col-12'>
+                  <TextField
+                    label="Card Name"
+                    variant="standard"
+                    id="name"
+                    name="name"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    helperText={formik.touched.name && formik.errors.name}
+                  />
+                </div>
+                <div className='col-3'>
+                  <TextField
+                    label="Supertype"
+                    variant="standard"
+                    id="superType"
+                    name="superType"
+                    value={formik.values.superType}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.superType && Boolean(formik.errors.superType)}
+                    helperText={formik.touched.superType && formik.errors.superType}
+                  />
+                </div>
+                <div className='col-5'>
+                  <TextField
+                    label="Type"
+                    variant="standard"
+                    id="type"
+                    name="type"
+                    value={formik.values.type}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.type && Boolean(formik.errors.type)}
+                    helperText={formik.touched.type && formik.errors.type}
+                  />
+                </div>
+                <div className='col-4'>
+                  <TextField
+                    label="Subtype"
+                    variant="standard"
+                    id="subType"
+                    name="subType"
+                    value={formik.values.subType}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.subType && Boolean(formik.errors.subType)}
+                    helperText={formik.touched.subType && formik.errors.subType}
+                  />
+                </div>
+                <div className='row'>
+                  <div className='col-12'>
+                    <TextField
+                      fullWidth
+                      label="Description"
+                      variant="standard"
+                      id="description"
+                      name="description"
+                      multiline={true}
+                      value={formik.values.description}
+                      onChange={(e) => { formik.handleChange(e); parseDescription(e) }}
+                      onBlur={formik.handleBlur}
+                      error={formik.touched.description && Boolean(formik.errors.description)}
+                      helperText={formik.touched.description && formik.errors.description}
+                    />
+                  </div>
+                </div>
+                <div className='col-3'>
+                  <TextField
+                    label="Power"
+                    variant="standard"
+                    id="power"
+                    name="power"
+                    value={formik.values.power}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.power && Boolean(formik.errors.power)}
+                    helperText={formik.touched.power && formik.errors.power}
+                  />
+                </div>
+                <div className='col-3'>
+                  <TextField
+                    label="Toughness"
+                    variant="standard"
+                    id="toughness"
+                    name="toughness"
+                    value={formik.values.toughness}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.toughness && Boolean(formik.errors.toughness)}
+                    helperText={formik.touched.toughness && formik.errors.toughness}
                   />
                 </div>
               </div>
-              <div className='col col-3'>
-                <TextField
-                  label="Power"
-                  variant="standard"
-                  id="power"
-                  name="power"
-                  value={formik.values.power}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.power && Boolean(formik.errors.power)}
-                  helperText={formik.touched.power && formik.errors.power}
-                />
-              </div>
-              <div className='col col-3'>
-                <TextField
-                  label="Toughness"
-                  variant="standard"
-                  id="toughness"
-                  name="toughness"
-                  value={formik.values.toughness}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.toughness && Boolean(formik.errors.toughness)}
-                  helperText={formik.touched.toughness && formik.errors.toughness}
-                />
-              </div>
-              <div className='col col-12'>
-              <Button
-                component="label"
-                role={undefined}
-                variant="contained"
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload file
-                <VisuallyHiddenInput accept='image/jpeg, image/png' onChange={handlePickedImage} type="file" />
-              </Button>
-              </div>
-            </div>
-          </form>
-        </FormikProvider>
-      </div>
-      <div className='card-renderer col col-lg-6 col-md-12'>
-        <TokenCard formik={formik} description={description} image={image} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} />
+            </form>
+          </FormikProvider>
+        </div>
+        <div className='card-renderer col-lg-6 col-md-12'>
+          <div className='d-flex p-2 justify-content-center bg-secondary'>
+            <TokenCard formik={formik} description={description} image={image} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} />
+          </div>
+        </div>
       </div>
     </div>
   );
