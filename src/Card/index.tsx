@@ -25,7 +25,7 @@ const TokenCard = ({ formik, image, crop, zoom, setCrop, onCropComplete, setZoom
         </div>
       </div>
       <div className={`card-type rounded-sides-inset ${!formik.values.description ? 'descriptionless' : ''}`}>
-        <div>
+        <div className="ps-2">
           {formik.values.superType ? `${formik.values.superType} ` : null}{formik.values.type} {formik.values.subType ? ` - ${formik.values.subType}` : null}
         </div>
       </div>

@@ -124,7 +124,7 @@
       left: 7%;
       border-style: inset;
       border-width: 3px;
-      outline: solid 1px rgba(0, 0, 0, .4);
+      // outline: solid 1px rgba(0, 0, 0, .4);
 
       // border-top-left-radius: 70% 50%;
       // border-top-right-radius: 70% 50%;
@@ -178,7 +178,7 @@
   .card-description,
   .card-type,
   .card-pw {
-    outline: 1px groove rgba(0, 0, 0, .3);
+    // outline: 1px groove rgba(0, 0, 0, .3);
 
     &.card-name,
     &.card-type {
@@ -246,17 +246,33 @@
 
   .rounded-sides-inset {
     border: inset 3px gray;
-    // border-top-left-radius: 6% 42%;
-    // border-bottom-left-radius: 6% 42%;
-    // border-top-right-radius: 6% 42%;
-    // border-bottom-right-radius: 6% 42%;
+    border-top-left-radius: 6% 42%;
+    border-bottom-left-radius: 6% 42%;
+    border-top-right-radius: 6% 42%;
+    border-bottom-right-radius: 6% 42%;
 
     &>div {
       border: solid 1px black;
-      // border-top-left-radius: 4% 42%;
-      // border-bottom-left-radius: 4% 42%;
-      // border-top-right-radius: 4% 42%;
-      // border-bottom-right-radius: 4% 42%;
+      border-top-left-radius: 4% 42%;
+      border-bottom-left-radius: 4% 42%;
+      border-top-right-radius: 4% 42%;
+      border-bottom-right-radius: 4% 42%;
+    }
+  }
+
+  .card-pw.rounded-sides-inset {
+    border: inset 3px gray;
+    border-top-left-radius: 14% 42%;
+    border-bottom-left-radius: 14% 42%;
+    border-top-right-radius: 14% 42%;
+    border-bottom-right-radius: 14% 42%;
+
+    &>div {
+      border: solid 1px black;
+      border-top-left-radius: 11% 42%;
+      border-bottom-left-radius: 11% 42%;
+      border-top-right-radius: 11% 42%;
+      border-bottom-right-radius: 11% 42%;
     }
   }
 }
