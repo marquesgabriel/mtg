@@ -5,7 +5,7 @@ import './index.scss';
 const TokenCard = ({ formik, image, croppedImage, crop, zoom, setCrop, onCropComplete, setZoom, description }: any) => {
   console.log(croppedImage);
   return (<div className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
-    <div className={`card-inner`}>
+    <div className={`card-inner ${formik.values.cardTexture}`}>
       <div className={formik.values.cardImageSize === 'classic' ? `card-image` : `card-image-full`}>
         <div className='image-inner'>
           {croppedImage ?

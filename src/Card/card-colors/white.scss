@@ -1,6 +1,6 @@
 .card-wrapper.white {
     .card-inner {
-        background-image: url('../../assets/imgs/texture2.png');
+        background-blend-mode: multiply;
         background-color: $white;
 
         &>.rounded-sides-inset {

@@ -1,6 +1,40 @@
 .card-wrapper.dimir {
   .card-inner {
-    background: url('../../assets/imgs/texture3.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    &.texture1 {
+      background: url('../../assets/imgs/texture1.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
+
+    &.texture2 {
+      background: url('../../assets/imgs/texture2.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
+
+    &.texture3 {
+      background: url('../../assets/imgs/texture3.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
+
+    &.texture4 {
+      background: url('../../assets/imgs/texture4.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
+
+    &.texture5 {
+      background: url('../../assets/imgs/texture5.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
+
+    &.texture6 {
+      background: url('../../assets/imgs/texture6.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
+
+    &.texture7 {
+      background: url('../../assets/imgs/t7-w.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
+
+    &.texture8 {
+      background: url('../../assets/imgs/t7-b.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
+
+    &.texture9 {
+      background: url('../../assets/imgs/golden-eff.jpeg') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
+    }
 
     &>.rounded-sides-inset {
       border-color: $black;

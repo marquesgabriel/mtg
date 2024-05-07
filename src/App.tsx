@@ -16,6 +16,9 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CropIcon from '@mui/icons-material/Crop';
 import ZoomIn from '@mui/icons-material/ZoomIn';
 import ZoomOut from '@mui/icons-material/ZoomOut';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import Typography from '@mui/material/Typography';
+
 
 import './App.scss';
 import TokenCard from './Card';
@@ -39,7 +42,7 @@ function App() {
       const croppedProduct = await getCroppedImg(
         image,
         croppedArea,
-        0 // this is the roatation value
+        0 // this is the rotation value
       )
       console.log('donee', { croppedProduct })
       setCroppedImage(croppedProduct)
@@ -98,6 +101,7 @@ function App() {
     toughness: yup.string().nullable(),
     image: yup.string().required("This field is required"),
     cardBorder: yup.string().required("This field is required"),
+    cardTexture: yup.string().required("This field is required"),
     cardColor: yup.string().required("This field is required"),
     cardImageSize: yup.string().required("This field is required")
   })
@@ -114,6 +118,7 @@ function App() {
       toughness: "1",
       image: "",
       cardBorder: "black",
+      cardTexture: "texture6",
       cardColor: "colorless",
       cardImageSize: "full-art"
     },
@@ -149,6 +154,11 @@ function App() {
           <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
               <div className="row pb-2">
+                <div className='col-12'>
+                  <Typography variant="h4" gutterBottom>
+                    Card border and color
+                  </Typography>
+                </div>
                 <div className='col-6'>
                   <InputLabel id="cardBorder">Card Border</InputLabel>
                   <Select
@@ -160,7 +170,7 @@ function App() {
                     value={formik.values.cardBorder}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    error={formik.touched.cardBorder && Boolean(formik.errors.cardBorder)}
                   >
                     <MenuItem value="white">White</MenuItem>
                     <MenuItem value="black" defaultChecked>Black</MenuItem>
@@ -179,7 +189,7 @@ function App() {
                     value={formik.values.cardColor}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    error={formik.touched.cardColor && Boolean(formik.errors.cardColor)}
                   >
                     <MenuItem value="white">White</MenuItem>
                     <MenuItem value="black">Black</MenuItem>
@@ -199,31 +209,67 @@ function App() {
                     <MenuItem value="multicolor">Multicolor</MenuItem>
                   </Select>
                 </div>
+                <div className='col-6'>
+                  <InputLabel id="cardTexture">Card Texture</InputLabel>
+                  <Select
+                    fullWidth
+                    label="Card Texture"
+                    variant="standard"
+                    id="cardTexture"
+                    name="cardTexture"
+                    value={formik.values.cardTexture}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.cardTexture && Boolean(formik.errors.cardTexture)}
+                  >
+                    <MenuItem value="texture1">Texture 1</MenuItem>
+                    <MenuItem value="texture2">Texture 2</MenuItem>
+                    <MenuItem value="texture3">Texture 3</MenuItem>
+                    <MenuItem value="texture4">Texture 4</MenuItem>
+                    <MenuItem value="texture5">Texture 5</MenuItem>
+                    <MenuItem value="texture6" defaultChecked>Texture 6</MenuItem>
+                    <MenuItem value="texture7">Texture 7</MenuItem>
+                    <MenuItem value="texture8">Texture 8</MenuItem>
+                    <MenuItem value="texture9">Texture 9 (Old multicolor background)</MenuItem>
+                  </Select>
+                </div>
               </div>
               <Divider />
               <div className='row pt-2 pb-2'>
-                <div className='col-6'>
-                  <Button
-                    component="label"
-                    role={undefined}
-                    variant="contained"
-                    tabIndex={-1}
-                    startIcon={<FileUploadIcon />}
-                  >
-                    Upload file
-                    <VisuallyHiddenInput accept='image/jpeg, image/png' onChange={handlePickedImage} type="file" />
-                  </Button>
+                <div className='col-12'>
+                  <Typography variant="h4" gutterBottom>
+                    Image upload and edit
+                  </Typography>
                 </div>
                 <div className='col-6'>
-                  <Button
-                    component="label"
-                    variant="contained"
-                    tabIndex={-1}
-                    onClick={cropMyImage}
-                    startIcon={<CropIcon />}
-                  >
-                    Confirm image crop
-                  </Button>
+                  <div className='d-flex justify-content-center'>
+                    <Button
+                      component="label"
+                      role={undefined}
+                      variant="contained"
+                      size='small'
+                      tabIndex={-1}
+                      startIcon={<FileUploadIcon />}
+                    >
+                      Upload file
+                      <VisuallyHiddenInput accept='image/jpeg, image/png' onChange={handlePickedImage} type="file" />
+                    </Button>
+                  </div>
+                </div>
+                <div className='col-6'>
+                  <div className='d-flex justify-content-center'>
+                    <Button
+                      component="label"
+                      variant="contained"
+                      tabIndex={-1}
+                      size='small'
+                      color='success'
+                      onClick={cropMyImage}
+                      startIcon={<CropIcon />}
+                    >
+                      Confirm image crop
+                    </Button>
+                  </div>
                 </div>
                 <div className='col-12'>
                   <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
@@ -252,7 +298,7 @@ function App() {
                     value={formik.values.cardImageSize}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    error={formik.touched.cardImageSize && Boolean(formik.errors.cardImageSize)}
                   >
                     <MenuItem value="full-art" defaultChecked>Full Art</MenuItem>
                     <MenuItem value="classic">Classic</MenuItem>
@@ -261,6 +307,11 @@ function App() {
               </div>
               <Divider />
               <div className='row pt-2 pb-2'>
+                <div className='col-12'>
+                  <Typography variant="h4" gutterBottom>
+                    Card data
+                  </Typography>
+                </div>
                 <div className='col-12'>
                   <TextField
                     label="Card Name"
@@ -317,7 +368,7 @@ function App() {
                   <div className='col-12'>
                     <TextField
                       fullWidth
-                      label="Description"
+                      label={<>Description <HelpOutlineIcon /></>}
                       variant="standard"
                       id="description"
                       name="description"
@@ -328,6 +379,11 @@ function App() {
                       error={formik.touched.description && Boolean(formik.errors.description)}
                       helperText={formik.touched.description && formik.errors.description}
                     />
+                  </div>
+                  <div className='col-12 pt-1 pb-3'>
+                    <Typography variant="caption">
+                      For the card description, you can add mana or tap symbols by putting the symbols between brackets, like {`{tap}, {u} or {x}`}
+                    </Typography>
                   </div>
                 </div>
                 <div className='col-3'>
