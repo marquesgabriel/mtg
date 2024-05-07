@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Point, Area } from "react-easy-crop/types";
-import { useFormik, Field, FormikProvider } from 'formik';
+import { useFormik, FormikProvider } from 'formik';
 import * as yup from "yup";
+import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
@@ -20,6 +21,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Typography from '@mui/material/Typography';
 
 
+
 import './App.scss';
 import TokenCard from './Card';
 import getCroppedImg from './utils/cropper';
@@ -30,6 +32,7 @@ function App() {
   const [zoom, setZoom] = useState(1);
   const [croppedImage, setCroppedImage] = useState<any>(null);
   const [croppedArea, setCroppedArea] = useState<any>(null);
+  const printRef = useRef<any>();
   const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels);
   };
@@ -37,20 +40,33 @@ function App() {
   const [description, setDescription] = useState("");
 
   const cropMyImage = async () => {
-    console.log("oi?")
     try {
       const croppedProduct = await getCroppedImg(
         image,
         croppedArea,
         0 // this is the rotation value
       )
-      console.log('donee', { croppedProduct })
       setCroppedImage(croppedProduct)
     } catch (e) {
       console.error(e)
     }
   }
 
+  const downloadAs = (ext: string) => {
+    switch (ext) {
+      case 'jpg':
+        exportComponentAsJPEG(printRef)
+        break;
+      case 'png':
+        exportComponentAsPNG(printRef)
+        break;
+      case 'pdf':
+        exportComponentAsPDF(printRef)
+        break;
+      default:
+        break;
+    }
+  }
 
   const parseDescription = (e: any) => {
     let str: string = e.target.value;
@@ -141,7 +157,6 @@ function App() {
   });
 
   const handlePickedImage = (event: any) => {
-    // console.log(event.target.files)
     setCroppedImage(null);
     setImage(URL.createObjectURL(event.target.files[0]))
   }
@@ -429,13 +444,27 @@ function App() {
                     />
                   </div>
                 </div>
+                <div className='row'>
+                  <div className='col-12'>
+                    <Button
+                      component="label"
+                      variant="contained"
+                      tabIndex={-1}
+                      size='small'
+                      color='success'
+                      onClick={() => { downloadAs("jpg") }}
+                    >
+                      Download file as JPEG
+                    </Button>
+                  </div>
+                </div>
               </div>
             </form>
           </FormikProvider>
         </div>
         <div className='card-renderer col-lg-6 col-md-12'>
           <div className='d-flex p-2 justify-content-center bg-secondary'>
-            <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} />
+            <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} ref={printRef} />
           </div>
         </div>
       </div>

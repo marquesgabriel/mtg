@@ -1,10 +1,10 @@
+import { forwardRef } from 'react';
 import Cropper from "react-easy-crop";
 import moment from 'moment';
 import './index.scss';
 
-const TokenCard = ({ formik, image, croppedImage, crop, zoom, setCrop, onCropComplete, setZoom, description }: any) => {
-  console.log(croppedImage);
-  return (<div className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
+const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop, onCropComplete, setZoom, description }: any, ref: any) => {
+  return (<div ref={ref} id="card-element" className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
     <div className={`card-inner ${formik.values.cardTexture}`}>
       <div className={formik.values.cardImageSize === 'classic' ? `card-image` : `card-image-full`}>
         <div className='image-inner'>
@@ -53,6 +53,6 @@ const TokenCard = ({ formik, image, croppedImage, crop, zoom, setCrop, onCropCom
       </div>
     </div>
   </div>)
-}
+})
 
 export default TokenCard
