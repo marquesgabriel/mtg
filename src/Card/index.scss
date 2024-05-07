@@ -252,11 +252,17 @@
   }
 
   .rounded-sides-inset {
-    border: inset 3px gray;
+    border: inset 3px transparent;
     border-top-left-radius: 6% 42%;
     border-bottom-left-radius: 6% 42%;
     border-top-right-radius: 6% 42%;
     border-bottom-right-radius: 6% 42%;
+
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    // &::before {
+    //   content: "";
+    //   mask-composite: exclude;
+    // }
 
     &>div {
       border: solid 1px black;

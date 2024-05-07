@@ -78,7 +78,12 @@
     }
 
     &.card-type {
-      background-color: color.adjust($colorless-bg, $alpha: -0.1);
+      background: linear-gradient(90deg, $white 0%, $red 100%);
+
+      &>div {
+        background-color: color.adjust($colorless-bg, $alpha: -0.1);
+      }
+
       border-image-slice: 1;
       border-image-source: linear-gradient(90deg, $white 0%, $red 100%);
       color: black;
