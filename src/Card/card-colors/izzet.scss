@@ -12,7 +12,8 @@
   }
 
   .card-image {
-    border: outset 3px $colorless;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(90deg, $blue 0%, $red 100%);
 
     .image-inner {
       border: solid 1px black;

@@ -122,7 +122,10 @@
       height: 41mm;
       width: 54mm;
       left: 7%;
-      border: outset 3px gray;
+      border-style: inset;
+      border-width: 3px;
+      outline: solid 1px rgba(0, 0, 0, .4);
+
       // border-top-left-radius: 70% 50%;
       // border-top-right-radius: 70% 50%;
 
@@ -160,7 +163,7 @@
 
   div.card-footer {
     width: 100%;
-    font-size: 5pt;
+    font-size: 5.5pt;
     position: absolute;
     bottom: -1mm;
     right: 0mm;
@@ -175,9 +178,7 @@
   .card-description,
   .card-type,
   .card-pw {
-    &::before {
-      border: solid 1px red;
-    }
+    outline: 1px groove rgba(0, 0, 0, .3);
 
     &.card-name,
     &.card-type {
@@ -229,7 +230,7 @@
 
       &>div {
         padding: .5em;
-        text-align: justify;
+        text-align: left;
       }
     }
 

@@ -13,7 +13,7 @@
     }
 
     .card-image {
-        border: outset 3px $red;
+        border-color: $red;
 
         .image-inner {
             border: solid 1px black;

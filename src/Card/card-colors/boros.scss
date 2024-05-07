@@ -1,57 +1,58 @@
 .card-wrapper.boros {
-    .card-inner {
-        background: url('../../assets/imgs/texture2.png') repeat, linear-gradient(90deg, $white 0%, $red 100%);
+  .card-inner {
+    background: url('../../assets/imgs/texture2.png') repeat, linear-gradient(90deg, $white 0%, $red 100%);
 
-        &>.rounded-sides-inset {
-            border-color: $red;
+    &>.rounded-sides-inset {
+      border-color: $red;
 
-            &>div {
-                border-color: black;
-            }
-        }
+      &>div {
+        border-color: black;
+      }
+    }
+  }
+
+  .card-image {
+    border-image-slice: 1;
+    border-image-source: linear-gradient(90deg, $white 0%, $red 100%);
+
+    .image-inner {
+      border: solid 1px black;
+    }
+  }
+
+  .card-name {
+    background: linear-gradient(90deg, $white 0%, $red 100%);
+    border-image-slice: 1;
+    border-image-source: linear-gradient(90deg, $white 0%, $red 100%);
+
+    &>div {
+      color: white;
+      background: radial-gradient(black 0%, rgba(0, 0, 0, 0) 75%);
+    }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $colorless-bg;
+
+    &.card-description {
+      background: (linear-gradient(90deg, color.adjust($white-bg, $alpha: -0.1) 0%, color.adjust($red-bg, $alpha: -0.1) 100%));
+      color: black;
     }
 
-    .card-image {
-        border: outset 3px $colorless;
-
-        .image-inner {
-            border: solid 1px black;
-        }
+    &.card-type {
+      background-color: color.adjust($colorless-bg, $alpha: -0.1);
+      border-image-slice: 1;
+      border-image-source: linear-gradient(90deg, $white 0%, $red 100%);
+      color: black;
     }
 
-    .card-name {
-        background: linear-gradient(90deg, $white 0%, $red 100%);
-        border-image-slice: 1;
-        border-image-source: linear-gradient(90deg, $white 0%, $red 100%);
-
-        &>div {
-            color: white;
-            background: radial-gradient(black 0%, rgba(0, 0, 0, 0) 75%);
-        }
+    &.card-pw {
+      border-color: $colorless;
     }
-
-    .card-name,
-    .card-description,
-    .card-type,
-    .card-pw {
-        color: black;
-        background-color: $colorless-bg;
-
-        &.card-description {
-            background: (linear-gradient(90deg, color.adjust($white-bg, $alpha: -0.1) 0%, color.adjust($red-bg, $alpha: -0.1) 100%));
-            color: black;
-        }
-
-        &.card-type {
-            background-color: color.adjust($colorless-bg, $alpha: -0.1);
-            border-image-slice: 1;
-            border-image-source: linear-gradient(90deg, $white 0%, $red 100%);
-            color: black;
-        }
-
-        &.card-pw {
-            border-color: $colorless;
-        }
-    }
+  }
 
 }
