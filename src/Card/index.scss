@@ -26,6 +26,10 @@
   position: relative;
   z-index: 6;
 
+  height: 3.5in;
+  width: 2.5in;
+  border-radius: 3mm;
+
   &.black-border {
     background-color: black;
     border: solid 3mm black;
@@ -97,10 +101,6 @@
       }
     }
   }
-
-  height: 3.5in;
-  width: 2.5in;
-  border-radius: 3mm;
 
   .card-inner {
     display: block;
@@ -175,6 +175,9 @@
   .card-description,
   .card-type,
   .card-pw {
+    &::before {
+      border: solid 1px red;
+    }
 
     &.card-name,
     &.card-type {

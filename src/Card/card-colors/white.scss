@@ -1,13 +1,15 @@
 .card-wrapper.white {
     .card-inner {
+        background-image: url('../../assets/imgs/texture2.png');
         background-color: $white;
+
         &>.rounded-sides-inset {
-                border-color: $white;
-        
-                &>div {
-                    border-color: black;
-                }
+            border-color: $white;
+
+            &>div {
+                border-color: black;
             }
+        }
     }
 
     .card-image {
@@ -20,8 +22,9 @@
 
     .card-name {
         background: $white;
+
         // background: radial-gradient(circle, black 0%, $white 75%);
-        &>div{
+        &>div {
             color: black;
         }
     }
@@ -33,7 +36,8 @@
         color: black;
         background-color: $white-bg;
 
-        &.card-description,&.card-type {
+        &.card-description,
+        &.card-type {
             background-color: color.adjust($white-bg, $alpha: -0.1);
             color: black;
         }

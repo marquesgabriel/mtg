@@ -1,6 +1,6 @@
 .card-wrapper.azorius {
     .card-inner {
-        background: linear-gradient(90deg, $white 0%, $blue 100%);
+        background: url('../../assets/imgs/texture2.png') repeat, linear-gradient(90deg, $white 0%, $blue 100%);
 
         &>.rounded-sides-inset {
             border-color: $blue;

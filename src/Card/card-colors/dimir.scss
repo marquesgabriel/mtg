@@ -1,6 +1,6 @@
 .card-wrapper.dimir {
     .card-inner {
-        background: linear-gradient(90deg, $blue 0%, $black 100%);
+        background: url('../../assets/imgs/texture3.png') repeat, linear-gradient(90deg, $blue 0%, $black 100%);
 
         &>.rounded-sides-inset {
             border-color: $black;
