@@ -55,7 +55,9 @@ function App() {
   const downloadAs = (ext: string) => {
     switch (ext) {
       case 'jpg':
-        exportComponentAsJPEG(printRef)
+        exportComponentAsJPEG(printRef, {
+          fileName: "exported-image"
+        })
         break;
       case 'png':
         exportComponentAsPNG(printRef)
