@@ -135,14 +135,18 @@
         position: relative;
         height: 100%;
         width: 100%;
+        overflow: hidden;
+
+        img.rendered-crop {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          max-width: 100%;
+        }
+
         // border: solid 1px black;
         // border-top-left-radius: 77% 53%;
         // border-top-right-radius: 77% 53%;
-      }
-
-      img {
-        width: 100%;
-        height: auto;
       }
     }
 
@@ -153,9 +157,11 @@
 
       z-index: 4;
 
-      img {
-        width: 100%;
-        height: auto;
+      img.rendered-crop {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        max-width: 100%;
       }
     }
 

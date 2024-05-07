@@ -2,21 +2,25 @@ import Cropper from "react-easy-crop";
 import moment from 'moment';
 import './index.scss';
 
-const TokenCard = ({ formik, image, crop, zoom, setCrop, onCropComplete, setZoom, description }: any) => {
+const TokenCard = ({ formik, image, croppedImage, crop, zoom, setCrop, onCropComplete, setZoom, description }: any) => {
+  console.log(croppedImage);
   return (<div className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
     <div className={`card-inner`}>
       <div className={formik.values.cardImageSize === 'classic' ? `card-image` : `card-image-full`}>
         <div className='image-inner'>
-          <Cropper
-            image={image}
-            crop={crop}
-            zoom={zoom}
-            aspect={formik.values.cardImageSize === 'classic' ? (1.3 / 1) : (3.1 / 4)} // this is for classic
-            objectFit='cover'
-            onCropChange={setCrop}
-            onCropComplete={onCropComplete}
-            onZoomChange={setZoom}
-          />
+          {croppedImage ?
+            <img src={croppedImage} alt="cropped item by user" className="rendered-crop" /> :
+            <Cropper
+              image={image}
+              crop={crop}
+              zoom={zoom}
+              aspect={formik.values.cardImageSize === 'classic' ? (54 / 41) : (63.5 / 82.5)} // this is for classic
+              objectFit='cover'
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+            />
+          }
         </div>
       </div>
       <div className='card-name rounded-sides-inset'>

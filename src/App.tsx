@@ -5,26 +5,49 @@ import * as yup from "yup";
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import Stack from '@mui/material/Stack';
+import Slider from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import CropIcon from '@mui/icons-material/Crop';
+import ZoomIn from '@mui/icons-material/ZoomIn';
+import ZoomOut from '@mui/icons-material/ZoomOut';
 
 import './App.scss';
 import TokenCard from './Card';
+import getCroppedImg from './utils/cropper';
 
 function App() {
 
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedImage, setCroppedImage] = useState();
+  const [croppedImage, setCroppedImage] = useState<any>(null);
+  const [croppedArea, setCroppedArea] = useState<any>(null);
   const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
-    console.log(croppedArea, croppedAreaPixels);
+    setCroppedArea(croppedAreaPixels);
   };
   const [image, setImage] = useState("https://images.theconversation.com/files/123291/original/image-20160520-4451-87u0j1.jpg");
-
   const [description, setDescription] = useState("");
+
+  const cropMyImage = async () => {
+    console.log("oi?")
+    try {
+      const croppedProduct = await getCroppedImg(
+        image,
+        croppedArea,
+        0 // this is the roatation value
+      )
+      console.log('donee', { croppedProduct })
+      setCroppedImage(croppedProduct)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
 
   const parseDescription = (e: any) => {
     let str: string = e.target.value;
@@ -113,7 +136,8 @@ function App() {
   });
 
   const handlePickedImage = (event: any) => {
-    console.log(event.target.files)
+    // console.log(event.target.files)
+    setCroppedImage(null);
     setImage(URL.createObjectURL(event.target.files[0]))
   }
 
@@ -124,7 +148,7 @@ function App() {
           {/* TODO create guide for special symbols */}
           <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
-              <div className="row">
+              <div className="row pb-2">
                 <div className='col-6'>
                   <InputLabel id="cardBorder">Card Border</InputLabel>
                   <Select
@@ -175,17 +199,47 @@ function App() {
                     <MenuItem value="multicolor">Multicolor</MenuItem>
                   </Select>
                 </div>
+              </div>
+              <Divider />
+              <div className='row pt-2 pb-2'>
                 <div className='col-6'>
                   <Button
                     component="label"
                     role={undefined}
                     variant="contained"
                     tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
+                    startIcon={<FileUploadIcon />}
                   >
                     Upload file
                     <VisuallyHiddenInput accept='image/jpeg, image/png' onChange={handlePickedImage} type="file" />
                   </Button>
+                </div>
+                <div className='col-6'>
+                  <Button
+                    component="label"
+                    variant="contained"
+                    tabIndex={-1}
+                    onClick={cropMyImage}
+                    startIcon={<CropIcon />}
+                  >
+                    Confirm image crop
+                  </Button>
+                </div>
+                <div className='col-12'>
+                  <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+                    <ZoomOut />
+                    <Slider aria-label="Zoom"
+                      value={zoom}
+                      step={.05}
+                      marks
+                      min={1}
+                      max={3}
+                      onChange={(e: any) => {
+                        setZoom(e.target.value)
+                      }}
+                    />
+                    <ZoomIn />
+                  </Stack>
                 </div>
                 <div className='col-6'>
                   <InputLabel id="cardImageSize">Image Size</InputLabel>
@@ -204,6 +258,9 @@ function App() {
                     <MenuItem value="classic">Classic</MenuItem>
                   </Select>
                 </div>
+              </div>
+              <Divider />
+              <div className='row pt-2 pb-2'>
                 <div className='col-12'>
                   <TextField
                     label="Card Name"
@@ -322,7 +379,7 @@ function App() {
         </div>
         <div className='card-renderer col-lg-6 col-md-12'>
           <div className='d-flex p-2 justify-content-center bg-secondary'>
-            <TokenCard formik={formik} description={description} image={image} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} />
+            <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} />
           </div>
         </div>
       </div>
