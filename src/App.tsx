@@ -2,7 +2,8 @@ import { useRef, useState } from 'react';
 import { Point, Area } from "react-easy-crop/types";
 import { useFormik, FormikProvider } from 'formik';
 import * as yup from "yup";
-import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
+// import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
+import domtoimage from 'dom-to-image';
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -53,18 +54,40 @@ function App() {
   }
 
   const downloadAs = (ext: string) => {
+    const node: any = document.getElementById("card-element");
     switch (ext) {
-      case 'jpg':
-        exportComponentAsJPEG(printRef, {
-          fileName: "exported-image"
-        })
+      case 'svg':
+        domtoimage.toSvg(node, { quality: 1, bgcolor: "#000", height: 936, width: 672 })
+          .then(function (dataUrl: string) {
+            var link = document.createElement('a');
+            link.download = 'my-image-name.svg';
+            link.href = dataUrl;
+            link.click();
+          });
+        // exportComponentAsJPEG(printRef, {
+        //   fileName: "exported-image"
+        // })
+        break;
+      case 'jpg': // npte:  other extensions are not working as expected
+        domtoimage.toJpeg(node, { quality: 1, bgcolor: "#000", height: 936, width: 672 })
+          .then(function (dataUrl: string) {
+            var link = document.createElement('a');
+            link.download = 'my-image-name.jpeg';
+            link.href = dataUrl;
+            link.click();
+          });
         break;
       case 'png':
-        exportComponentAsPNG(printRef)
+        domtoimage.toPng(node, { quality: 1, bgcolor: "#000", height: 936, width: 672 })
+          .then(function (dataUrl: string) {
+            var link = document.createElement('a');
+            link.download = 'my-image-name.png';
+            link.href = dataUrl;
+            link.click();
+          });
         break;
-      case 'pdf':
-        exportComponentAsPDF(printRef)
-        break;
+      // case 'pdf':
+      //   break;
       default:
         break;
     }
@@ -456,7 +479,7 @@ function App() {
                       color='success'
                       onClick={() => { downloadAs("jpg") }}
                     >
-                      Download file as JPEG
+                      Download file as SVG
                     </Button>
                   </div>
                 </div>
