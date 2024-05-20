@@ -155,7 +155,7 @@ function App() {
       image: "",
       cardBorder: "black",
       cardTexture: "texture6",
-      cardColor: "colorless",
+      cardColor: "black",
       cardImageSize: "full-art"
     },
     validationSchema: form,
@@ -240,7 +240,7 @@ function App() {
                     <MenuItem value="rakdos">Red/Black</MenuItem>
                     <MenuItem value="selesnya">White/Green</MenuItem>
                     <MenuItem value="simic">Blue/Green</MenuItem>
-                    <MenuItem value="colorless" defaultChecked>Colorless</MenuItem>
+                    <MenuItem value="colorless">Colorless</MenuItem>
                     <MenuItem value="multicolor">Multicolor</MenuItem>
                   </Select>
                 </div>
