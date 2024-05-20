@@ -5,7 +5,7 @@ import './index.scss';
 
 const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop, onCropComplete, setZoom, description }: any, ref: any) => {
   return (<div ref={ref} id="card-element" className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
-    <div className={`card-inner ${formik.values.cardTexture}`}>
+    <div className={`card-inner`}>
       <div className={formik.values.cardImageSize === 'classic' ? `card-image` : `card-image-full`}>
         <div className='image-inner'>
           {croppedImage ?
@@ -14,7 +14,7 @@ const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop
               image={image}
               crop={crop}
               zoom={zoom}
-              aspect={formik.values.cardImageSize === 'classic' ? (54 / 41) : (63.5 / 82.5)} // this is for classic
+              aspect={formik.values.cardImageSize === 'classic' ? (54 / 43.5) : (63.5 / 85.5)} // this is for classic
               objectFit='cover'
               onCropChange={setCrop}
               onCropComplete={onCropComplete}
@@ -22,6 +22,8 @@ const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop
             />
           }
         </div>
+      </div>
+      <div className={`texture ${formik.values.cardTexture}`}>
       </div>
       <div className='card-name rounded-sides-inset'>
         <div>

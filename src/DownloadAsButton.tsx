@@ -5,18 +5,18 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 
-const options = ['Download as PDF', 'Download as PNG', 'Download as JPG'];
-
-export default function SplitButton() {
+const options = [{ label: 'Download as SVG', value: "svg" }, { label: 'Download as PNG', value: "png" }, { label: 'Download as JPG', value: "jpeg" }];
+export default function DownloadAsButton({ downloadAs }: any) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const handleClick = () => {
-    console.info(`You clicked ${options[selectedIndex]}`);
+    downloadAs(options[selectedIndex].value);
   };
 
   const handleMenuItemClick = (
@@ -43,13 +43,14 @@ export default function SplitButton() {
   };
 
   return (
-    <React.Fragment>
-      <ButtonGroup
+    <>
+      <ButtonGroup className='pt-2'
         variant="contained"
         ref={anchorRef}
+        size='small'
         aria-label="Button group with a nested menu"
       >
-        <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+        <Button onClick={handleClick}>{options[selectedIndex].label}</Button>
         <Button
           size="small"
           aria-controls={open ? 'split-button-menu' : undefined}
@@ -61,24 +62,43 @@ export default function SplitButton() {
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
-      <Grow>
-        <Paper>
-          <ClickAwayListener onClickAway={handleClose}>
-            <MenuList id="split-button-menu" autoFocusItem>
-              {options.map((option, index) => (
-                <MenuItem
-                  key={option}
-                  disabled={index === 2}
-                  selected={index === selectedIndex}
-                  onClick={(event) => handleMenuItemClick(event, index)}
-                >
-                  {option}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </ClickAwayListener>
-        </Paper>
-      </Grow>
-    </React.Fragment>
+      <Popper
+        sx={{
+          zIndex: 1,
+        }}
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+        placement='top'
+      >
+        {({ TransitionProps, placement }: any) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === 'top' ? 'center top' : 'center top',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList id="split-button-menu" autoFocusItem>
+                  {options.map((option, index) => (
+                    <MenuItem
+                      key={option.label}
+                      selected={index === selectedIndex}
+                      onClick={(event) => handleMenuItemClick(event, index)}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </>
   );
 }

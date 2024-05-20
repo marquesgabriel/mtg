@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import { Point, Area } from "react-easy-crop/types";
 import { useFormik, FormikProvider } from 'formik';
 import * as yup from "yup";
-// import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
 import domtoimage from 'dom-to-image';
 
 import Button from '@mui/material/Button';
@@ -18,7 +17,6 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CropIcon from '@mui/icons-material/Crop';
 import ZoomIn from '@mui/icons-material/ZoomIn';
 import ZoomOut from '@mui/icons-material/ZoomOut';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Typography from '@mui/material/Typography';
 
 
@@ -26,6 +24,8 @@ import Typography from '@mui/material/Typography';
 import './App.scss';
 import TokenCard from './Card';
 import getCroppedImg from './utils/cropper';
+import DownloadAsButton from './DownloadAsButton';
+import DescriptionTooltip from './Descriptiontooltip';
 
 function App() {
 
@@ -57,37 +57,32 @@ function App() {
     const node: any = document.getElementById("card-element");
     switch (ext) {
       case 'svg':
-        domtoimage.toSvg(node, { quality: 1, bgcolor: "#000", height: 936, width: 672 })
+        domtoimage.toSvg(node, { quality: 1, bgcolor: "#000" })
           .then(function (dataUrl: string) {
             var link = document.createElement('a');
-            link.download = 'my-image-name.svg';
+            link.download = 'exported-card.svg';
             link.href = dataUrl;
             link.click();
           });
-        // exportComponentAsJPEG(printRef, {
-        //   fileName: "exported-image"
-        // })
         break;
-      case 'jpg': // npte:  other extensions are not working as expected
-        domtoimage.toJpeg(node, { quality: 1, bgcolor: "#000", height: 936, width: 672 })
+      case 'jpeg':
+        domtoimage.toJpeg(node, { quality: 1, bgcolor: "#000" })
           .then(function (dataUrl: string) {
             var link = document.createElement('a');
-            link.download = 'my-image-name.jpeg';
+            link.download = 'exported-card.jpeg';
             link.href = dataUrl;
             link.click();
           });
         break;
       case 'png':
-        domtoimage.toPng(node, { quality: 1, bgcolor: "#000", height: 936, width: 672 })
+        domtoimage.toPng(node, { quality: 1, bgcolor: "#000" })
           .then(function (dataUrl: string) {
             var link = document.createElement('a');
-            link.download = 'my-image-name.png';
+            link.download = 'exported-card.png';
             link.href = dataUrl;
             link.click();
           });
         break;
-      // case 'pdf':
-      //   break;
       default:
         break;
     }
@@ -408,7 +403,7 @@ function App() {
                   <div className='col-12'>
                     <TextField
                       fullWidth
-                      label={<>Description <HelpOutlineIcon /></>}
+                      label={<>Description<DescriptionTooltip /></>}
                       variant="standard"
                       id="description"
                       name="description"
@@ -420,11 +415,11 @@ function App() {
                       helperText={formik.touched.description && formik.errors.description}
                     />
                   </div>
-                  <div className='col-12 pt-1 pb-3'>
+                  {/* <div className='col-12 pt-1 pb-3'>
                     <Typography variant="caption">
                       For the card description, you can add mana or tap symbols by putting the symbols between brackets, like {`{tap}, {u} or {x}`}
                     </Typography>
-                  </div>
+                  </div> */}
                 </div>
                 <div className='col-3'>
                   <TextField
@@ -471,16 +466,7 @@ function App() {
                 </div>
                 <div className='row'>
                   <div className='col-12'>
-                    <Button
-                      component="label"
-                      variant="contained"
-                      tabIndex={-1}
-                      size='small'
-                      color='success'
-                      onClick={() => { downloadAs("jpg") }}
-                    >
-                      Download file as SVG
-                    </Button>
+                    <DownloadAsButton downloadAs={downloadAs} />
                   </div>
                 </div>
               </div>
@@ -488,7 +474,7 @@ function App() {
           </FormikProvider>
         </div>
         <div className='card-renderer col-lg-6 col-md-12'>
-          <div className='d-flex p-2 justify-content-center bg-secondary'>
+          <div className='d-flex p-2 justify-content-center bg-secondary h-100 align-items-center'>
             <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} ref={printRef} />
           </div>
         </div>

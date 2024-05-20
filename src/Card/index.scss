@@ -27,8 +27,8 @@
   position: relative;
   z-index: 6;
 
-  height: 3.5in;
-  width: 2.5in;
+  height: 88.9mm;
+  width: 63.5mm;
   border-radius: 3mm;
 
   &.black-border {
@@ -112,15 +112,15 @@
 
     // background-color: white;
 
-    height: 82mm;
+    height: 85mm;
 
     overflow: hidden;
     z-index: 5;
 
     .card-image {
       position: absolute;
-      top: 8.5mm;
-      height: 41mm;
+      top: 7.6mm;
+      height: 43.5mm;
       width: 54mm;
       left: 7%;
       border-style: inset;
@@ -195,7 +195,7 @@
 
     &.card-name {
       position: absolute;
-      top: 1mm;
+      top: .25mm;
       left: 1%;
       width: 96%;
       text-align: center;
@@ -209,7 +209,7 @@
 
     &.card-type {
       position: absolute;
-      bottom: 32mm;
+      bottom: 29.5mm;
       left: 1.5%;
       width: 95%;
       z-index: 8;
@@ -217,7 +217,7 @@
       font-size: 10pt;
 
       &.descriptionless {
-        bottom: 11mm;
+        bottom: 9mm;
       }
 
       &>div {
@@ -227,7 +227,7 @@
 
     &.card-description {
       position: absolute;
-      bottom: 6.8mm;
+      bottom: 4mm;
       left: 5%;
       width: 90%;
       height: 26mm;
@@ -244,7 +244,7 @@
 
     &.card-pw {
       position: absolute;
-      bottom: 4mm;
+      bottom: 2.5mm;
       right: 3%;
       width: 20%;
       z-index: 8;

@@ -1,45 +1,48 @@
 .card-wrapper.white {
-    .card-inner {
-        background-blend-mode: multiply;
-        background-color: $white;
-
-        &>.rounded-sides-inset {
-            border-color: $white;
-
-            &>div {
-                border-color: black;
-            }
-        }
+  .card-inner {
+    .texture {
+      mix-blend-mode: multiply;
     }
 
-    .card-image {
-        border-color: $white;
+    background-color: $white;
 
-        .image-inner {
-            border: solid 1px black;
-        }
+    &>.rounded-sides-inset {
+      border-color: $white;
+
+      &>div {
+        border-color: black;
+      }
     }
+  }
 
-    .card-name {
-        background: $white;
+  .card-image {
+    border-color: $white;
 
-        // background: radial-gradient(circle, black 0%, $white 75%);
-        &>div {
-            color: black;
-        }
+    .image-inner {
+      border: solid 1px black;
     }
+  }
 
-    .card-name,
-    .card-description,
-    .card-type,
-    .card-pw {
-        color: black;
-        background-color: $white-bg;
+  .card-name {
+    background: $white;
 
-        &.card-description,
-        &.card-type {
-            background-color: color.adjust($white-bg, $alpha: -0.1);
-            color: black;
-        }
+    // background: radial-gradient(circle, black 0%, $white 75%);
+    &>div {
+      color: black;
     }
+  }
+
+  .card-name,
+  .card-description,
+  .card-type,
+  .card-pw {
+    color: black;
+    background-color: $white-bg;
+
+    &.card-description,
+    &.card-type {
+      background-color: color.adjust($white-bg, $alpha: -0.1);
+      color: black;
+    }
+  }
 }
