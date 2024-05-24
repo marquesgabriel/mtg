@@ -1,0 +1,32 @@
+{
+  "files": {
+    "main.css": "/mtg-token-generator/static/css/main.0cb1107c.css",
+    "main.js": "/mtg-token-generator/static/js/main.f9adbceb.js",
+    "static/js/453.05023239.chunk.js": "/mtg-token-generator/static/js/453.05023239.chunk.js",
+    "static/media/mana.svg?v=1.15.9": "/mtg-token-generator/static/media/mana.ec0c59c6828ef62128df.svg",
+    "static/media/mplantin.svg?v=1.15.9": "/mtg-token-generator/static/media/mplantin.83d7d29e550b1e99d824.svg",
+    "static/media/mana.eot": "/mtg-token-generator/static/media/mana.06b1f0d31d8b73c6f932.eot",
+    "static/media/mana.woff?v=1.15.9": "/mtg-token-generator/static/media/mana.f08c970b2ebeaefa0771.woff",
+    "static/media/mana.ttf?v=1.15.9": "/mtg-token-generator/static/media/mana.187d5dba0563652df9be.ttf",
+    "static/media/texture4.png": "/mtg-token-generator/static/media/texture4.41bba093e5929e96bc89.png",
+    "static/media/texture6.png": "/mtg-token-generator/static/media/texture6.2e58282350a06f65e011.png",
+    "static/media/belerensmallcaps-bold.ttf": "/mtg-token-generator/static/media/belerensmallcaps-bold.fdcf9898f44b63c207b5.ttf",
+    "static/media/beleren-bold_P1.01.ttf": "/mtg-token-generator/static/media/beleren-bold_P1.01.1b9579d8034d0cb87f20.ttf",
+    "static/media/mplantinit.ttf": "/mtg-token-generator/static/media/mplantinit.4662736df03a49c2e4fa.ttf",
+    "static/media/mplantin.eot": "/mtg-token-generator/static/media/mplantin.5b4cd76298c9d024c16d.eot",
+    "static/media/mplantin.ttf": "/mtg-token-generator/static/media/mplantin.9ccce3a24c7c9894b58e.ttf",
+    "static/media/mplantin.woff?v=1.15.9": "/mtg-token-generator/static/media/mplantin.f511062c132e4b72f9b8.woff",
+    "static/media/ModMatrix.ttf": "/mtg-token-generator/static/media/ModMatrix.c7febb9b7efe9e2ab1e8.ttf",
+    "static/media/MagicMedieval.ttf": "/mtg-token-generator/static/media/MagicMedieval.8677f9ade971b1a37da1.ttf",
+    "static/media/texture1.png": "/mtg-token-generator/static/media/texture1.0dc0248a94662fa2129c.png",
+    "static/media/golden-eff.jpeg": "/mtg-token-generator/static/media/golden-eff.38c16fc4269ac5f4e58b.jpeg",
+    "index.html": "/mtg-token-generator/index.html",
+    "main.0cb1107c.css.map": "/mtg-token-generator/static/css/main.0cb1107c.css.map",
+    "main.f9adbceb.js.map": "/mtg-token-generator/static/js/main.f9adbceb.js.map",
+    "453.05023239.chunk.js.map": "/mtg-token-generator/static/js/453.05023239.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0cb1107c.css",
+    "static/js/main.f9adbceb.js"
+  ]
+}
