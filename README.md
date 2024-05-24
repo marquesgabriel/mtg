@@ -1,4 +1,4 @@
-![CI/CD](https://github.com/marquesgabriel/mtg-token-generator.github.io/actions/workflows/node-CI/badge.svg)
+![CI/CD](https://github.com/marquesgabriel/mtg-token-generator/actions/workflows/node-CI/badge.svg)
 
 # Getting Started with Create React App
 
