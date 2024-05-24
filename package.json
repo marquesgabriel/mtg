@@ -1,6 +1,6 @@
 {
   "name": "token-generator",
-  "homepage": "https://marquesgabriel.github.io/mtg-token-generator",
+  "homepage": "https://mtg-token-generator.github.io/mtg-token-generator",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
