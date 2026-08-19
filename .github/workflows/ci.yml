@@ -30,7 +30,5 @@ jobs:
       - name: Build App
         run: yarn build
 
-      # --passWithNoTests: the repo has no tests yet (see issue #4). Remove
-      # this flag once real tests exist so a missing suite fails the build.
       - name: Run tests
-        run: yarn test --watchAll=false --passWithNoTests
+        run: yarn test --watchAll=false
