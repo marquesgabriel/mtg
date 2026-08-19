@@ -1,0 +1,101 @@
+# Moves the issues a PR closes (via "Closes #123" in the PR body) to
+# "In Progress" on the project board when the PR is opened/reopened.
+# Requires a PROJECT_TOKENS secret (classic PAT with `repo` + `project`
+# scopes) since the default GITHUB_TOKEN can't write to user-owned
+# Projects v2.
+
+name: Sync project status
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  move-to-in-progress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move linked issues to In Progress
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_TOKENS }}
+          script: |
+            const PROJECT_OWNER = "marquesgabriel";
+            const PROJECT_NUMBER = 1;
+            const TARGET_STATUS = "In Progress";
+
+            const body = context.payload.pull_request.body || "";
+            const closesRegex = /\b(close[sd]?|fix(?:es|ed)?|resolve[sd]?)\s*:?\s*#(\d+)/gi;
+            const issueNumbers = [...body.matchAll(closesRegex)].map(m => parseInt(m[2], 10));
+
+            if (issueNumbers.length === 0) {
+              console.log("No 'Closes #N' references found in PR body — nothing to do.");
+              return;
+            }
+            console.log("Issues referenced:", issueNumbers);
+
+            const projectQuery = `
+              query($owner: String!, $number: Int!) {
+                user(login: $owner) {
+                  projectV2(number: $number) {
+                    id
+                    field(name: "Status") {
+                      ... on ProjectV2SingleSelectField {
+                        id
+                        options { id name }
+                      }
+                    }
+                    items(first: 100) {
+                      nodes {
+                        id
+                        content {
+                          ... on Issue { number }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+
+            const result = await github.graphql(projectQuery, {
+              owner: PROJECT_OWNER,
+              number: PROJECT_NUMBER,
+            });
+
+            const project = result.user.projectV2;
+            const statusField = project.field;
+            const targetOption = statusField.options.find(o => o.name === TARGET_STATUS);
+
+            if (!targetOption) {
+              throw new Error(`Status option "${TARGET_STATUS}" not found on the project.`);
+            }
+
+            const mutation = `
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $projectId,
+                  itemId: $itemId,
+                  fieldId: $fieldId,
+                  value: { singleSelectOptionId: $optionId }
+                }) {
+                  projectV2Item { id }
+                }
+              }
+            `;
+
+            for (const issueNumber of issueNumbers) {
+              const item = project.items.nodes.find(
+                n => n.content && n.content.number === issueNumber
+              );
+              if (!item) {
+                console.log(`Issue #${issueNumber} not found on the project board — skipping.`);
+                continue;
+              }
+              await github.graphql(mutation, {
+                projectId: project.id,
+                itemId: item.id,
+                fieldId: statusField.id,
+                optionId: targetOption.id,
+              });
+              console.log(`Moved issue #${issueNumber} to "${TARGET_STATUS}".`);
+            }
