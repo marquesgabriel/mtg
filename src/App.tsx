@@ -53,10 +53,32 @@ function App() {
     }
   }
 
+  // dom-to-image has no "scale" option — without width/height it captures
+  // the element at on-screen CSS pixel size (~96dpi), which is far too low
+  // resolution for print. We render at PRINT_DPI instead by scaling the
+  // cloned node up before capture (fixed, not user-configurable).
+  const PRINT_DPI = 300;
+  const SCREEN_DPI = 96;
+
   const downloadAs = (ext: string) => {
     const node: any = document.getElementById("card-element");
+    const scale = PRINT_DPI / SCREEN_DPI;
+    const printOptions = {
+      quality: 1,
+      bgcolor: "#000",
+      width: node.offsetWidth * scale,
+      height: node.offsetHeight * scale,
+      style: {
+        transform: `scale(${scale})`,
+        transformOrigin: 'top left',
+        width: `${node.offsetWidth}px`,
+        height: `${node.offsetHeight}px`,
+      },
+    };
+
     switch (ext) {
       case 'svg':
+        // Vector output is already resolution-independent — no scaling needed.
         domtoimage.toSvg(node, { quality: 1, bgcolor: "#000" })
           .then(function (dataUrl: string) {
             var link = document.createElement('a');
@@ -66,7 +88,7 @@ function App() {
           });
         break;
       case 'jpeg':
-        domtoimage.toJpeg(node, { quality: 1, bgcolor: "#000" })
+        domtoimage.toJpeg(node, printOptions)
           .then(function (dataUrl: string) {
             var link = document.createElement('a');
             link.download = 'exported-card.jpeg';
@@ -75,7 +97,7 @@ function App() {
           });
         break;
       case 'png':
-        domtoimage.toPng(node, { quality: 1, bgcolor: "#000" })
+        domtoimage.toPng(node, printOptions)
           .then(function (dataUrl: string) {
             var link = document.createElement('a');
             link.download = 'exported-card.png';
