@@ -1,6 +1,6 @@
 # Moves the issues a PR closes (via "Closes #123" in the PR body) to
 # "In Progress" on the project board when the PR is opened/reopened.
-# Requires a PROJECTS_TOKEN secret (classic PAT with `repo` + `project`
+# Requires a PROJECT_TOKENS secret (classic PAT with `repo` + `project`
 # scopes) since the default GITHUB_TOKEN can't write to user-owned
 # Projects v2.
 
@@ -17,7 +17,7 @@ jobs:
       - name: Move linked issues to In Progress
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.PROJECTS_TOKEN }}
+          github-token: ${{ secrets.PROJECT_TOKENS }}
           script: |
             const PROJECT_OWNER = "marquesgabriel";
             const PROJECT_NUMBER = 1;
