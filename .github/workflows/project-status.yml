@@ -1,5 +1,12 @@
-# Moves the issues a PR closes (via "Closes #123" in the PR body) to
-# "In Progress" on the project board when the PR is opened/reopened.
+# Moves the issues a PR closes (via "Closes #123" in the PR body) on the
+# project board: "In Progress" when the PR opens/reopens, "Done" when it
+# merges. Runs on every merge target, not just the default branch — this
+# repo reviews via PRs into release/* branches, and GitHub's native
+# "Closes #N" auto-close (and the built-in project "item closed" automation
+# that depends on it) only fires for merges into the default branch, so
+# without this step issues never leave "In Progress" until the release
+# branch itself merges to main.
+#
 # Requires a PROJECT_TOKENS secret (classic PAT with `repo` + `project`
 # scopes) since the default GITHUB_TOKEN can't write to user-owned
 # Projects v2.
@@ -8,20 +15,21 @@ name: Sync project status
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, closed]
 
 jobs:
-  move-to-in-progress:
+  sync-status:
     runs-on: ubuntu-latest
+    if: github.event.action != 'closed' || github.event.pull_request.merged == true
     steps:
-      - name: Move linked issues to In Progress
+      - name: Move linked issues on the board
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.PROJECT_TOKENS }}
           script: |
             const PROJECT_OWNER = "marquesgabriel";
             const PROJECT_NUMBER = 1;
-            const TARGET_STATUS = "In Progress";
+            const TARGET_STATUS = context.payload.action === "closed" ? "Done" : "In Progress";
 
             const body = context.payload.pull_request.body || "";
             const closesRegex = /\b(close[sd]?|fix(?:es|ed)?|resolve[sd]?)\s*:?\s*#(\d+)/gi;
@@ -31,7 +39,7 @@ jobs:
               console.log("No 'Closes #N' references found in PR body — nothing to do.");
               return;
             }
-            console.log("Issues referenced:", issueNumbers);
+            console.log(`Issues referenced: ${issueNumbers.join(", ")} -> ${TARGET_STATUS}`);
 
             const projectQuery = `
               query($owner: String!, $number: Int!) {
