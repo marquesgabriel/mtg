@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Point, Area } from "react-easy-crop/types";
 import { useFormik, FormikProvider } from 'formik';
 import * as yup from "yup";
@@ -27,7 +27,73 @@ import getCroppedImg from './utils/cropper';
 import DownloadAsButton from './DownloadAsButton';
 import DescriptionTooltip from './Descriptiontooltip';
 
+// Only text/selection fields are persisted — the uploaded image/crop is a
+// blob URL (URL.createObjectURL) that doesn't survive a reload, so it's
+// intentionally left out (see issue #3).
+const DRAFT_STORAGE_KEY = 'mtg-token-generator:draft';
+const PERSISTED_FIELDS = [
+  'name', 'superType', 'type', 'subType', 'description', 'artist',
+  'power', 'toughness', 'cardBorder', 'cardTexture', 'cardColor', 'cardImageSize',
+] as const;
+
+function loadDraft(): Partial<Record<typeof PERSISTED_FIELDS[number], string>> {
+  try {
+    const raw = window.localStorage.getItem(DRAFT_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveDraft(values: Record<string, any>) {
+  try {
+    const toSave: Record<string, any> = {};
+    PERSISTED_FIELDS.forEach((field) => { toSave[field] = values[field]; });
+    window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(toSave));
+  } catch {
+    // localStorage unavailable (private browsing, quota, etc.) — degrade silently
+  }
+}
+
+const parseManaSymbols = (str: string): string => {
+  let result = str;
+
+  result = result.replace(/(\{(g)\})/, '<i class="ms ms-g green"></i>');
+  result = result.replace(/(\{(w)\})/, '<i class="ms ms-w white"></i>');
+  result = result.replace(/(\{(b)\})/, '<i class="ms ms-b black"></i>');
+  result = result.replace(/(\{(u)\})/, '<i class="ms ms-u blue"></i>');
+  result = result.replace(/(\{(r)\})/, '<i class="ms ms-r red"></i>');
+  result = result.replace(/(\{(c)\})/, '<i class="ms ms-c colorless"></i>');
+  result = result.replace(/(\{(tap)\})/, '<i class="ms ms-tap colorless"></i>');
+  result = result.replace(/(\{(untap)\})/, '<i class="ms ms-untap colorless"></i>');
+  result = result.replace(/(\{(x)\})/, '<i class="ms ms-x colorless"></i>');
+  result = result.replace(/(\{(0)\})/, '<i class="ms ms-0 colorless"></i>');
+  result = result.replace(/(\{(1)\})/, '<i class="ms ms-1 colorless"></i>');
+  result = result.replace(/(\{(2)\})/, '<i class="ms ms-2 colorless"></i>');
+  result = result.replace(/(\{(3)\})/, '<i class="ms ms-3 colorless"></i>');
+  result = result.replace(/(\{(4)\})/, '<i class="ms ms-4 colorless"></i>');
+  result = result.replace(/(\{(5)\})/, '<i class="ms ms-5 colorless"></i>');
+  result = result.replace(/(\{(6)\})/, '<i class="ms ms-6 colorless"></i>');
+  result = result.replace(/(\{(7)\})/, '<i class="ms ms-7 colorless"></i>');
+  result = result.replace(/(\{(8)\})/, '<i class="ms ms-8 colorless"></i>');
+  result = result.replace(/(\{(9)\})/, '<i class="ms ms-9 colorless"></i>');
+  result = result.replace(/(\{(10)\})/, '<i class="ms ms-10 colorless"></i>');
+  result = result.replace(/(\{(11)\})/, '<i class="ms ms-11 colorless"></i>');
+  result = result.replace(/(\{(12)\})/, '<i class="ms ms-12 colorless"></i>');
+  result = result.replace(/(\{(13)\})/, '<i class="ms ms-13 colorless"></i>');
+  result = result.replace(/(\{(14)\})/, '<i class="ms ms-14 colorless"></i>');
+  result = result.replace(/(\{(15)\})/, '<i class="ms ms-15 colorless"></i>');
+  result = result.replace(/(\{(16)\})/, '<i class="ms ms-16 colorless"></i>');
+  result = result.replace(/(\{(17)\})/, '<i class="ms ms-17 colorless"></i>');
+  result = result.replace(/(\{(18)\})/, '<i class="ms ms-18 colorless"></i>');
+  result = result.replace(/(\{(19)\})/, '<i class="ms ms-19 colorless"></i>');
+  result = result.replace(/(\{(20)\})/, '<i class="ms ms-20 colorless"></i>');
+
+  return result;
+}
+
 function App() {
+  const initialDraft = loadDraft();
 
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -38,7 +104,7 @@ function App() {
     setCroppedArea(croppedAreaPixels);
   };
   const [image, setImage] = useState("https://images.theconversation.com/files/123291/original/image-20160520-4451-87u0j1.jpg");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(() => parseManaSymbols(initialDraft.description ?? ""));
 
   const cropMyImage = async () => {
     try {
@@ -111,41 +177,7 @@ function App() {
   }
 
   const parseDescription = (e: any) => {
-    let str: string = e.target.value;
-
-    str = str.replace(/(\{(g)\})/, '<i class="ms ms-g green"></i>');
-    str = str.replace(/(\{(w)\})/, '<i class="ms ms-w white"></i>');
-    str = str.replace(/(\{(b)\})/, '<i class="ms ms-b black"></i>');
-    str = str.replace(/(\{(u)\})/, '<i class="ms ms-u blue"></i>');
-    str = str.replace(/(\{(r)\})/, '<i class="ms ms-r red"></i>');
-    str = str.replace(/(\{(c)\})/, '<i class="ms ms-c colorless"></i>');
-    str = str.replace(/(\{(tap)\})/, '<i class="ms ms-tap colorless"></i>');
-    str = str.replace(/(\{(untap)\})/, '<i class="ms ms-untap colorless"></i>');
-    str = str.replace(/(\{(x)\})/, '<i class="ms ms-x colorless"></i>');
-    str = str.replace(/(\{(0)\})/, '<i class="ms ms-0 colorless"></i>');
-    str = str.replace(/(\{(1)\})/, '<i class="ms ms-1 colorless"></i>');
-    str = str.replace(/(\{(2)\})/, '<i class="ms ms-2 colorless"></i>');
-    str = str.replace(/(\{(3)\})/, '<i class="ms ms-3 colorless"></i>');
-    str = str.replace(/(\{(4)\})/, '<i class="ms ms-4 colorless"></i>');
-    str = str.replace(/(\{(5)\})/, '<i class="ms ms-5 colorless"></i>');
-    str = str.replace(/(\{(6)\})/, '<i class="ms ms-6 colorless"></i>');
-    str = str.replace(/(\{(7)\})/, '<i class="ms ms-7 colorless"></i>');
-    str = str.replace(/(\{(8)\})/, '<i class="ms ms-8 colorless"></i>');
-    str = str.replace(/(\{(9)\})/, '<i class="ms ms-9 colorless"></i>');
-    str = str.replace(/(\{(10)\})/, '<i class="ms ms-10 colorless"></i>');
-    str = str.replace(/(\{(11)\})/, '<i class="ms ms-11 colorless"></i>');
-    str = str.replace(/(\{(12)\})/, '<i class="ms ms-12 colorless"></i>');
-    str = str.replace(/(\{(13)\})/, '<i class="ms ms-13 colorless"></i>');
-    str = str.replace(/(\{(14)\})/, '<i class="ms ms-14 colorless"></i>');
-    str = str.replace(/(\{(15)\})/, '<i class="ms ms-15 colorless"></i>');
-    str = str.replace(/(\{(16)\})/, '<i class="ms ms-16 colorless"></i>');
-    str = str.replace(/(\{(17)\})/, '<i class="ms ms-17 colorless"></i>');
-    str = str.replace(/(\{(18)\})/, '<i class="ms ms-18 colorless"></i>');
-    str = str.replace(/(\{(19)\})/, '<i class="ms ms-19 colorless"></i>');
-    str = str.replace(/(\{(20)\})/, '<i class="ms ms-20 colorless"></i>');
-
-    setDescription(str)
-
+    setDescription(parseManaSymbols(e.target.value));
   }
 
   const form = yup.object({
@@ -178,13 +210,20 @@ function App() {
       cardBorder: "black",
       cardTexture: "texture6",
       cardColor: "black",
-      cardImageSize: "full-art"
+      cardImageSize: "full-art",
+      ...initialDraft,
     },
     validationSchema: form,
     onSubmit: values => {
       alert(JSON.stringify(values, null, 2));
     },
   });
+
+  // Debounced auto-save of the text/selection fields (see loadDraft/saveDraft above).
+  useEffect(() => {
+    const handle = setTimeout(() => saveDraft(formik.values), 400);
+    return () => clearTimeout(handle);
+  }, [formik.values]);
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
