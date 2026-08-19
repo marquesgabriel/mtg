@@ -270,8 +270,8 @@ function App() {
                   >
                     <MenuItem value="white">White</MenuItem>
                     <MenuItem value="black" defaultChecked>Black</MenuItem>
-                    <MenuItem value="silver" disabled>Silver</MenuItem>
-                    <MenuItem value="golden" disabled>Golden</MenuItem>
+                    <MenuItem value="silver">Silver</MenuItem>
+                    <MenuItem value="golden">Golden</MenuItem>
                   </Select>
                 </div>
                 <div className='col-6'>
