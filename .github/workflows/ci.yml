@@ -1,0 +1,36 @@
+# Runs on every Pull Request targeting main: installs dependencies, builds,
+# and runs tests. Never deploys — deployment only happens on push to main
+# (see deploy.yml).
+
+name: CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build App
+        run: yarn build
+
+      # --passWithNoTests: the repo has no tests yet (see issue #4). Remove
+      # this flag once real tests exist so a missing suite fails the build.
+      - name: Run tests
+        run: yarn test --watchAll=false --passWithNoTests
