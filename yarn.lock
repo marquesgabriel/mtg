@@ -8798,9 +8798,10 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-web-vitals@^2.1.4:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-2.1.4.tgz#76563175a475a5e835264d373704f9dde718290c"
+web-vitals@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-6.1.1.tgz#855ba63ed40847c55e061ac13f55ee5f6435b723"
+  integrity sha512-r93gKnR6ZC2O8F3JrS0AAGIQ0v0OhXuyg4DAj2oG7K+GPkwXfUSc3ZcWeu50AsV5yIc6xxnTjERipJ6EvSw2vg==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"
