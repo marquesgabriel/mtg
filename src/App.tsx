@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Point, Area } from "react-easy-crop/types";
+import { Point, Area } from "react-easy-crop";
 import { useFormik, FormikProvider } from 'formik';
 import * as yup from "yup";
 import domtoimage from 'dom-to-image';
