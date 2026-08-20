@@ -1,16 +1,28 @@
 .support-sidebar {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  // NOT "center" - a centered flex column shrinks each child to its content
+  // width, which leaves the (initially empty) AdSense <ins> at 0px wide and
+  // triggers "No slot size for availableWidth=0". Stretch gives it the full
+  // column width; individual children opt into centering their own content.
+  align-items: stretch;
   gap: 1rem;
   padding: 1rem;
 
-  &__bmc-link img {
-    display: block;
+  &__bmc-link {
+    text-align: center;
+
+    img {
+      display: inline-block;
+    }
+  }
+
+  &__ad-slot {
+    width: 100%;
+    min-width: 250px;
   }
 
   &__consent {
-    max-width: 220px;
     text-align: center;
   }
 

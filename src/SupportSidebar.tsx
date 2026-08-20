@@ -40,13 +40,15 @@ function AdSlot() {
   }, []);
 
   return (
-    <ins
-      className="adsbygoogle"
-      style={{ display: 'block' }}
-      data-ad-client={ADSENSE_PUBLISHER_ID}
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    />
+    <div className="support-sidebar__ad-slot">
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block', width: '100%' }}
+        data-ad-client={ADSENSE_PUBLISHER_ID}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    </div>
   );
 }
 
