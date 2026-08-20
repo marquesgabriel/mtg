@@ -260,6 +260,20 @@
     }
   }
 
+  .card-mana-cost {
+    position: absolute;
+    top: .5mm;
+    right: 2%;
+    z-index: 9;
+    text-align: right;
+    font-size: 11pt;
+    white-space: nowrap;
+
+    i.ms {
+      margin-left: .1em;
+    }
+  }
+
   .rounded-sides-inset {
     border: inset 3px transparent;
     border-top-left-radius: 6% 42%;
