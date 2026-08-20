@@ -236,7 +236,6 @@ function App() {
     <div className='container'>
       <div className="row">
         <div className="card-inputs col-lg-5 col-md-12">
-          {/* TODO create guide for special symbols */}
           <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
               <div className="row pb-2">
@@ -480,11 +479,6 @@ function App() {
                       helperText={formik.touched.description && formik.errors.description}
                     />
                   </div>
-                  {/* <div className='col-12 pt-1 pb-3'>
-                    <Typography variant="caption">
-                      For the card description, you can add mana or tap symbols by putting the symbols between brackets, like {`{tap}, {u} or {x}`}
-                    </Typography>
-                  </div> */}
                 </div>
                 <div className='col-3'>
                   <TextField
