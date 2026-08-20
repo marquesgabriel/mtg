@@ -1,6 +1,7 @@
 import { forwardRef, useLayoutEffect, useRef } from 'react';
 import Cropper from "react-easy-crop";
 import moment from 'moment';
+import { parseManaSymbols } from '../utils/manaSymbols';
 import './index.scss';
 
 const DESCRIPTION_BASE_FONT_SIZE_PT = 9.5;
@@ -55,6 +56,10 @@ const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop
           {formik.values.name}
         </div>
       </div>
+      {formik.values.manaCost && <div
+        className='card-mana-cost'
+        dangerouslySetInnerHTML={{ __html: parseManaSymbols(formik.values.manaCost) }}
+      />}
       <div className={`card-type rounded-sides-inset ${!formik.values.description ? 'descriptionless' : ''}`}>
         <div className="ps-2">
           {formik.values.superType ? `${formik.values.superType} ` : null}{formik.values.type} {formik.values.subType ? ` - ${formik.values.subType}` : null}

@@ -20,19 +20,19 @@ import ZoomOut from '@mui/icons-material/ZoomOut';
 import Typography from '@mui/material/Typography';
 
 
-
 import './App.scss';
 import TokenCard from './Card';
 import getCroppedImg from './utils/cropper';
 import DownloadAsButton from './DownloadAsButton';
 import DescriptionTooltip from './Descriptiontooltip';
+import { parseManaSymbols } from './utils/manaSymbols';
 
 // Only text/selection fields are persisted — the uploaded image/crop is a
 // blob URL (URL.createObjectURL) that doesn't survive a reload, so it's
 // intentionally left out (see issue #3).
 const DRAFT_STORAGE_KEY = 'mtg-token-generator:draft';
 const PERSISTED_FIELDS = [
-  'name', 'superType', 'type', 'subType', 'description', 'artist',
+  'name', 'superType', 'type', 'subType', 'description', 'artist', 'manaCost',
   'power', 'toughness', 'cardBorder', 'cardTexture', 'cardColor', 'cardImageSize',
 ] as const;
 
@@ -63,6 +63,7 @@ const DEFAULT_VALUES = {
   type: "creature",
   subType: "rat",
   description: "",
+  manaCost: "",
   artist: "",
   power: "1",
   toughness: "1",
@@ -72,43 +73,6 @@ const DEFAULT_VALUES = {
   cardColor: "black",
   cardImageSize: "full-art",
 };
-
-const parseManaSymbols = (str: string): string => {
-  let result = str;
-
-  result = result.replace(/(\{(g)\})/, '<i class="ms ms-g green"></i>');
-  result = result.replace(/(\{(w)\})/, '<i class="ms ms-w white"></i>');
-  result = result.replace(/(\{(b)\})/, '<i class="ms ms-b black"></i>');
-  result = result.replace(/(\{(u)\})/, '<i class="ms ms-u blue"></i>');
-  result = result.replace(/(\{(r)\})/, '<i class="ms ms-r red"></i>');
-  result = result.replace(/(\{(c)\})/, '<i class="ms ms-c colorless"></i>');
-  result = result.replace(/(\{(tap)\})/, '<i class="ms ms-tap colorless"></i>');
-  result = result.replace(/(\{(untap)\})/, '<i class="ms ms-untap colorless"></i>');
-  result = result.replace(/(\{(x)\})/, '<i class="ms ms-x colorless"></i>');
-  result = result.replace(/(\{(0)\})/, '<i class="ms ms-0 colorless"></i>');
-  result = result.replace(/(\{(1)\})/, '<i class="ms ms-1 colorless"></i>');
-  result = result.replace(/(\{(2)\})/, '<i class="ms ms-2 colorless"></i>');
-  result = result.replace(/(\{(3)\})/, '<i class="ms ms-3 colorless"></i>');
-  result = result.replace(/(\{(4)\})/, '<i class="ms ms-4 colorless"></i>');
-  result = result.replace(/(\{(5)\})/, '<i class="ms ms-5 colorless"></i>');
-  result = result.replace(/(\{(6)\})/, '<i class="ms ms-6 colorless"></i>');
-  result = result.replace(/(\{(7)\})/, '<i class="ms ms-7 colorless"></i>');
-  result = result.replace(/(\{(8)\})/, '<i class="ms ms-8 colorless"></i>');
-  result = result.replace(/(\{(9)\})/, '<i class="ms ms-9 colorless"></i>');
-  result = result.replace(/(\{(10)\})/, '<i class="ms ms-10 colorless"></i>');
-  result = result.replace(/(\{(11)\})/, '<i class="ms ms-11 colorless"></i>');
-  result = result.replace(/(\{(12)\})/, '<i class="ms ms-12 colorless"></i>');
-  result = result.replace(/(\{(13)\})/, '<i class="ms ms-13 colorless"></i>');
-  result = result.replace(/(\{(14)\})/, '<i class="ms ms-14 colorless"></i>');
-  result = result.replace(/(\{(15)\})/, '<i class="ms ms-15 colorless"></i>');
-  result = result.replace(/(\{(16)\})/, '<i class="ms ms-16 colorless"></i>');
-  result = result.replace(/(\{(17)\})/, '<i class="ms ms-17 colorless"></i>');
-  result = result.replace(/(\{(18)\})/, '<i class="ms ms-18 colorless"></i>');
-  result = result.replace(/(\{(19)\})/, '<i class="ms ms-19 colorless"></i>');
-  result = result.replace(/(\{(20)\})/, '<i class="ms ms-20 colorless"></i>');
-
-  return result;
-}
 
 function App() {
   const initialDraft = loadDraft();
@@ -204,6 +168,7 @@ function App() {
     type: yup.string().required("This field is required"),
     subType: yup.string().nullable(),
     description: yup.string().nullable(),
+    manaCost: yup.string().nullable(),
     artist: yup.string().nullable(),
     power: yup.string().nullable(),
     toughness: yup.string().nullable(),
@@ -443,6 +408,20 @@ function App() {
                     onBlur={formik.handleBlur}
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
+                  />
+                </div>
+                <div className='col-12'>
+                  <TextField
+                    fullWidth
+                    label={<>Mana Cost<DescriptionTooltip /></>}
+                    variant="standard"
+                    id="manaCost"
+                    name="manaCost"
+                    value={formik.values.manaCost}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.manaCost && Boolean(formik.errors.manaCost)}
+                    helperText={formik.touched.manaCost && formik.errors.manaCost}
                   />
                 </div>
                 <div className='col-3'>
