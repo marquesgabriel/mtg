@@ -416,7 +416,7 @@ function App() {
                 <div className='col-12'>
                   <TextField
                     fullWidth
-                    label={<>Mana Cost<DescriptionTooltip /></>}
+                    label={<>Mana Cost<DescriptionTooltip title={"For the mana cost, put the symbols between brackets, like {`{2}{u}{u}`} or {`{x}`}"} /></>}
                     variant="standard"
                     id="manaCost"
                     name="manaCost"
