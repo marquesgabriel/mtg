@@ -55,6 +55,24 @@ function saveDraft(values: Record<string, any>) {
   }
 }
 
+const DEFAULT_IMAGE = "https://images.theconversation.com/files/123291/original/image-20160520-4451-87u0j1.jpg";
+
+const DEFAULT_VALUES = {
+  name: "rat",
+  superType: "token",
+  type: "creature",
+  subType: "rat",
+  description: "",
+  artist: "",
+  power: "1",
+  toughness: "1",
+  image: "",
+  cardBorder: "black",
+  cardTexture: "texture6",
+  cardColor: "black",
+  cardImageSize: "full-art",
+};
+
 const parseManaSymbols = (str: string): string => {
   let result = str;
 
@@ -103,7 +121,7 @@ function App() {
   const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels);
   };
-  const [image, setImage] = useState("https://images.theconversation.com/files/123291/original/image-20160520-4451-87u0j1.jpg");
+  const [image, setImage] = useState(DEFAULT_IMAGE);
   const [description, setDescription] = useState(() => parseManaSymbols(initialDraft.description ?? ""));
 
   const cropMyImage = async () => {
@@ -198,19 +216,7 @@ function App() {
 
   const formik = useFormik({
     initialValues: {
-      name: "rat",
-      superType: "token",
-      type: "creature",
-      subType: "rat",
-      description: "",
-      artist: "",
-      power: "1",
-      toughness: "1",
-      image: "",
-      cardBorder: "black",
-      cardTexture: "texture6",
-      cardColor: "black",
-      cardImageSize: "full-art",
+      ...DEFAULT_VALUES,
       ...initialDraft,
     },
     validationSchema: form,
@@ -224,6 +230,24 @@ function App() {
     const handle = setTimeout(() => saveDraft(formik.values), 400);
     return () => clearTimeout(handle);
   }, [formik.values]);
+
+  const handleReset = () => {
+    if (!window.confirm('Reset the form to its default values? This cannot be undone.')) {
+      return;
+    }
+
+    formik.resetForm({ values: DEFAULT_VALUES });
+
+    try {
+      window.localStorage.removeItem(DRAFT_STORAGE_KEY);
+    } catch {
+      // localStorage unavailable — nothing to clear
+    }
+
+    setImage(DEFAULT_IMAGE);
+    setCroppedImage(null);
+    setDescription('');
+  };
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -526,8 +550,11 @@ function App() {
                   </div>
                 </div>
                 <div className='row'>
-                  <div className='col-12'>
+                  <div className='col-12 d-flex justify-content-between align-items-start'>
                     <DownloadAsButton downloadAs={downloadAs} />
+                    <Button className='pt-2' variant="outlined" color="error" size='small' onClick={handleReset}>
+                      Reset
+                    </Button>
                   </div>
                 </div>
               </div>
