@@ -212,34 +212,47 @@ function App() {
     <div className='container'>
       <div className="row">
         <div className="card-inputs col-lg-5 col-md-12">
-          <FormikProvider value={formik}>
-            <form onSubmit={formik.handleSubmit}>
-              <CardStyleSection formik={formik} />
-              <Divider />
-              <ImageUploadSection
-                formik={formik}
-                zoom={zoom}
-                setZoom={setZoom}
-                cropMyImage={cropMyImage}
-                handlePickedImage={handlePickedImage}
-              />
-              <Divider />
-              <CardDataSection
-                formik={formik}
-                parseDescription={parseDescription}
-                downloadAs={downloadAs}
-                handleReset={handleReset}
-              />
-            </form>
-          </FormikProvider>
+          <div className="win98-window">
+            <div className="win98-window__titlebar">MTG Token Generator</div>
+            <div className="win98-window__body">
+              <FormikProvider value={formik}>
+                <form onSubmit={formik.handleSubmit}>
+                  <CardStyleSection formik={formik} />
+                  <Divider />
+                  <ImageUploadSection
+                    formik={formik}
+                    zoom={zoom}
+                    setZoom={setZoom}
+                    cropMyImage={cropMyImage}
+                    handlePickedImage={handlePickedImage}
+                  />
+                  <Divider />
+                  <CardDataSection
+                    formik={formik}
+                    parseDescription={parseDescription}
+                    downloadAs={downloadAs}
+                    handleReset={handleReset}
+                  />
+                </form>
+              </FormikProvider>
+            </div>
+          </div>
         </div>
         <div className='card-renderer col-lg-5 col-md-12'>
-          <div className='d-flex p-2 justify-content-center bg-secondary h-100 align-items-center'>
-            <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} ref={printRef} />
+          <div className="win98-window h-100">
+            <div className="win98-window__titlebar">Preview</div>
+            <div className='win98-window__body d-flex p-2 justify-content-center bg-secondary h-100 align-items-center'>
+              <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} ref={printRef} />
+            </div>
           </div>
         </div>
         <div className='col-lg-2 col-md-12'>
-          <SupportSidebar />
+          <div className="win98-window">
+            <div className="win98-window__titlebar">Support</div>
+            <div className="win98-window__body">
+              <SupportSidebar />
+            </div>
+          </div>
         </div>
       </div>
     </div>

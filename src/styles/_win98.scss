@@ -1,0 +1,84 @@
+// Windows 98-esque skin for the app shell (form panel, buttons, inputs,
+// page background). Does NOT touch the token card itself — that already
+// has its own bespoke Magic-card styling and shouldn't look like a Windows
+// dialog. Adapted from the win98 theme in marquesgabriel.github.io (which
+// is coupled to that project's "window" Container component); this is a
+// from-scratch equivalent sized for mtg's own layout.
+
+$win98-gray: #c0c0c0;
+$win98-dark-gray: #808080;
+$win98-darker-gray: #535050;
+$win98-titlebar-start: navy;
+$win98-titlebar-end: skyblue;
+
+@mixin win98-outset($size: 2px) {
+  border-top: $size solid #ffffff;
+  border-left: $size solid #ffffff;
+  border-right: $size solid $win98-dark-gray;
+  border-bottom: $size solid $win98-dark-gray;
+}
+
+@mixin win98-inset($size: 2px) {
+  border-top: $size solid $win98-dark-gray;
+  border-left: $size solid $win98-dark-gray;
+  border-right: $size solid #ffffff;
+  border-bottom: $size solid #ffffff;
+}
+
+body {
+  background-color: $win98-gray;
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+}
+
+.win98-window {
+  background: $win98-gray;
+  @include win98-outset(3px);
+  box-shadow: 1px 1px $win98-darker-gray;
+
+  &__titlebar {
+    background: linear-gradient(90deg, $win98-titlebar-start, $win98-titlebar-end);
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    padding: .35em .5em;
+    margin-bottom: .5em;
+  }
+
+  &__body {
+    padding: 0 .75em .75em;
+  }
+}
+
+// MUI overrides - targets MUI's stable public class names (safe to rely on
+// across versions), not generated emotion hashes.
+.MuiButton-root {
+  border-radius: 0 !important;
+  background-color: $win98-gray !important;
+  color: black !important;
+  box-shadow: none !important;
+  text-transform: none !important;
+  @include win98-outset(2px);
+
+  &:hover {
+    background-color: $win98-gray !important;
+  }
+
+  &:active {
+    @include win98-inset(2px);
+  }
+}
+
+.MuiInputBase-root {
+  background-color: white;
+  padding: 1px 4px !important;
+  @include win98-inset(2px);
+
+  &::before,
+  &::after {
+    display: none !important; // remove MUI's underline, the inset border replaces it
+  }
+}
+
+.MuiTypography-h4 {
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+}
