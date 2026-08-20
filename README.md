@@ -1,4 +1,4 @@
-![[CI/CD]((https://github.com/marquesgabriel/mtg-token-generator/actions/workflows/node.js.yml/badge.svg))](https://github.com/marquesgabriel/mtg-token-generator/actions/workflows/node.js.yml/badge.svg)
+[![CI](https://github.com/marquesgabriel/mtg/actions/workflows/ci.yml/badge.svg)](https://github.com/marquesgabriel/mtg/actions/workflows/ci.yml)
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/open-source.svg)](https://forthebadge.com)
@@ -15,3 +15,11 @@
 ### This is a simple MTG card token generator. the goal was to provide users a straightforward UI that would enable them to create tokens, and have that ready to be printed.
 
 This app was created using Create React App, Bootstrap, Material UI and some other libraries.
+
+### Documentation
+
+For a deeper look at the project structure, data flow and known limitations, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+### Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, PR requirements, and branching conventions.

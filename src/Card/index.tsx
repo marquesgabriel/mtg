@@ -1,9 +1,35 @@
-import { forwardRef } from 'react';
+import { forwardRef, useLayoutEffect, useRef } from 'react';
 import Cropper from "react-easy-crop";
 import moment from 'moment';
+import { parseManaSymbols } from '../utils/manaSymbols';
 import './index.scss';
 
+const DESCRIPTION_BASE_FONT_SIZE_PT = 9.5;
+const DESCRIPTION_MIN_FONT_SIZE_PT = 6;
+const DESCRIPTION_FONT_STEP_PT = 0.5;
+
 const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop, onCropComplete, setZoom, description }: any, ref: any) => {
+  const descriptionBoxRef = useRef<HTMLDivElement>(null);
+  const descriptionContentRef = useRef<HTMLDivElement>(null);
+
+  // Shrinks the description font until it fits the fixed-height box instead
+  // of overflowing and breaking the card layout (measures real DOM overflow
+  // rather than estimating from character count, since mana/tap icons take
+  // up space that character count alone doesn't capture).
+  useLayoutEffect(() => {
+    const box = descriptionBoxRef.current;
+    const content = descriptionContentRef.current;
+    if (!box || !content) return;
+
+    let fontSize = DESCRIPTION_BASE_FONT_SIZE_PT;
+    content.style.fontSize = `${fontSize}pt`;
+
+    while (content.scrollHeight > box.clientHeight && fontSize > DESCRIPTION_MIN_FONT_SIZE_PT) {
+      fontSize -= DESCRIPTION_FONT_STEP_PT;
+      content.style.fontSize = `${fontSize}pt`;
+    }
+  }, [description]);
+
   return (<div ref={ref} id="card-element" className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
     <div className={`card-inner`}>
       <div className={formik.values.cardImageSize === 'classic' ? `card-image` : `card-image-full`}>
@@ -30,13 +56,17 @@ const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop
           {formik.values.name}
         </div>
       </div>
+      {formik.values.manaCost && <div
+        className='card-mana-cost'
+        dangerouslySetInnerHTML={{ __html: parseManaSymbols(formik.values.manaCost) }}
+      />}
       <div className={`card-type rounded-sides-inset ${!formik.values.description ? 'descriptionless' : ''}`}>
         <div className="ps-2">
           {formik.values.superType ? `${formik.values.superType} ` : null}{formik.values.type} {formik.values.subType ? ` - ${formik.values.subType}` : null}
         </div>
       </div>
-      {description && <div className='card-description'>
-        <div dangerouslySetInnerHTML={{ __html: description }} />
+      {description && <div className='card-description' ref={descriptionBoxRef}>
+        <div ref={descriptionContentRef} dangerouslySetInnerHTML={{ __html: description }} />
       </div>}
       {formik.values.power ? <div className='card-pw rounded-sides-inset'>
         <div>

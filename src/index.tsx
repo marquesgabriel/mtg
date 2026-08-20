@@ -7,6 +7,10 @@ import 'mana-font/css/mana.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+const appVersion = process.env.REACT_APP_VERSION ?? 'unknown';
+(window as any).APP_VERSION = appVersion;
+console.log(`App version: ${appVersion} (also available as window.APP_VERSION)`);
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

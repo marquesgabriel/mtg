@@ -1,0 +1,42 @@
+# Runs on every Pull Request targeting main: installs dependencies, builds,
+# and runs tests. Never deploys — deployment only happens on push to main
+# (see deploy.yml).
+
+name: CI
+
+on:
+  pull_request:
+    branches: [ "main", "release/**" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      # `yarn format:check` isn't wired in yet — the codebase predates
+      # Prettier and running --check today would fail on ~every existing
+      # file, unrelated to whatever a given PR actually changed. Enable
+      # once a dedicated full-repo reformat PR lands (see issue #15).
+
+      - name: Build App
+        run: yarn build
+
+      - name: Run tests
+        run: yarn test --watchAll=false
