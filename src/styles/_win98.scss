@@ -61,24 +61,17 @@ div.container-wrapper {
       @include win98-outset(2px);
       height: 18px;
       width: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      font-size: 11px;
+      text-align: center;
       color: black;
-
-      &::before {
-        content: '';
-      }
     }
 
     .minimize-btn {
       right: 3.15em;
 
       &::before {
-        content: '_';
-        align-self: flex-end;
+        content: '__';
+        bottom: 2px;
+        position: relative;
       }
     }
 
@@ -87,6 +80,8 @@ div.container-wrapper {
 
       &::before {
         content: '◻';
+        bottom: 2px;
+        position: relative;
       }
     }
 
@@ -95,6 +90,8 @@ div.container-wrapper {
 
       &::before {
         content: '✕';
+        bottom: 2px;
+        position: relative;
       }
     }
   }
