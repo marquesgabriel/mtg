@@ -26,6 +26,7 @@ import getCroppedImg from './utils/cropper';
 import DownloadAsButton from './DownloadAsButton';
 import DescriptionTooltip from './Descriptiontooltip';
 import { parseManaSymbols } from './utils/manaSymbols';
+import SupportSidebar from './SupportSidebar';
 
 // Only text/selection fields are persisted — the uploaded image/crop is a
 // blob URL (URL.createObjectURL) that doesn't survive a reload, so it's
@@ -234,7 +235,7 @@ function App() {
   return (
     <div className='container'>
       <div className="row">
-        <div className="card-inputs col-lg-6 col-md-12">
+        <div className="card-inputs col-lg-5 col-md-12">
           {/* TODO create guide for special symbols */}
           <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
@@ -540,10 +541,13 @@ function App() {
             </form>
           </FormikProvider>
         </div>
-        <div className='card-renderer col-lg-6 col-md-12'>
+        <div className='card-renderer col-lg-5 col-md-12'>
           <div className='d-flex p-2 justify-content-center bg-secondary h-100 align-items-center'>
             <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} ref={printRef} />
           </div>
+        </div>
+        <div className='col-lg-2 col-md-12'>
+          <SupportSidebar />
         </div>
       </div>
     </div>
