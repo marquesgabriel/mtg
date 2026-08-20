@@ -7354,12 +7354,12 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-react-easy-crop@^5.0.6:
-  version "5.0.6"
-  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-5.0.6.tgz#bf95235e0ed043cadbf11c30900b9526d7bda241"
+react-easy-crop@^6.2.3:
+  version "6.2.3"
+  resolved "https://registry.yarnpkg.com/react-easy-crop/-/react-easy-crop-6.2.3.tgz#5b5fb04bab2b15fc51c502611184d05f278296d0"
+  integrity sha512-ebimG3OGlzizjxEZ77Cj9CVLcg5vDZ6QVz8ud1rx4WmsCDWHIROEhgMi0GpJ/jKAuwHrH0M+QZUK4hyvxbYhOA==
   dependencies:
     normalize-wheel "^1.0.1"
-    tslib "2.0.1"
 
 react-error-overlay@^6.0.11:
   version "6.0.11"
@@ -8455,10 +8455,6 @@ tsconfig-paths@^3.15.0:
     json5 "^1.0.2"
     minimist "^1.2.6"
     strip-bom "^3.0.0"
-
-tslib@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
 
 tslib@^1.8.1:
   version "1.14.1"
