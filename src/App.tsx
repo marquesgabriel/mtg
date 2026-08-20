@@ -186,9 +186,11 @@ function App() {
       ...initialDraft,
     },
     validationSchema: form,
-    onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
-    },
+    // No real submit action — exporting the card happens via DownloadAsButton,
+    // not this form. Kept as a no-op (rather than removing <form>/onSubmit
+    // entirely) so formik.handleSubmit still preventDefaults an Enter-key
+    // submit in a text field, avoiding a full page reload.
+    onSubmit: () => {},
   });
 
   // Debounced auto-save of the text/selection fields (see loadDraft/saveDraft above).
