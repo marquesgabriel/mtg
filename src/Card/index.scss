@@ -118,8 +118,6 @@
     border-bottom-left-radius: 10mm;
     border-bottom-right-radius: 10mm;
 
-    // background-color: white;
-
     height: 85mm;
 
     overflow: hidden;
@@ -133,10 +131,6 @@
       left: 7%;
       border-style: inset;
       border-width: 3px;
-      // outline: solid 1px rgba(0, 0, 0, .4);
-
-      // border-top-left-radius: 70% 50%;
-      // border-top-right-radius: 70% 50%;
 
       z-index: 4;
 
@@ -152,10 +146,6 @@
           transform: translateY(-50%);
           max-width: 100%;
         }
-
-        // border: solid 1px black;
-        // border-top-left-radius: 77% 53%;
-        // border-top-right-radius: 77% 53%;
       }
     }
 
@@ -194,8 +184,6 @@
   .card-description,
   .card-type,
   .card-pw {
-    // outline: 1px groove rgba(0, 0, 0, .3);
-
     &.card-name,
     &.card-type {
       text-transform: capitalize;
@@ -282,10 +270,6 @@
     border-bottom-right-radius: 6% 42%;
 
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    // &::before {
-    //   content: "";
-    //   mask-composite: exclude;
-    // }
 
     &>div {
       border: solid 1px black;
