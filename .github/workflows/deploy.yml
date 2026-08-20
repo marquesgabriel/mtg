@@ -1,0 +1,41 @@
+# Runs only on push to main (i.e. after a PR merges): installs dependencies,
+# builds, and deploys to GitHub Pages. Never runs on pull_request — see
+# ci.yml for the PR-time build+test check.
+
+name: Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build App
+        run: yarn build
+        env:
+          REACT_APP_ADSENSE_PUBLISHER_ID: ${{ vars.REACT_APP_ADSENSE_PUBLISHER_ID }}
+
+      - name: Deploy
+        run: |
+          git config --global user.name $user_name
+          git config --global user.email $user_email
+          git remote set-url origin https://${github_token}@github.com/${repository}
+          yarn deploy
+        env:
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          github_token: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
+          repository: ${{ github.repository }}

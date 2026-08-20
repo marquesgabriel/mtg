@@ -1,0 +1,162 @@
+// Windows 98-esque skin for the app shell (form panel, buttons, inputs,
+// page background). Does NOT touch the token card itself — that already
+// has its own bespoke Magic-card styling and shouldn't look like a Windows
+// dialog.
+//
+// The .container-wrapper/.title/.minimize-btn/.maximize-btn/.close-btn/
+// .c-container rules below are ported directly from marquesgabriel.github.io's
+// win98.scss (src/Container.tsx here is likewise a trimmed port of that
+// project's Container component) - kept as the SAME class names/component
+// contract on purpose, per the project-scaffold standard, instead of
+// reinventing an equivalent. Portfolio-specific rules from that file (the
+// language/style switcher bar, the profile-photo ".image" modifier, timeline
+// entries, etc.) are intentionally NOT ported - mtg has no equivalent UI.
+
+$win98-gray: #c0c0c0;
+$win98-dark-gray: #808080;
+$win98-darker-gray: #535050;
+$win98-titlebar-start: navy;
+$win98-titlebar-end: skyblue;
+
+@mixin win98-outset($size: 2px) {
+  border-top: $size solid #ffffff;
+  border-left: $size solid #ffffff;
+  border-right: $size solid $win98-dark-gray;
+  border-bottom: $size solid $win98-dark-gray;
+}
+
+@mixin win98-inset($size: 2px) {
+  border-top: $size solid $win98-dark-gray;
+  border-left: $size solid $win98-dark-gray;
+  border-right: $size solid #ffffff;
+  border-bottom: $size solid #ffffff;
+}
+
+body {
+  background-color: $win98-gray;
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+}
+
+div.container-wrapper {
+  margin: 1em 1em;
+  border: outset 3px gray;
+  border-top: outset 3px white;
+  border-left: outset 3px white;
+  background: $win98-gray;
+  box-shadow: 1px 1px $win98-darker-gray;
+
+  & > .title {
+    padding: .25em;
+    font-weight: bold;
+    background: linear-gradient(90deg, $win98-titlebar-start, $win98-titlebar-end);
+    color: white;
+    position: relative;
+
+    .minimize-btn,
+    .maximize-btn,
+    .close-btn {
+      position: absolute;
+      top: 2px;
+      background: $win98-gray;
+      @include win98-outset(2px);
+      height: 18px;
+      width: 18px;
+      text-align: center;
+      color: black;
+    }
+
+    .minimize-btn {
+      right: 3.15em;
+
+      &::before {
+        content: '_';
+        bottom: 2px;
+        position: relative;
+      }
+    }
+
+    .maximize-btn {
+      right: 1.7em;
+
+      &::before {
+        content: '◻';
+        bottom: 2px;
+        position: relative;
+      }
+    }
+
+    .close-btn {
+      right: .25em;
+
+      &::before {
+        content: '✕';
+        bottom: 2px;
+        position: relative;
+      }
+    }
+  }
+
+  .c-container {
+    padding: .5em;
+  }
+}
+
+// MUI overrides - targets MUI's stable public class names (safe to rely on
+// across versions), not generated emotion hashes.
+.MuiButton-root {
+  border-radius: 0 !important;
+  background-color: $win98-gray !important;
+  color: black !important;
+  box-shadow: none !important;
+  text-transform: none !important;
+  @include win98-outset(2px);
+
+  &:hover {
+    background-color: $win98-gray !important;
+  }
+
+  &:active {
+    @include win98-inset(2px);
+  }
+}
+
+.MuiInputBase-root {
+  background-color: white;
+  padding: 1px 4px !important;
+  @include win98-inset(2px);
+
+  &::before,
+  &::after {
+    display: none !important; // remove MUI's underline, the inset border replaces it
+  }
+}
+
+// MUI's default label colors (gray unfocused, theme-blue focused) were hard
+// to read against the win98 gray panel background - force a single legible
+// color instead of MUI's default focus/unfocused color swap.
+.MuiFormLabel-root {
+  color: black !important;
+
+  &.Mui-focused {
+    color: black !important;
+  }
+}
+
+.MuiTypography-h4 {
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+}
+
+// TextField's InputLabel overlaps its input at rest (unshrunk) and sits
+// behind .MuiInputBase-root's opaque white background - invisible for any
+// field that's empty by default (Mana Cost, Description, Artist) since it
+// never gets the "shrink" state MUI toggles on for focus/value. Force it to
+// always render in the compact, above-input position instead.
+.MuiFormControl-root .MuiInputLabel-root {
+  transform: translate(0, -1.5px) scale(0.75) !important;
+  transform-origin: top left;
+}
+
+// The Download/Reset action row otherwise sits flush against the field above it.
+.card-actions-row {
+  margin-top: 1em;
+}

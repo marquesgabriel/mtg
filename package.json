@@ -1,7 +1,7 @@
 {
   "name": "token-generator",
   "homepage": "https://mtg.marquesgabriel.com.br",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -30,10 +30,16 @@
     "yup": "^1.4.0"
   },
   "scripts": {
+    "prestart": "node scripts/inject-version.js",
     "start": "react-scripts start",
+    "prebuild": "node scripts/inject-version.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint src --ext .ts,.tsx",
+    "format": "prettier --write \"src/**/*.{ts,tsx,scss}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,scss}\"",
+    "commit": "git-cz",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -57,6 +63,8 @@
   },
   "devDependencies": {
     "@types/dom-to-image": "^2.6.7",
-    "gh-pages": "^6.1.1"
+    "gh-pages": "^6.1.1",
+    "git-cz": "^4.9.0",
+    "prettier": "3.9.6"
   }
 }
