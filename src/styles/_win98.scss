@@ -69,7 +69,7 @@ div.container-wrapper {
       right: 3.15em;
 
       &::before {
-        content: '__';
+        content: '_';
         bottom: 2px;
         position: relative;
       }
@@ -144,6 +144,16 @@ div.container-wrapper {
 
 .MuiTypography-h4 {
   font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+}
+
+// TextField's InputLabel overlaps its input at rest (unshrunk) and sits
+// behind .MuiInputBase-root's opaque white background - invisible for any
+// field that's empty by default (Mana Cost, Description, Artist) since it
+// never gets the "shrink" state MUI toggles on for focus/value. Force it to
+// always render in the compact, above-input position instead.
+.MuiFormControl-root .MuiInputLabel-root {
+  transform: translate(0, -1.5px) scale(0.75) !important;
+  transform-origin: top left;
 }
 
 // The Download/Reset action row otherwise sits flush against the field above it.

@@ -211,7 +211,7 @@ function App() {
 
   return (
     <div className='container'>
-      <div className="row">
+      <div className="row gy-4">
         <div className="card-inputs col-lg-5 col-md-12">
           <Container title="MTG Token Generator">
             <FormikProvider value={formik}>
