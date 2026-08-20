@@ -25,7 +25,7 @@ const VisuallyHiddenInput = styled('input')({
 
 export default function ImageUploadSection({ formik, zoom, setZoom, cropMyImage, handlePickedImage }: any) {
   return (
-    <div className='row pt-2 pb-2'>
+    <div className='row pt-2 pb-2 gy-3'>
       <div className='col-12'>
         <Typography variant="h4" gutterBottom>
           Image upload and edit

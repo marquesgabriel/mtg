@@ -1,5 +1,6 @@
 @import './styles/_fonts';
 @import './styles/_colors';
+@import './styles/_win98';
 
 i.ms {
   font-size: 8pt;
@@ -73,10 +74,6 @@ i.ms.ms-text {
   &.black {
     color: white;
   }
-}
-
-.card-renderer {
-  background-color: lightgray;
 }
 
 .h-100 {

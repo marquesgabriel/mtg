@@ -6,7 +6,7 @@ import DescriptionTooltip from './Descriptiontooltip';
 
 export default function CardDataSection({ formik, parseDescription, downloadAs, handleReset }: any) {
   return (
-    <div className='row pt-2 pb-2'>
+    <div className='row pt-2 pb-2 gy-3'>
       <div className='col-12'>
         <Typography variant="h4" gutterBottom>
           Card data
@@ -138,7 +138,7 @@ export default function CardDataSection({ formik, parseDescription, downloadAs, 
           />
         </div>
       </div>
-      <div className='row'>
+      <div className='row card-actions-row'>
         <div className='col-12 d-flex justify-content-between align-items-start'>
           <DownloadAsButton downloadAs={downloadAs} />
           <Button className='pt-2' variant="outlined" color="error" size='small' onClick={handleReset}>

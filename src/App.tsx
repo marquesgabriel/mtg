@@ -13,6 +13,7 @@ import SupportSidebar from './SupportSidebar';
 import CardStyleSection from './CardStyleSection';
 import ImageUploadSection from './ImageUploadSection';
 import CardDataSection from './CardDataSection';
+import Container from './Container';
 
 // Only text/selection fields are persisted — the uploaded image/crop is a
 // blob URL (URL.createObjectURL) that doesn't survive a reload, so it's
@@ -210,36 +211,42 @@ function App() {
 
   return (
     <div className='container'>
-      <div className="row">
+      <div className="row gy-4">
         <div className="card-inputs col-lg-5 col-md-12">
-          <FormikProvider value={formik}>
-            <form onSubmit={formik.handleSubmit}>
-              <CardStyleSection formik={formik} />
-              <Divider />
-              <ImageUploadSection
-                formik={formik}
-                zoom={zoom}
-                setZoom={setZoom}
-                cropMyImage={cropMyImage}
-                handlePickedImage={handlePickedImage}
-              />
-              <Divider />
-              <CardDataSection
-                formik={formik}
-                parseDescription={parseDescription}
-                downloadAs={downloadAs}
-                handleReset={handleReset}
-              />
-            </form>
-          </FormikProvider>
+          <Container title="MTG Token Generator">
+            <FormikProvider value={formik}>
+              <form onSubmit={formik.handleSubmit}>
+                <CardStyleSection formik={formik} />
+                <Divider />
+                <ImageUploadSection
+                  formik={formik}
+                  zoom={zoom}
+                  setZoom={setZoom}
+                  cropMyImage={cropMyImage}
+                  handlePickedImage={handlePickedImage}
+                />
+                <Divider />
+                <CardDataSection
+                  formik={formik}
+                  parseDescription={parseDescription}
+                  downloadAs={downloadAs}
+                  handleReset={handleReset}
+                />
+              </form>
+            </FormikProvider>
+          </Container>
         </div>
         <div className='card-renderer col-lg-5 col-md-12'>
-          <div className='d-flex p-2 justify-content-center bg-secondary h-100 align-items-center'>
-            <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} ref={printRef} />
-          </div>
+          <Container title="Preview" classes="h-100">
+            <div className='d-flex p-2 justify-content-center bg-secondary h-100 align-items-center'>
+              <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} ref={printRef} />
+            </div>
+          </Container>
         </div>
         <div className='col-lg-2 col-md-12'>
-          <SupportSidebar />
+          <Container title="Support" barButtons="close-only">
+            <SupportSidebar />
+          </Container>
         </div>
       </div>
     </div>

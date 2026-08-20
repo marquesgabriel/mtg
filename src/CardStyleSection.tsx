@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 export default function CardStyleSection({ formik }: any) {
   return (
-    <div className='row pb-2'>
+    <div className='row pb-2 gy-3'>
       <div className='col-12'>
         <Typography variant="h4" gutterBottom>
           Card border and color
