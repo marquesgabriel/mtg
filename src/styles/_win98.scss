@@ -38,7 +38,7 @@ body {
 }
 
 div.container-wrapper {
-  margin: 1em .5em;
+  margin: 1em 1em;
   border: outset 3px gray;
   border-top: outset 3px white;
   border-left: outset 3px white;
@@ -61,17 +61,24 @@ div.container-wrapper {
       @include win98-outset(2px);
       height: 18px;
       width: 18px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      font-size: 11px;
       color: black;
+
+      &::before {
+        content: '';
+      }
     }
 
     .minimize-btn {
       right: 3.15em;
 
       &::before {
-        content: '__';
-        bottom: 2px;
-        position: relative;
+        content: '_';
+        align-self: flex-end;
       }
     }
 
@@ -80,8 +87,6 @@ div.container-wrapper {
 
       &::before {
         content: '◻';
-        bottom: 2px;
-        position: relative;
       }
     }
 
@@ -90,8 +95,6 @@ div.container-wrapper {
 
       &::before {
         content: '✕';
-        bottom: 2px;
-        position: relative;
       }
     }
   }
@@ -131,6 +134,22 @@ div.container-wrapper {
   }
 }
 
+// MUI's default label colors (gray unfocused, theme-blue focused) were hard
+// to read against the win98 gray panel background - force a single legible
+// color instead of MUI's default focus/unfocused color swap.
+.MuiFormLabel-root {
+  color: black !important;
+
+  &.Mui-focused {
+    color: black !important;
+  }
+}
+
 .MuiTypography-h4 {
   font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+}
+
+// The Download/Reset action row otherwise sits flush against the field above it.
+.card-actions-row {
+  margin-top: 1em;
 }

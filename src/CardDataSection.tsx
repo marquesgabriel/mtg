@@ -138,7 +138,7 @@ export default function CardDataSection({ formik, parseDescription, downloadAs, 
           />
         </div>
       </div>
-      <div className='row'>
+      <div className='row card-actions-row'>
         <div className='col-12 d-flex justify-content-between align-items-start'>
           <DownloadAsButton downloadAs={downloadAs} />
           <Button className='pt-2' variant="outlined" color="error" size='small' onClick={handleReset}>
