@@ -1,0 +1,63 @@
+// Layout for the printable sheet of tokens (#10). TokenCard's own root
+// (.card-wrapper, src/Card/index.scss) is already sized at real card
+// dimensions (63.5mm x 88.9mm), so the grid below just arranges that many
+// of them per page - no scaling needed for the print to come out true size.
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  // The dialog is rendered in a portal alongside the rest of the app (the
+  // form/preview/support panels) - without this, printing would include
+  // that underlying page content bleeding through around/after the sheet,
+  // not just the sheet itself. Hide everything, then re-reveal only the
+  // print-sheet subtree.
+  body * {
+    visibility: hidden;
+  }
+
+  .print-sheet,
+  .print-sheet * {
+    visibility: visible;
+  }
+
+  .print-sheet {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.print-sheet__page {
+  display: grid;
+  grid-template-columns: repeat(3, 63.5mm);
+  grid-auto-rows: 88.9mm;
+  gap: 2mm;
+  justify-content: center;
+  margin: 0 auto 10mm;
+  page-break-after: always;
+
+  &:last-child {
+    page-break-after: auto;
+  }
+}
+
+// assets/svg/card-back.svg is a full A4 page (210mm x 297mm) with a single
+// card back positioned at (73.25mm, 104.05mm) within it, not a standalone
+// card-sized asset. Since the SVG and this container are both real mm
+// units, displaying it at its natural size (background-size) and shifting
+// by the card's offset (background-position) crops it down to just the
+// card art, 1:1, no separate cropped asset needed.
+.print-sheet__card--back {
+  background-image: url('./assets/svg/card-back.svg');
+  background-size: 210mm 297mm;
+  background-position: -73.25mm -104.05mm;
+  border-radius: 3.5mm;
+  overflow: hidden;
+}

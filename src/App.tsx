@@ -10,45 +10,22 @@ import Alert from '@mui/material/Alert';
 
 import './App.scss';
 import TokenCard from './Card';
-import getCroppedImg from './utils/cropper';
+import getCroppedImg, { getCroppedImgDataUrl } from './utils/cropper';
 import { parseManaSymbols } from './utils/manaSymbols';
 import { safeStorageGet, safeStorageSet, safeStorageRemove } from './utils/safeStorage';
+import { DEFAULT_TOKEN_VALUES as DEFAULT_VALUES, TOKEN_FIELD_KEYS as PERSISTED_FIELDS } from './utils/tokenFields';
+import { serializeToken, isValidTokenFile, tokenValuesFromFile } from './utils/tokenFile';
+import { GalleryEntry, loadGallery, addToGallery, removeFromGallery, updateGalleryEntryCopies } from './utils/gallery';
 import SupportSidebar from './SupportSidebar';
 import CardStyleSection from './CardStyleSection';
 import ImageUploadSection from './ImageUploadSection';
 import CardDataSection from './CardDataSection';
+import GalleryDialog from './GalleryDialog';
+import PrintSheetDialog from './PrintSheetDialog';
 import Container from './Container';
 
 const DRAFT_STORAGE_KEY = 'mtg-token-generator:draft';
 const DEFAULT_IMAGE = "https://images.theconversation.com/files/123291/original/image-20160520-4451-87u0j1.jpg";
-
-const DEFAULT_VALUES = {
-  name: "rat",
-  superType: "token",
-  type: "creature",
-  subType: "rat",
-  description: "",
-  manaCost: "",
-  artist: "",
-  power: "1",
-  toughness: "1",
-  image: "",
-  cardBorder: "black",
-  cardTexture: "texture6",
-  cardColor: "black",
-  cardImageSize: "full-art",
-};
-
-// Every formik field is persisted EXCEPT the ones listed here, instead of a
-// separately hand-maintained allowlist — a new field added to DEFAULT_VALUES
-// is persisted by default, so it can't silently stop surviving a reload
-// just because someone forgot to also update a second list (see #57).
-// `image` is excluded because the uploaded image/crop is a blob URL
-// (URL.createObjectURL) that doesn't survive a reload anyway (see #3).
-const NON_PERSISTED_FIELDS = ['image'] as const;
-const PERSISTED_FIELDS = (Object.keys(DEFAULT_VALUES) as (keyof typeof DEFAULT_VALUES)[]).filter(
-  (field) => !(NON_PERSISTED_FIELDS as readonly string[]).includes(field)
-);
 
 function loadDraft(): Partial<Record<typeof PERSISTED_FIELDS[number], string>> {
   try {
@@ -78,7 +55,10 @@ function App() {
   };
   const [image, setImage] = useState(DEFAULT_IMAGE);
   const [description, setDescription] = useState(() => parseManaSymbols(initialDraft.description ?? ""));
-  const [downloadFeedback, setDownloadFeedback] = useState(false);
+  const [feedback, setFeedback] = useState<{ message: string; severity: 'success' | 'error' } | null>(null);
+  const [gallery, setGallery] = useState<GalleryEntry[]>(() => loadGallery());
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [printSheetOpen, setPrintSheetOpen] = useState(false);
 
   // Applies the current crop/zoom selection, replacing the interactive
   // Cropper (react-easy-crop) with the cropped result in the preview. Runs
@@ -136,7 +116,7 @@ function App() {
       link.download = filename;
       link.href = dataUrl;
       link.click();
-      setDownloadFeedback(true);
+      setFeedback({ message: 'Download started', severity: 'success' });
     };
 
     switch (ext) {
@@ -161,6 +141,77 @@ function App() {
   const parseDescription = (e: any) => {
     setDescription(parseManaSymbols(e.target.value));
   }
+
+  // Exports the current form fields (not the image - see utils/tokenFields)
+  // as a downloadable JSON file, so a token-in-progress can be picked back
+  // up later without redoing the whole form (#6). Complements the
+  // localStorage draft, which only survives in this browser.
+  const saveAsJson = () => {
+    const file = serializeToken(formik.values);
+    const blob = new Blob([JSON.stringify(file, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = `${formik.values.name || 'token'}.json`;
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
+    setFeedback({ message: 'Token saved as JSON', severity: 'success' });
+  };
+
+  const loadFromJson = (event: any) => {
+    const inputFile = event.target.files[0];
+    event.target.value = ''; // allow re-selecting the same file later
+    if (!inputFile) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result as string);
+        if (!isValidTokenFile(parsed)) {
+          setFeedback({ message: 'That file is not a valid token JSON', severity: 'error' });
+          return;
+        }
+        const values = tokenValuesFromFile(parsed);
+        formik.setValues({ ...formik.values, ...values });
+        setDescription(parseManaSymbols(values.description));
+        setFeedback({ message: 'Token loaded from JSON', severity: 'success' });
+      } catch {
+        setFeedback({ message: 'That file is not a valid token JSON', severity: 'error' });
+      }
+    };
+    reader.readAsText(inputFile);
+  };
+
+  // The gallery (#7) is a separate, in-app persisted list of tokens -
+  // unlike JSON save/load (#6), no file dialog is involved, and each entry
+  // tracks a "copies" count consumed by the print-sheet feature (#10). The
+  // art is captured as a base64 data URL (not the live blob URL, which is
+  // revoked/invalid after a reload) via the same crop pipeline downloadAs
+  // uses, so a gallery entry always stores the cropped result even if the
+  // user never explicitly exported.
+  const saveToGallery = async () => {
+    const { token } = serializeToken(formik.values);
+    const croppedDataUrl = await getCroppedImgDataUrl(image, croppedArea, 0);
+    setGallery(addToGallery(token, croppedDataUrl ?? ''));
+    setFeedback({ message: 'Saved to gallery', severity: 'success' });
+  };
+
+  const loadGalleryEntry = (entry: GalleryEntry) => {
+    formik.setValues({ ...formik.values, ...entry.token });
+    setDescription(parseManaSymbols(entry.token.description));
+    setImage(entry.image);
+    setCroppedImage(entry.image);
+    setGalleryOpen(false);
+    setFeedback({ message: 'Token loaded from gallery', severity: 'success' });
+  };
+
+  const deleteGalleryEntry = (id: string) => {
+    setGallery(removeFromGallery(id));
+  };
+
+  const changeGalleryEntryCopies = (id: string, copies: number) => {
+    setGallery(updateGalleryEntryCopies(id, copies));
+  };
 
   const form = yup.object({
     name: yup.string().required("This field is required"),
@@ -239,6 +290,11 @@ function App() {
                   parseDescription={parseDescription}
                   downloadAs={downloadAs}
                   handleReset={handleReset}
+                  saveAsJson={saveAsJson}
+                  loadFromJson={loadFromJson}
+                  saveToGallery={saveToGallery}
+                  openGallery={() => setGalleryOpen(true)}
+                  galleryCount={gallery.length}
                 />
               </form>
             </FormikProvider>
@@ -258,15 +314,29 @@ function App() {
         </div>
       </div>
       <Snackbar
-        open={downloadFeedback}
+        open={!!feedback}
         autoHideDuration={3000}
-        onClose={() => setDownloadFeedback(false)}
+        onClose={() => setFeedback(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert onClose={() => setDownloadFeedback(false)} severity="success" variant="filled">
-          Download started
+        <Alert onClose={() => setFeedback(null)} severity={feedback?.severity ?? 'success'} variant="filled">
+          {feedback?.message}
         </Alert>
       </Snackbar>
+      <GalleryDialog
+        open={galleryOpen}
+        onClose={() => setGalleryOpen(false)}
+        entries={gallery}
+        onLoad={loadGalleryEntry}
+        onDelete={deleteGalleryEntry}
+        onCopiesChange={changeGalleryEntryCopies}
+        onPrintSheet={() => { setGalleryOpen(false); setPrintSheetOpen(true); }}
+      />
+      <PrintSheetDialog
+        open={printSheetOpen}
+        onClose={() => setPrintSheetOpen(false)}
+        entries={gallery}
+      />
     </div>
   );
 }
