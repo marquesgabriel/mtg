@@ -10,15 +10,18 @@ import Alert from '@mui/material/Alert';
 
 import './App.scss';
 import TokenCard from './Card';
-import getCroppedImg from './utils/cropper';
+import getCroppedImg, { getCroppedImgDataUrl } from './utils/cropper';
 import { parseManaSymbols } from './utils/manaSymbols';
 import { safeStorageGet, safeStorageSet, safeStorageRemove } from './utils/safeStorage';
 import { DEFAULT_TOKEN_VALUES as DEFAULT_VALUES, TOKEN_FIELD_KEYS as PERSISTED_FIELDS } from './utils/tokenFields';
 import { serializeToken, isValidTokenFile, tokenValuesFromFile } from './utils/tokenFile';
+import { GalleryEntry, loadGallery, addToGallery, removeFromGallery, updateGalleryEntryCopies } from './utils/gallery';
 import SupportSidebar from './SupportSidebar';
 import CardStyleSection from './CardStyleSection';
 import ImageUploadSection from './ImageUploadSection';
 import CardDataSection from './CardDataSection';
+import GalleryDialog from './GalleryDialog';
+import PrintSheetDialog from './PrintSheetDialog';
 import Container from './Container';
 
 const DRAFT_STORAGE_KEY = 'mtg-token-generator:draft';
@@ -53,6 +56,9 @@ function App() {
   const [image, setImage] = useState(DEFAULT_IMAGE);
   const [description, setDescription] = useState(() => parseManaSymbols(initialDraft.description ?? ""));
   const [feedback, setFeedback] = useState<{ message: string; severity: 'success' | 'error' } | null>(null);
+  const [gallery, setGallery] = useState<GalleryEntry[]>(() => loadGallery());
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [printSheetOpen, setPrintSheetOpen] = useState(false);
 
   // Applies the current crop/zoom selection, replacing the interactive
   // Cropper (react-easy-crop) with the cropped result in the preview. Runs
@@ -176,6 +182,37 @@ function App() {
     reader.readAsText(inputFile);
   };
 
+  // The gallery (#7) is a separate, in-app persisted list of tokens -
+  // unlike JSON save/load (#6), no file dialog is involved, and each entry
+  // tracks a "copies" count consumed by the print-sheet feature (#10). The
+  // art is captured as a base64 data URL (not the live blob URL, which is
+  // revoked/invalid after a reload) via the same crop pipeline downloadAs
+  // uses, so a gallery entry always stores the cropped result even if the
+  // user never explicitly exported.
+  const saveToGallery = async () => {
+    const { token } = serializeToken(formik.values);
+    const croppedDataUrl = await getCroppedImgDataUrl(image, croppedArea, 0);
+    setGallery(addToGallery(token, croppedDataUrl ?? ''));
+    setFeedback({ message: 'Saved to gallery', severity: 'success' });
+  };
+
+  const loadGalleryEntry = (entry: GalleryEntry) => {
+    formik.setValues({ ...formik.values, ...entry.token });
+    setDescription(parseManaSymbols(entry.token.description));
+    setImage(entry.image);
+    setCroppedImage(entry.image);
+    setGalleryOpen(false);
+    setFeedback({ message: 'Token loaded from gallery', severity: 'success' });
+  };
+
+  const deleteGalleryEntry = (id: string) => {
+    setGallery(removeFromGallery(id));
+  };
+
+  const changeGalleryEntryCopies = (id: string, copies: number) => {
+    setGallery(updateGalleryEntryCopies(id, copies));
+  };
+
   const form = yup.object({
     name: yup.string().required("This field is required"),
     superType: yup.string().nullable(),
@@ -255,6 +292,9 @@ function App() {
                   handleReset={handleReset}
                   saveAsJson={saveAsJson}
                   loadFromJson={loadFromJson}
+                  saveToGallery={saveToGallery}
+                  openGallery={() => setGalleryOpen(true)}
+                  galleryCount={gallery.length}
                 />
               </form>
             </FormikProvider>
@@ -283,6 +323,20 @@ function App() {
           {feedback?.message}
         </Alert>
       </Snackbar>
+      <GalleryDialog
+        open={galleryOpen}
+        onClose={() => setGalleryOpen(false)}
+        entries={gallery}
+        onLoad={loadGalleryEntry}
+        onDelete={deleteGalleryEntry}
+        onCopiesChange={changeGalleryEntryCopies}
+        onPrintSheet={() => { setGalleryOpen(false); setPrintSheetOpen(true); }}
+      />
+      <PrintSheetDialog
+        open={printSheetOpen}
+        onClose={() => setPrintSheetOpen(false)}
+        entries={gallery}
+      />
     </div>
   );
 }
