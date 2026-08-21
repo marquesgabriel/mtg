@@ -1,6 +1,8 @@
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,15 +13,17 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
+import PrintIcon from '@mui/icons-material/Print';
 import { GalleryEntry } from './utils/gallery';
 
-export default function GalleryDialog({ open, onClose, entries, onLoad, onDelete, onCopiesChange }: {
+export default function GalleryDialog({ open, onClose, entries, onLoad, onDelete, onCopiesChange, onPrintSheet }: {
   open: boolean;
   onClose: () => void;
   entries: GalleryEntry[];
   onLoad: (entry: GalleryEntry) => void;
   onDelete: (id: string) => void;
   onCopiesChange: (id: string, copies: number) => void;
+  onPrintSheet: () => void;
 }) {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -69,6 +73,17 @@ export default function GalleryDialog({ open, onClose, entries, onLoad, onDelete
           </List>
         )}
       </DialogContent>
+      <DialogActions>
+        <Button
+          type="button"
+          variant="contained"
+          startIcon={<PrintIcon />}
+          disabled={entries.length === 0}
+          onClick={onPrintSheet}
+        >
+          Print Sheet
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }

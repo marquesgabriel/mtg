@@ -8,7 +8,7 @@ const DESCRIPTION_BASE_FONT_SIZE_PT = 9.5;
 const DESCRIPTION_MIN_FONT_SIZE_PT = 6;
 const DESCRIPTION_FONT_STEP_PT = 0.5;
 
-const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop, onCropComplete, setZoom, description }: any, ref: any) => {
+const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop, onCropComplete, setZoom, description, id = "card-element" }: any, ref: any) => {
   const descriptionBoxRef = useRef<HTMLDivElement>(null);
   const descriptionContentRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +30,7 @@ const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop
     }
   }, [description]);
 
-  return (<div ref={ref} id="card-element" className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
+  return (<div ref={ref} id={id} className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
     <div className={`card-inner`}>
       <div className={formik.values.cardImageSize === 'classic' ? `card-image` : `card-image-full`}>
         <div className='image-inner'>

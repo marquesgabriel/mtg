@@ -2,6 +2,7 @@ import { loadGallery, addToGallery, removeFromGallery, updateGalleryEntryCopies 
 import { DEFAULT_TOKEN_VALUES, TokenValues } from './tokenFields';
 
 const token: TokenValues = { ...DEFAULT_TOKEN_VALUES, name: 'Elite Vanguard' } as TokenValues;
+const image = 'data:image/jpeg;base64,fake';
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -19,31 +20,32 @@ describe('loadGallery', () => {
 });
 
 describe('addToGallery', () => {
-  it('adds a new entry with a unique id, timestamp, and 1 copy by default', () => {
-    const entries = addToGallery(token);
+  it('adds a new entry with a unique id, timestamp, image, and 1 copy by default', () => {
+    const entries = addToGallery(token, image);
     expect(entries).toHaveLength(1);
     expect(entries[0].token).toEqual(token);
+    expect(entries[0].image).toBe(image);
     expect(entries[0].copies).toBe(1);
     expect(entries[0].id).toBeTruthy();
     expect(entries[0].savedAt).toBeGreaterThan(0);
   });
 
   it('persists across loadGallery calls', () => {
-    addToGallery(token);
+    addToGallery(token, image);
     expect(loadGallery()).toHaveLength(1);
   });
 
   it('appends rather than replacing existing entries', () => {
-    addToGallery(token);
-    const entries = addToGallery({ ...token, name: 'Second Token' });
+    addToGallery(token, image);
+    const entries = addToGallery({ ...token, name: 'Second Token' }, image);
     expect(entries).toHaveLength(2);
   });
 });
 
 describe('removeFromGallery', () => {
   it('removes only the matching entry', () => {
-    addToGallery(token);
-    const [second] = addToGallery({ ...token, name: 'Second' }).slice(1);
+    addToGallery(token, image);
+    const [second] = addToGallery({ ...token, name: 'Second' }, image).slice(1);
     const remaining = removeFromGallery(second.id);
     expect(remaining).toHaveLength(1);
     expect(remaining[0].token.name).toBe('Elite Vanguard');
@@ -52,19 +54,19 @@ describe('removeFromGallery', () => {
 
 describe('updateGalleryEntryCopies', () => {
   it('updates the copies count for the matching entry', () => {
-    const [entry] = addToGallery(token);
+    const [entry] = addToGallery(token, image);
     const updated = updateGalleryEntryCopies(entry.id, 4);
     expect(updated[0].copies).toBe(4);
   });
 
   it('clamps to a minimum of 1', () => {
-    const [entry] = addToGallery(token);
+    const [entry] = addToGallery(token, image);
     const updated = updateGalleryEntryCopies(entry.id, 0);
     expect(updated[0].copies).toBe(1);
   });
 
   it('falls back to 1 for a non-finite value', () => {
-    const [entry] = addToGallery(token);
+    const [entry] = addToGallery(token, image);
     const updated = updateGalleryEntryCopies(entry.id, NaN);
     expect(updated[0].copies).toBe(1);
   });

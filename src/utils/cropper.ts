@@ -25,12 +25,16 @@ export function rotateSize(width: number, height: number, rotation=0) {
   }
 }
 
-export default async function getCroppedImg(
+// Shared by getCroppedImg (blob URL - live preview) and getCroppedImgDataUrl
+// (base64 data URL - gallery persistence, #7/#10): a blob URL is revoked/
+// invalid after a reload, so anything that needs to survive localStorage
+// needs the data URL form instead.
+async function buildCroppedCanvas(
   imageSrc: string,
   pixelCrop: any,
   rotation = 0,
   flip = { horizontal: false, vertical: false }
-) {
+): Promise<HTMLCanvasElement | null> {
   const image: any = await createImage(imageSrc)
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
@@ -86,13 +90,33 @@ export default async function getCroppedImg(
     pixelCrop.height
   )
 
-  // As Base64 string
-  // return croppedCanvas.toDataURL('image/jpeg');
+  return croppedCanvas
+}
 
-  // As a blob
+export default async function getCroppedImg(
+  imageSrc: string,
+  pixelCrop: any,
+  rotation = 0,
+  flip = { horizontal: false, vertical: false }
+) {
+  const croppedCanvas = await buildCroppedCanvas(imageSrc, pixelCrop, rotation, flip)
+  if (!croppedCanvas) return null
+
   return new Promise((resolve, reject) => {
     croppedCanvas.toBlob((file: any) => {
       resolve(URL.createObjectURL(file))
     }, 'image/jpeg')
   })
+}
+
+export async function getCroppedImgDataUrl(
+  imageSrc: string,
+  pixelCrop: any,
+  rotation = 0,
+  flip = { horizontal: false, vertical: false }
+): Promise<string | null> {
+  const croppedCanvas = await buildCroppedCanvas(imageSrc, pixelCrop, rotation, flip)
+  if (!croppedCanvas) return null
+
+  return croppedCanvas.toDataURL('image/jpeg', 0.85)
 }

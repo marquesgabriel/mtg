@@ -1,0 +1,64 @@
+// Layout for the printable sheet of tokens (#10). TokenCard's own root
+// (.card-wrapper, src/Card/index.scss) is already sized at real card
+// dimensions (63.5mm x 88.9mm), so the grid below just arranges that many
+// of them per page - no scaling needed for the print to come out true size.
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  // The dialog is rendered in a portal alongside the rest of the app (the
+  // form/preview/support panels) - without this, printing would include
+  // that underlying page content bleeding through around/after the sheet,
+  // not just the sheet itself. Hide everything, then re-reveal only the
+  // print-sheet subtree.
+  body * {
+    visibility: hidden;
+  }
+
+  .print-sheet,
+  .print-sheet * {
+    visibility: visible;
+  }
+
+  .print-sheet {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.print-sheet__page {
+  display: grid;
+  grid-template-columns: repeat(3, 63.5mm);
+  grid-auto-rows: 88.9mm;
+  gap: 2mm;
+  justify-content: center;
+  margin: 0 auto 10mm;
+  page-break-after: always;
+
+  &:last-child {
+    page-break-after: auto;
+  }
+}
+
+.print-sheet__card--back {
+  border: 1px solid #000;
+  border-radius: 3.5mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+  color: #fff;
+  text-align: center;
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+  font-size: 10pt;
+  padding: 4mm;
+  box-sizing: border-box;
+}
