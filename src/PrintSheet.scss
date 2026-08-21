@@ -1,7 +1,11 @@
-// Layout for the printable sheet of tokens (#10). TokenCard's own root
-// (.card-wrapper, src/Card/index.scss) is already sized at real card
-// dimensions (63.5mm x 88.9mm), so the grid below just arranges that many
-// of them per page - no scaling needed for the print to come out true size.
+// Layout for the printable sheet of tokens (#10). Each front card is a
+// plain <img>, pre-rendered off-screen via the same dom-to-image pipeline
+// as the single-card download (see utils/renderCardImage.tsx) - not a live
+// TokenCard re-rendered inside this grid. Re-rendering TokenCard live here
+// requires this grid's CSS to exactly match the single-card live preview's
+// (sizing, box-sizing, overflow) to avoid distortion, which is exactly what
+// went wrong the first time (cards overlapping neighbors, asymmetric
+// borders) - a plain image has no such fidelity requirement.
 
 @page {
   size: A4;
@@ -34,6 +38,13 @@
   }
 }
 
+.print-sheet__loading {
+  display: flex;
+  align-items: center;
+  gap: .75em;
+  padding: 2em;
+}
+
 .print-sheet__page {
   display: grid;
   grid-template-columns: repeat(3, 63.5mm);
@@ -48,6 +59,20 @@
   }
 }
 
+.print-sheet__card {
+  width: 63.5mm;
+  height: 88.9mm;
+  overflow: hidden;
+  border-radius: 3.5mm;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
 // assets/svg/card-back.svg is a full A4 page (210mm x 297mm) with a single
 // card back positioned at (73.25mm, 104.05mm) within it, not a standalone
 // card-sized asset. Since the SVG and this container are both real mm
@@ -58,6 +83,4 @@
   background-image: url('./assets/svg/card-back.svg');
   background-size: 210mm 297mm;
   background-position: -73.25mm -104.05mm;
-  border-radius: 3.5mm;
-  overflow: hidden;
 }
