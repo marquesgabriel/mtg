@@ -48,6 +48,35 @@
   }
 }
 
+// Explicit size (not just relying on the grid cell to stretch it) plus
+// overflow:hidden on every card slot, front and back alike - TokenCard's
+// own root (.card-wrapper) has no overflow clipping of its own, so parts
+// that sit slightly outside its nominal 63.5x88.9mm box (e.g. .card-footer,
+// intentionally offset -1mm past the bottom edge) spill into the 2mm grid
+// gap and visually overlap the neighboring card once several are packed
+// tightly on a sheet - invisible in the single-card preview, obvious here.
+.print-sheet__card {
+  width: 63.5mm;
+  height: 88.9mm;
+  overflow: hidden;
+  border-radius: 3.5mm;
+
+  // .card-wrapper (src/Card/index.scss) declares width/height 63.5mm/88.9mm
+  // under the default box-sizing: content-box, so its 3mm border adds on
+  // top of that - the element actually renders at 69.5mm x 94.9mm. That's
+  // invisible in the single-card live preview (nothing clips it), but
+  // against this container's exact-size overflow:hidden box, the excess
+  // only gets cut off the right/bottom (the wrapper's top-left corner sits
+  // flush with this container's), producing a visibly thinner border on
+  // two sides instead of an even one. Forcing border-box here - scoped to
+  // the print sheet only, not touching the shared Card/index.scss - makes
+  // the wrapper's declared size its true outer size, matching this
+  // container exactly with nothing to clip.
+  .card-wrapper {
+    box-sizing: border-box;
+  }
+}
+
 // assets/svg/card-back.svg is a full A4 page (210mm x 297mm) with a single
 // card back positioned at (73.25mm, 104.05mm) within it, not a standalone
 // card-sized asset. Since the SVG and this container are both real mm
@@ -58,6 +87,4 @@
   background-image: url('./assets/svg/card-back.svg');
   background-size: 210mm 297mm;
   background-position: -73.25mm -104.05mm;
-  border-radius: 3.5mm;
-  overflow: hidden;
 }
