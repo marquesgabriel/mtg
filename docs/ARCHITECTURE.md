@@ -155,6 +155,7 @@ texto, evitando reload de página.
   simples sobre input do usuário; hoje o conteúdo é local (não enviado a
   nenhum servidor), mas é um ponto a considerar em qualquer evolução que
   envolva compartilhamento/backend.
-- A persistência de rascunho usa uma allowlist de campos (`PERSISTED_FIELDS`
-  em `App.tsx`) mantida manualmente em paralelo a `DEFAULT_VALUES` — tracked
-  em #57.
+- Salvar/carregar token como JSON (#6) está temporariamente desativado na
+  UI enquanto uma distorção na exportação da carta é investigada — o
+  formato/utilitários (`utils/tokenFields.ts`, `utils/tokenFile.ts`)
+  continuam no código, já que a galeria (#7) depende deles também.
