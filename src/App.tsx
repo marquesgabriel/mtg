@@ -9,40 +9,14 @@ import './App.scss';
 import TokenCard from './Card';
 import getCroppedImg from './utils/cropper';
 import { parseManaSymbols } from './utils/manaSymbols';
+import { safeStorageGet, safeStorageSet, safeStorageRemove } from './utils/safeStorage';
 import SupportSidebar from './SupportSidebar';
 import CardStyleSection from './CardStyleSection';
 import ImageUploadSection from './ImageUploadSection';
 import CardDataSection from './CardDataSection';
 import Container from './Container';
 
-// Only text/selection fields are persisted — the uploaded image/crop is a
-// blob URL (URL.createObjectURL) that doesn't survive a reload, so it's
-// intentionally left out (see issue #3).
 const DRAFT_STORAGE_KEY = 'mtg-token-generator:draft';
-const PERSISTED_FIELDS = [
-  'name', 'superType', 'type', 'subType', 'description', 'artist', 'manaCost',
-  'power', 'toughness', 'cardBorder', 'cardTexture', 'cardColor', 'cardImageSize',
-] as const;
-
-function loadDraft(): Partial<Record<typeof PERSISTED_FIELDS[number], string>> {
-  try {
-    const raw = window.localStorage.getItem(DRAFT_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveDraft(values: Record<string, any>) {
-  try {
-    const toSave: Record<string, any> = {};
-    PERSISTED_FIELDS.forEach((field) => { toSave[field] = values[field]; });
-    window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(toSave));
-  } catch {
-    // localStorage unavailable (private browsing, quota, etc.) — degrade silently
-  }
-}
-
 const DEFAULT_IMAGE = "https://images.theconversation.com/files/123291/original/image-20160520-4451-87u0j1.jpg";
 
 const DEFAULT_VALUES = {
@@ -61,6 +35,32 @@ const DEFAULT_VALUES = {
   cardColor: "black",
   cardImageSize: "full-art",
 };
+
+// Every formik field is persisted EXCEPT the ones listed here, instead of a
+// separately hand-maintained allowlist — a new field added to DEFAULT_VALUES
+// is persisted by default, so it can't silently stop surviving a reload
+// just because someone forgot to also update a second list (see #57).
+// `image` is excluded because the uploaded image/crop is a blob URL
+// (URL.createObjectURL) that doesn't survive a reload anyway (see #3).
+const NON_PERSISTED_FIELDS = ['image'] as const;
+const PERSISTED_FIELDS = (Object.keys(DEFAULT_VALUES) as (keyof typeof DEFAULT_VALUES)[]).filter(
+  (field) => !(NON_PERSISTED_FIELDS as readonly string[]).includes(field)
+);
+
+function loadDraft(): Partial<Record<typeof PERSISTED_FIELDS[number], string>> {
+  try {
+    const raw = safeStorageGet(DRAFT_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveDraft(values: Record<string, any>) {
+  const toSave: Record<string, any> = {};
+  PERSISTED_FIELDS.forEach((field) => { toSave[field] = values[field]; });
+  safeStorageSet(DRAFT_STORAGE_KEY, JSON.stringify(toSave));
+}
 
 function App() {
   const initialDraft = loadDraft();
@@ -192,12 +192,7 @@ function App() {
     }
 
     formik.resetForm({ values: DEFAULT_VALUES });
-
-    try {
-      window.localStorage.removeItem(DRAFT_STORAGE_KEY);
-    } catch {
-      // localStorage unavailable — nothing to clear
-    }
+    safeStorageRemove(DRAFT_STORAGE_KEY);
 
     setImage(DEFAULT_IMAGE);
     setCroppedImage(null);
