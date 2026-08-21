@@ -202,6 +202,8 @@ function App() {
     setImage(DEFAULT_IMAGE);
     setCroppedImage(null);
     setDescription('');
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
   };
 
   const handlePickedImage = (event: any) => {
