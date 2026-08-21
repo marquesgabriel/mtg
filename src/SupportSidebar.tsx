@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { safeStorageGet, safeStorageSet } from './utils/safeStorage';
 import './SupportSidebar.scss';
 
 const CONSENT_STORAGE_KEY = 'mtg-token-generator:cookie-consent';
@@ -9,12 +10,8 @@ const ADSENSE_PUBLISHER_ID = process.env.REACT_APP_ADSENSE_PUBLISHER_ID;
 type Consent = 'accepted' | 'declined' | null;
 
 function loadConsent(): Consent {
-  try {
-    const stored = window.localStorage.getItem(CONSENT_STORAGE_KEY);
-    return stored === 'accepted' || stored === 'declined' ? stored : null;
-  } catch {
-    return null;
-  }
+  const stored = safeStorageGet(CONSENT_STORAGE_KEY);
+  return stored === 'accepted' || stored === 'declined' ? stored : null;
 }
 
 // AdSense's script must only load after the user consents (legal
@@ -59,11 +56,7 @@ export default function SupportSidebar() {
 
   const handleConsent = (value: 'accepted' | 'declined') => {
     setConsent(value);
-    try {
-      window.localStorage.setItem(CONSENT_STORAGE_KEY, value);
-    } catch {
-      // localStorage unavailable — consent choice just won't persist across reloads
-    }
+    safeStorageSet(CONSENT_STORAGE_KEY, value);
   };
 
   return (

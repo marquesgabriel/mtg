@@ -1,10 +1,15 @@
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import SaveIcon from '@mui/icons-material/Save';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import FormikTextField from './FormikTextField';
 import DownloadAsButton from './DownloadAsButton';
 import DescriptionTooltip from './Descriptiontooltip';
 
-export default function CardDataSection({ formik, parseDescription, downloadAs, handleReset }: any) {
+export default function CardDataSection({
+  formik, parseDescription, downloadAs, handleReset,
+  saveToGallery, openGallery, galleryCount,
+}: any) {
   return (
     <div className='row pt-2 pb-2 gy-3'>
       <div className='col-12'>
@@ -13,135 +18,62 @@ export default function CardDataSection({ formik, parseDescription, downloadAs, 
         </Typography>
       </div>
       <div className='col-12'>
-        <TextField
-          label="Card Name"
-          variant="standard"
-          id="name"
-          name="name"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.name && Boolean(formik.errors.name)}
-          helperText={formik.touched.name && formik.errors.name}
-        />
+        <FormikTextField formik={formik} name="name" label="Card Name" />
       </div>
       <div className='col-12'>
-        <TextField
+        <FormikTextField
+          formik={formik}
+          name="manaCost"
           fullWidth
           label={<>Mana Cost<DescriptionTooltip title={"For the mana cost, put the symbols between brackets, like {`{2}{u}{u}`} or {`{x}`}"} /></>}
-          variant="standard"
-          id="manaCost"
-          name="manaCost"
-          value={formik.values.manaCost}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.manaCost && Boolean(formik.errors.manaCost)}
-          helperText={formik.touched.manaCost && formik.errors.manaCost}
         />
       </div>
       <div className='col-3'>
-        <TextField
-          label="Supertype"
-          variant="standard"
-          id="superType"
-          name="superType"
-          value={formik.values.superType}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.superType && Boolean(formik.errors.superType)}
-          helperText={formik.touched.superType && formik.errors.superType}
-        />
+        <FormikTextField formik={formik} name="superType" label="Supertype" />
       </div>
       <div className='col-5'>
-        <TextField
-          label="Type"
-          variant="standard"
-          id="type"
-          name="type"
-          value={formik.values.type}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.type && Boolean(formik.errors.type)}
-          helperText={formik.touched.type && formik.errors.type}
-        />
+        <FormikTextField formik={formik} name="type" label="Type" />
       </div>
       <div className='col-4'>
-        <TextField
-          label="Subtype"
-          variant="standard"
-          id="subType"
-          name="subType"
-          value={formik.values.subType}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.subType && Boolean(formik.errors.subType)}
-          helperText={formik.touched.subType && formik.errors.subType}
-        />
+        <FormikTextField formik={formik} name="subType" label="Subtype" />
       </div>
       <div className='row'>
         <div className='col-12'>
-          <TextField
-            fullWidth
-            label={<>Description<DescriptionTooltip /></>}
-            variant="standard"
-            id="description"
+          <FormikTextField
+            formik={formik}
             name="description"
-            multiline={true}
-            value={formik.values.description}
-            onChange={(e: any) => { formik.handleChange(e); parseDescription(e) }}
-            onBlur={formik.handleBlur}
-            error={formik.touched.description && Boolean(formik.errors.description)}
-            helperText={formik.touched.description && formik.errors.description}
+            fullWidth
+            multiline
+            label={<>Description<DescriptionTooltip /></>}
+            onChange={(e) => { formik.handleChange(e); parseDescription(e); }}
           />
         </div>
       </div>
       <div className='col-3'>
-        <TextField
-          label="Power"
-          variant="standard"
-          id="power"
-          name="power"
-          value={formik.values.power}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.power && Boolean(formik.errors.power)}
-          helperText={formik.touched.power && formik.errors.power}
-        />
+        <FormikTextField formik={formik} name="power" label="Power" />
       </div>
       <div className='col-3'>
-        <TextField
-          label="Toughness"
-          variant="standard"
-          id="toughness"
-          name="toughness"
-          value={formik.values.toughness}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.toughness && Boolean(formik.errors.toughness)}
-          helperText={formik.touched.toughness && formik.errors.toughness}
-        />
+        <FormikTextField formik={formik} name="toughness" label="Toughness" />
       </div>
       <div className='row'>
         <div className='col-12'>
-          <TextField
-            fullWidth
-            label="Artist"
-            variant="standard"
-            id="artist"
-            name="artist"
-            multiline={true}
-            value={formik.values.artist}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.artist && Boolean(formik.errors.artist)}
-            helperText={formik.touched.artist && formik.errors.artist}
-          />
+          <FormikTextField formik={formik} name="artist" fullWidth multiline label="Artist" />
+        </div>
+      </div>
+      <div className='row card-actions-row'>
+        <div className='col-12 d-flex justify-content-between align-items-start'>
+          <Button type="button" variant="text" size='small' startIcon={<SaveIcon />} onClick={saveToGallery}>
+            Save to Gallery
+          </Button>
+          <Button type="button" variant="text" size='small' onClick={openGallery} startIcon={<CollectionsIcon />}>
+            Gallery (x{galleryCount})
+          </Button>
         </div>
       </div>
       <div className='row card-actions-row'>
         <div className='col-12 d-flex justify-content-between align-items-start'>
           <DownloadAsButton downloadAs={downloadAs} />
-          <Button className='pt-2' variant="outlined" color="error" size='small' onClick={handleReset}>
+          <Button type="button" className='pt-2' variant="outlined" color="error" size='small' onClick={handleReset}>
             Reset
           </Button>
         </div>

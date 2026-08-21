@@ -50,8 +50,9 @@ export default function DownloadAsButton({ downloadAs }: any) {
         size='small'
         aria-label="Button group with a nested menu"
       >
-        <Button onClick={handleClick}>{options[selectedIndex].label}</Button>
+        <Button type="button" onClick={handleClick}>{options[selectedIndex].label}</Button>
         <Button
+          type="button"
           size="small"
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
