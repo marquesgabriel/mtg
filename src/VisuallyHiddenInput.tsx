@@ -2,8 +2,9 @@ import { styled } from '@mui/material/styles';
 
 // A file <input> that's visually hidden but still focusable/clickable via
 // its wrapping label - the standard MUI pattern for a styled "Upload"
-// button backed by a native file input. Shared by image upload
-// (ImageUploadSection) and JSON load (CardDataSection, #6).
+// button backed by a native file input. Used by image upload
+// (ImageUploadSection); JSON load (#6) used this too before being
+// temporarily disabled - re-adding that UI can reuse this as-is.
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',
