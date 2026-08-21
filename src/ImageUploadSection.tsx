@@ -1,6 +1,4 @@
 import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Slider from '@mui/material/Slider';
@@ -10,6 +8,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CropIcon from '@mui/icons-material/Crop';
 import ZoomIn from '@mui/icons-material/ZoomIn';
 import ZoomOut from '@mui/icons-material/ZoomOut';
+import FormikSelect from './FormikSelect';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -78,21 +77,10 @@ export default function ImageUploadSection({ formik, zoom, setZoom, cropMyImage,
         </Stack>
       </div>
       <div className='col-6'>
-        <InputLabel id="cardImageSize">Image Size</InputLabel>
-        <Select
-          fullWidth
-          label="Image Size"
-          variant="standard"
-          id="cardImageSize"
-          name="cardImageSize"
-          value={formik.values.cardImageSize}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.cardImageSize && Boolean(formik.errors.cardImageSize)}
-        >
+        <FormikSelect formik={formik} name="cardImageSize" label="Image Size">
           <MenuItem value="full-art" defaultChecked>Full Art</MenuItem>
           <MenuItem value="classic">Classic</MenuItem>
-        </Select>
+        </FormikSelect>
       </div>
     </div>
   );
