@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.982cc966.css",
-    "main.js": "/static/js/main.9109204f.js",
-    "static/js/453.05023239.chunk.js": "/static/js/453.05023239.chunk.js",
+    "main.css": "/static/css/main.27639c7d.css",
+    "main.js": "/static/js/main.5c630d35.js",
+    "static/js/154.1ea6df71.chunk.js": "/static/js/154.1ea6df71.chunk.js",
     "static/media/mana.svg?v=1.15.9": "/static/media/mana.ec0c59c6828ef62128df.svg",
     "static/media/mplantin.svg?v=1.15.9": "/static/media/mplantin.83d7d29e550b1e99d824.svg",
     "static/media/mana.eot": "/static/media/mana.06b1f0d31d8b73c6f932.eot",
@@ -17,16 +17,17 @@
     "static/media/mplantin.ttf": "/static/media/mplantin.9ccce3a24c7c9894b58e.ttf",
     "static/media/mplantin.woff?v=1.15.9": "/static/media/mplantin.f511062c132e4b72f9b8.woff",
     "static/media/ModMatrix.ttf": "/static/media/ModMatrix.c7febb9b7efe9e2ab1e8.ttf",
+    "static/media/card-back.svg": "/static/media/card-back.bb0d20e4e8de151bb4fe.svg",
     "static/media/MagicMedieval.ttf": "/static/media/MagicMedieval.8677f9ade971b1a37da1.ttf",
     "static/media/texture1.png": "/static/media/texture1.0dc0248a94662fa2129c.png",
     "static/media/golden-eff.jpeg": "/static/media/golden-eff.38c16fc4269ac5f4e58b.jpeg",
     "index.html": "/index.html",
-    "main.982cc966.css.map": "/static/css/main.982cc966.css.map",
-    "main.9109204f.js.map": "/static/js/main.9109204f.js.map",
-    "453.05023239.chunk.js.map": "/static/js/453.05023239.chunk.js.map"
+    "main.27639c7d.css.map": "/static/css/main.27639c7d.css.map",
+    "main.5c630d35.js.map": "/static/js/main.5c630d35.js.map",
+    "154.1ea6df71.chunk.js.map": "/static/js/154.1ea6df71.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.982cc966.css",
-    "static/js/main.9109204f.js"
+    "static/css/main.27639c7d.css",
+    "static/js/main.5c630d35.js"
   ]
 }
