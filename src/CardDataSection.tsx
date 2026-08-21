@@ -1,6 +1,5 @@
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Badge from '@mui/material/Badge';
 import SaveIcon from '@mui/icons-material/Save';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import CollectionsIcon from '@mui/icons-material/Collections';
@@ -79,12 +78,8 @@ export default function CardDataSection({
           <Button type="button" variant="text" size='small' startIcon={<SaveIcon />} onClick={saveToGallery}>
             Save to Gallery
           </Button>
-          <Button type="button" variant="text" size='small' onClick={openGallery} startIcon={
-            <Badge badgeContent={galleryCount} color="primary">
-              <CollectionsIcon />
-            </Badge>
-          }>
-            Gallery
+          <Button type="button" variant="text" size='small' onClick={openGallery} startIcon={<CollectionsIcon />}>
+            Gallery (x{galleryCount})
           </Button>
         </div>
       </div>

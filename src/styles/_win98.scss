@@ -18,18 +18,25 @@ $win98-darker-gray: #535050;
 $win98-titlebar-start: navy;
 $win98-titlebar-end: skyblue;
 
-@mixin win98-outset($size: 2px) {
-  border-top: $size solid #ffffff;
-  border-left: $size solid #ffffff;
-  border-right: $size solid $win98-dark-gray;
-  border-bottom: $size solid $win98-dark-gray;
+// $important: MUI's own variants (e.g. Button's "contained") set their own
+// unimportant `border` shorthand, which otherwise wins over these
+// individual border-side declarations regardless of source order - needed
+// wherever this mixin overrides a MUI component, harmless on the plain
+// divs (titlebar buttons) that don't have a competing border rule.
+@mixin win98-outset($size: 2px, $important: false) {
+  $bang: if($important, ' !important', '');
+  border-top: unquote($size + ' solid #ffffff' + $bang);
+  border-left: unquote($size + ' solid #ffffff' + $bang);
+  border-right: unquote($size + ' solid ' + $win98-dark-gray + $bang);
+  border-bottom: unquote($size + ' solid ' + $win98-dark-gray + $bang);
 }
 
-@mixin win98-inset($size: 2px) {
-  border-top: $size solid $win98-dark-gray;
-  border-left: $size solid $win98-dark-gray;
-  border-right: $size solid #ffffff;
-  border-bottom: $size solid #ffffff;
+@mixin win98-inset($size: 2px, $important: false) {
+  $bang: if($important, ' !important', '');
+  border-top: unquote($size + ' solid ' + $win98-dark-gray + $bang);
+  border-left: unquote($size + ' solid ' + $win98-dark-gray + $bang);
+  border-right: unquote($size + ' solid #ffffff' + $bang);
+  border-bottom: unquote($size + ' solid #ffffff' + $bang);
 }
 
 body {
@@ -109,21 +116,21 @@ div.container-wrapper {
   color: black !important;
   box-shadow: none !important;
   text-transform: none !important;
-  @include win98-outset(2px);
+  @include win98-outset(2px, true);
 
   &:hover {
     background-color: $win98-gray !important;
   }
 
   &:active {
-    @include win98-inset(2px);
+    @include win98-inset(2px, true);
   }
 }
 
 .MuiInputBase-root {
   background-color: white;
   padding: 1px 4px !important;
-  @include win98-inset(2px);
+  @include win98-inset(2px, true);
 
   &::before,
   &::after {
@@ -159,4 +166,45 @@ div.container-wrapper {
 // The Download/Reset action row otherwise sits flush against the field above it.
 .card-actions-row {
   margin-top: 1em;
+}
+
+// MUI's Dialog (GalleryDialog, PrintSheetDialog) renders in a portal and
+// ships its own Material look (white Paper, rounded corners, elevation
+// shadow, Roboto type) regardless of the win98 skin applied to the rest of
+// the app shell - reskin it the same way .container-wrapper is skinned.
+.MuiDialog-paper {
+  border-radius: 0 !important;
+  background: $win98-gray !important;
+  box-shadow: 1px 1px $win98-darker-gray !important;
+  border: outset 3px gray;
+  border-top: outset 3px white;
+  border-left: outset 3px white;
+}
+
+.MuiDialogTitle-root {
+  background: linear-gradient(90deg, $win98-titlebar-start, $win98-titlebar-end) !important;
+  color: white !important;
+  font-weight: bold;
+  padding: .5em 1em !important;
+}
+
+// MUI's Typography variants (used throughout Dialog content, e.g.
+// ListItemText) set their own Roboto-based font-family, which otherwise
+// overrides the win98 font inherited from body.
+.MuiTypography-root,
+.MuiDialogTitle-root {
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif !important;
+}
+
+.MuiDialogContent-root {
+  padding: 1em !important;
+}
+
+.MuiDialogActions-root {
+  padding: .75em 1em !important;
+  border-top: 1px solid $win98-dark-gray;
+}
+
+.MuiListItem-root {
+  border-color: $win98-dark-gray !important;
 }
