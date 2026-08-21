@@ -48,17 +48,16 @@
   }
 }
 
+// assets/svg/card-back.svg is a full A4 page (210mm x 297mm) with a single
+// card back positioned at (73.25mm, 104.05mm) within it, not a standalone
+// card-sized asset. Since the SVG and this container are both real mm
+// units, displaying it at its natural size (background-size) and shifting
+// by the card's offset (background-position) crops it down to just the
+// card art, 1:1, no separate cropped asset needed.
 .print-sheet__card--back {
-  border: 1px solid #000;
+  background-image: url('./assets/svg/card-back.svg');
+  background-size: 210mm 297mm;
+  background-position: -73.25mm -104.05mm;
   border-radius: 3.5mm;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #1a1a2e;
-  color: #fff;
-  text-align: center;
-  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
-  font-size: 10pt;
-  padding: 4mm;
-  box-sizing: border-box;
+  overflow: hidden;
 }

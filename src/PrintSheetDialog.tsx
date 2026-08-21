@@ -59,9 +59,7 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
             {pages.map((pageCards, pageIndex) => (
               <div className="print-sheet__page" key={`back-${pageIndex}`}>
                 {pageCards.map((_entry, cardIndex) => (
-                  <div className="print-sheet__card print-sheet__card--back" key={`back-${pageIndex}-${cardIndex}`}>
-                    <span>MTG Token Generator</span>
-                  </div>
+                  <div className="print-sheet__card print-sheet__card--back" key={`back-${pageIndex}-${cardIndex}`} />
                 ))}
               </div>
             ))}
