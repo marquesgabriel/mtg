@@ -37,6 +37,8 @@ jobs:
 
       - name: Build App
         run: yarn build
+        env:
+          REACT_APP_ADSENSE_PUBLISHER_ID: ${{ vars.REACT_APP_ADSENSE_PUBLISHER_ID }}
 
       - name: Run tests
         run: yarn test --watchAll=false
