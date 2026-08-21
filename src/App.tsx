@@ -14,7 +14,7 @@ import getCroppedImg, { getCroppedImgDataUrl } from './utils/cropper';
 import { parseManaSymbols } from './utils/manaSymbols';
 import { safeStorageGet, safeStorageSet, safeStorageRemove } from './utils/safeStorage';
 import { DEFAULT_TOKEN_VALUES as DEFAULT_VALUES, TOKEN_FIELD_KEYS as PERSISTED_FIELDS } from './utils/tokenFields';
-import { serializeToken, isValidTokenFile, tokenValuesFromFile } from './utils/tokenFile';
+import { serializeToken } from './utils/tokenFile';
 import { GalleryEntry, loadGallery, addToGallery, removeFromGallery, updateGalleryEntryCopies } from './utils/gallery';
 import SupportSidebar from './SupportSidebar';
 import CardStyleSection from './CardStyleSection';
@@ -142,45 +142,9 @@ function App() {
     setDescription(parseManaSymbols(e.target.value));
   }
 
-  // Exports the current form fields (not the image - see utils/tokenFields)
-  // as a downloadable JSON file, so a token-in-progress can be picked back
-  // up later without redoing the whole form (#6). Complements the
-  // localStorage draft, which only survives in this browser.
-  const saveAsJson = () => {
-    const file = serializeToken(formik.values);
-    const blob = new Blob([JSON.stringify(file, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = `${formik.values.name || 'token'}.json`;
-    link.href = url;
-    link.click();
-    URL.revokeObjectURL(url);
-    setFeedback({ message: 'Token saved as JSON', severity: 'success' });
-  };
-
-  const loadFromJson = (event: any) => {
-    const inputFile = event.target.files[0];
-    event.target.value = ''; // allow re-selecting the same file later
-    if (!inputFile) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const parsed = JSON.parse(reader.result as string);
-        if (!isValidTokenFile(parsed)) {
-          setFeedback({ message: 'That file is not a valid token JSON', severity: 'error' });
-          return;
-        }
-        const values = tokenValuesFromFile(parsed);
-        formik.setValues({ ...formik.values, ...values });
-        setDescription(parseManaSymbols(values.description));
-        setFeedback({ message: 'Token loaded from JSON', severity: 'success' });
-      } catch {
-        setFeedback({ message: 'That file is not a valid token JSON', severity: 'error' });
-      }
-    };
-    reader.readAsText(inputFile);
-  };
+  // JSON save/load (#6) is temporarily disabled - the underlying
+  // serializeToken/tokenFields format is still used by the gallery below,
+  // just not exposed as a standalone file download/upload for now.
 
   // The gallery (#7) is a separate, in-app persisted list of tokens -
   // unlike JSON save/load (#6), no file dialog is involved, and each entry
@@ -290,8 +254,6 @@ function App() {
                   parseDescription={parseDescription}
                   downloadAs={downloadAs}
                   handleReset={handleReset}
-                  saveAsJson={saveAsJson}
-                  loadFromJson={loadFromJson}
                   saveToGallery={saveToGallery}
                   openGallery={() => setGalleryOpen(true)}
                   galleryCount={gallery.length}
