@@ -5,7 +5,6 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import CropIcon from '@mui/icons-material/Crop';
 import ZoomIn from '@mui/icons-material/ZoomIn';
 import ZoomOut from '@mui/icons-material/ZoomOut';
 import FormikSelect from './FormikSelect';
@@ -22,7 +21,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-export default function ImageUploadSection({ formik, zoom, setZoom, cropMyImage, handlePickedImage }: any) {
+export default function ImageUploadSection({ formik, zoom, setZoom, handlePickedImage }: any) {
   return (
     <div className='row pt-2 pb-2 gy-3'>
       <div className='col-12'>
@@ -30,7 +29,7 @@ export default function ImageUploadSection({ formik, zoom, setZoom, cropMyImage,
           Image upload and edit
         </Typography>
       </div>
-      <div className='col-6'>
+      <div className='col-12'>
         <div className='d-flex justify-content-center'>
           <Button
             component="label"
@@ -42,21 +41,6 @@ export default function ImageUploadSection({ formik, zoom, setZoom, cropMyImage,
           >
             Upload file
             <VisuallyHiddenInput accept='image/jpeg, image/png' onChange={handlePickedImage} type="file" />
-          </Button>
-        </div>
-      </div>
-      <div className='col-6'>
-        <div className='d-flex justify-content-center'>
-          <Button
-            component="label"
-            variant="contained"
-            tabIndex={-1}
-            size='small'
-            color='success'
-            onClick={cropMyImage}
-            startIcon={<CropIcon />}
-          >
-            Confirm image crop
           </Button>
         </div>
       </div>

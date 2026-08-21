@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { Point, Area } from "react-easy-crop";
 import { useFormik, FormikProvider } from 'formik';
 import * as yup from "yup";
 import domtoimage from 'dom-to-image';
 import Divider from '@mui/material/Divider';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 import './App.scss';
 import TokenCard from './Card';
@@ -75,15 +78,25 @@ function App() {
   };
   const [image, setImage] = useState(DEFAULT_IMAGE);
   const [description, setDescription] = useState(() => parseManaSymbols(initialDraft.description ?? ""));
+  const [downloadFeedback, setDownloadFeedback] = useState(false);
 
-  const cropMyImage = async () => {
+  // Applies the current crop/zoom selection, replacing the interactive
+  // Cropper (react-easy-crop) with the cropped result in the preview. Runs
+  // automatically before every export (see downloadAs) instead of requiring
+  // a separate manual "Confirm image crop" step - exporting without
+  // confirming used to bake the Cropper's own grid/handles into the
+  // exported card (#72). flushSync forces the resulting <img> to be in the
+  // DOM before downloadAs captures #card-element, since a plain setState
+  // wouldn't be guaranteed to re-render in time.
+  const ensureCropped = async () => {
+    if (croppedImage) return;
     try {
       const croppedProduct = await getCroppedImg(
         image,
         croppedArea,
         0 // this is the rotation value
       )
-      setCroppedImage(croppedProduct)
+      flushSync(() => setCroppedImage(croppedProduct));
     } catch (e) {
       console.error(e)
     }
@@ -96,7 +109,9 @@ function App() {
   const PRINT_DPI = 300;
   const SCREEN_DPI = 96;
 
-  const downloadAs = (ext: string) => {
+  const downloadAs = async (ext: string) => {
+    await ensureCropped();
+
     const node: any = document.getElementById("card-element");
     const scale = PRINT_DPI / SCREEN_DPI;
     const printOptions = {
@@ -112,34 +127,31 @@ function App() {
       },
     };
 
+    // Mobile browsers (especially iOS Safari) give no visible confirmation
+    // that a download happened - the snackbar below is that feedback,
+    // shown once the file is actually ready rather than optimistically on
+    // click (#71).
+    const triggerDownload = (dataUrl: string, filename: string) => {
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = dataUrl;
+      link.click();
+      setDownloadFeedback(true);
+    };
+
     switch (ext) {
       case 'svg':
         // Vector output is already resolution-independent — no scaling needed.
         domtoimage.toSvg(node, { quality: 1, bgcolor: "#000" })
-          .then(function (dataUrl: string) {
-            var link = document.createElement('a');
-            link.download = 'exported-card.svg';
-            link.href = dataUrl;
-            link.click();
-          });
+          .then((dataUrl: string) => triggerDownload(dataUrl, 'exported-card.svg'));
         break;
       case 'jpeg':
         domtoimage.toJpeg(node, printOptions)
-          .then(function (dataUrl: string) {
-            var link = document.createElement('a');
-            link.download = 'exported-card.jpeg';
-            link.href = dataUrl;
-            link.click();
-          });
+          .then((dataUrl: string) => triggerDownload(dataUrl, 'exported-card.jpeg'));
         break;
       case 'png':
         domtoimage.toPng(node, printOptions)
-          .then(function (dataUrl: string) {
-            var link = document.createElement('a');
-            link.download = 'exported-card.png';
-            link.href = dataUrl;
-            link.click();
-          });
+          .then((dataUrl: string) => triggerDownload(dataUrl, 'exported-card.png'));
         break;
       default:
         break;
@@ -219,7 +231,6 @@ function App() {
                   formik={formik}
                   zoom={zoom}
                   setZoom={setZoom}
-                  cropMyImage={cropMyImage}
                   handlePickedImage={handlePickedImage}
                 />
                 <Divider />
@@ -246,6 +257,16 @@ function App() {
           </Container>
         </div>
       </div>
+      <Snackbar
+        open={downloadFeedback}
+        autoHideDuration={3000}
+        onClose={() => setDownloadFeedback(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setDownloadFeedback(false)} severity="success" variant="filled">
+          Download started
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
