@@ -98,10 +98,16 @@ function App() {
     // capturing - otherwise dom-to-image can rasterize a stale/incomplete
     // frame right after ensureCropped's DOM swap (see utils/captureReady.ts).
     await waitForCaptureReady(node);
+    // .card-wrapper's own background-color already matches its border
+    // color (see Card/index.scss's *-border classes) - using it as the
+    // capture's bgcolor (instead of a hardcoded black) means the rounded
+    // corners outside the border-radius match the live preview instead of
+    // showing a black canvas background through them.
+    const cardBgColor = getComputedStyle(node).backgroundColor;
     const scale = PRINT_DPI / SCREEN_DPI;
     const printOptions = {
       quality: 1,
-      bgcolor: "#000",
+      bgcolor: cardBgColor,
       width: node.offsetWidth * scale,
       height: node.offsetHeight * scale,
       style: {
@@ -137,7 +143,7 @@ function App() {
     switch (ext) {
       case 'svg':
         // Vector output is already resolution-independent — no scaling needed.
-        domtoimage.toSvg(node, { quality: 1, bgcolor: "#000" })
+        domtoimage.toSvg(node, { quality: 1, bgcolor: cardBgColor })
           .then((dataUrl: string) => triggerDownload(dataUrl, 'exported-card.svg'));
         break;
       case 'jpeg':

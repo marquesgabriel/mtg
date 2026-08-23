@@ -75,9 +75,15 @@ export async function renderCardImage(token: TokenValues, image: string): Promis
     // have decoded yet, and fonts may still be loading on a cold cache -
     // wait for both (see utils/captureReady.ts) before rasterizing.
     await waitForCaptureReady(node);
+    // .card-wrapper's own background-color already matches its border
+    // color (see Card/index.scss's *-border classes) - using it as the
+    // capture's bgcolor (instead of a hardcoded black) means the rounded
+    // corners outside the border-radius match the live preview instead of
+    // showing a black canvas background through them.
+    const cardBgColor = getComputedStyle(node).backgroundColor;
     return await domtoimage.toPng(node, {
       quality: 1,
-      bgcolor: '#000',
+      bgcolor: cardBgColor,
       width: node.offsetWidth * SCALE,
       height: node.offsetHeight * SCALE,
       style: {
