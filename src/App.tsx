@@ -56,9 +56,16 @@ function App() {
   const [image, setImage] = useState(DEFAULT_IMAGE);
   const [description, setDescription] = useState(() => parseManaSymbols(initialDraft.description ?? ""));
   const [feedback, setFeedback] = useState<{ message: string; severity: 'success' | 'error' } | null>(null);
-  const [gallery, setGallery] = useState<GalleryEntry[]>(() => loadGallery());
+  const [gallery, setGallery] = useState<GalleryEntry[]>([]);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [printSheetOpen, setPrintSheetOpen] = useState(false);
+
+  // Gallery is now IndexedDB-backed (#80), so the initial load is async -
+  // this also runs the one-time migration of any pre-existing localStorage
+  // gallery data (see utils/gallery.ts's migrateFromLocalStorage).
+  useEffect(() => {
+    loadGallery().then(setGallery);
+  }, []);
 
   // Applies the current crop/zoom selection, replacing the interactive
   // Cropper (react-easy-crop) with the cropped result in the preview. Runs
@@ -156,7 +163,7 @@ function App() {
   const saveToGallery = async () => {
     const { token } = serializeToken(formik.values);
     const croppedDataUrl = await getCroppedImgDataUrl(image, croppedArea, 0);
-    setGallery(addToGallery(token, croppedDataUrl ?? ''));
+    setGallery(await addToGallery(token, croppedDataUrl ?? ''));
     setFeedback({ message: 'Saved to gallery', severity: 'success' });
   };
 
@@ -169,12 +176,12 @@ function App() {
     setFeedback({ message: 'Token loaded from gallery', severity: 'success' });
   };
 
-  const deleteGalleryEntry = (id: string) => {
-    setGallery(removeFromGallery(id));
+  const deleteGalleryEntry = async (id: string) => {
+    setGallery(await removeFromGallery(id));
   };
 
-  const changeGalleryEntryCopies = (id: string, copies: number) => {
-    setGallery(updateGalleryEntryCopies(id, copies));
+  const changeGalleryEntryCopies = async (id: string, copies: number) => {
+    setGallery(await updateGalleryEntryCopies(id, copies));
   };
 
   const form = yup.object({
