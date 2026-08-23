@@ -91,6 +91,10 @@ function App() {
 
   const downloadAs = async (ext: string) => {
     await ensureCropped();
+    // Same self-hosted @font-face timing issue as renderCardImage.tsx - wait
+    // for the title/type-line fonts to finish loading before capturing,
+    // otherwise a cold cache can bake the fallback system font into the export.
+    await document.fonts.ready;
 
     const node: any = document.getElementById("card-element");
     const scale = PRINT_DPI / SCREEN_DPI;
