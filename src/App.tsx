@@ -54,6 +54,16 @@ function App() {
   const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels);
   };
+  // crop/zoom/croppedArea are only meaningful relative to whichever image
+  // they were computed against - every place the source `image` changes
+  // (upload, reset, gallery load) must clear all three, or a later
+  // save/export can silently apply a previous image's pixel coordinates
+  // to the new one (#90).
+  const resetCropState = () => {
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setCroppedArea(null);
+  };
   const [image, setImage] = useState(DEFAULT_IMAGE);
   const [description, setDescription] = useState(() => parseManaSymbols(initialDraft.description ?? ""));
   const [feedback, setFeedback] = useState<{ message: string; severity: 'success' | 'error' } | null>(null);
@@ -70,7 +80,11 @@ function App() {
   // DOM before downloadAs captures #card-element, since a plain setState
   // wouldn't be guaranteed to re-render in time.
   const ensureCropped = async () => {
-    if (croppedImage) return;
+    if (croppedImage) return true;
+    if (!croppedArea) {
+      setFeedback({ message: 'Adjust the crop before saving or downloading', severity: 'error' });
+      return false;
+    }
     try {
       const croppedProduct = await getCroppedImg(
         image,
@@ -78,8 +92,11 @@ function App() {
         0 // this is the rotation value
       )
       flushSync(() => setCroppedImage(croppedProduct));
+      return true;
     } catch (e) {
       console.error(e)
+      setFeedback({ message: 'Could not crop the image - try adjusting the crop again', severity: 'error' });
+      return false;
     }
   }
 
@@ -91,7 +108,13 @@ function App() {
   const SCREEN_DPI = 96;
 
   const downloadAs = async (ext: string) => {
+    if (!(await ensureCropped())) return;
     await ensureCropped();
+    
+    // Same self-hosted @font-face timing issue as renderCardImage.tsx - wait
+    // for the title/type-line fonts to finish loading before capturing,
+    // otherwise a cold cache can bake the fallback system font into the export.
+    await document.fonts.ready;
 
     const node: any = document.getElementById("card-element");
     // Wait for the swapped-in cropped <img> (and fonts/paint) before
@@ -175,9 +198,30 @@ function App() {
   // uses, so a gallery entry always stores the cropped result even if the
   // user never explicitly exported.
   const saveToGallery = async () => {
+    // Reuse the already-cropped result (e.g. a gallery entry loaded via
+    // loadGalleryEntry, or an image already exported this session) instead
+    // of unconditionally re-cropping with `croppedArea`, which may be stale
+    // pixel coordinates left over from a *different* image (#90) or still
+    // null if the user hasn't touched the Cropper yet (#89).
+    let croppedDataUrl = croppedImage;
+    if (!croppedDataUrl) {
+      if (!croppedArea) {
+        setFeedback({ message: 'Adjust the crop before saving to the gallery', severity: 'error' });
+        return;
+      }
+      try {
+        croppedDataUrl = await getCroppedImgDataUrl(image, croppedArea, 0);
+      } catch (e) {
+        console.error(e);
+        croppedDataUrl = null;
+      }
+      if (!croppedDataUrl) {
+        setFeedback({ message: 'Could not crop the image - try adjusting the crop again', severity: 'error' });
+        return;
+      }
+    }
     const { token } = serializeToken(formik.values);
-    const croppedDataUrl = await getCroppedImgDataUrl(image, croppedArea, 0);
-    setGallery(addToGallery(token, croppedDataUrl ?? ''));
+    setGallery(addToGallery(token, croppedDataUrl));
     setFeedback({ message: 'Saved to gallery', severity: 'success' });
   };
 
@@ -186,6 +230,10 @@ function App() {
     setDescription(parseManaSymbols(entry.token.description));
     setImage(entry.image);
     setCroppedImage(entry.image);
+    // The loaded entry's art is already cropped - clear crop/zoom/croppedArea
+    // so a later re-save can't apply stale pixel coordinates from whatever
+    // was cropped previously (#90).
+    resetCropState();
     setGalleryOpen(false);
     setFeedback({ message: 'Token loaded from gallery', severity: 'success' });
   };
@@ -245,12 +293,12 @@ function App() {
     setImage(DEFAULT_IMAGE);
     setCroppedImage(null);
     setDescription('');
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
+    resetCropState();
   };
 
   const handlePickedImage = (event: any) => {
     setCroppedImage(null);
+    resetCropState();
     setImage(URL.createObjectURL(event.target.files[0]))
   }
 
