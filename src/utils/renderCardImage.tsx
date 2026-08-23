@@ -48,6 +48,12 @@ export async function renderCardImage(token: TokenValues, image: string): Promis
     if (!node) {
       throw new Error(`renderCardImage: #offscreen-print-card not found in offscreen container. innerHTML: ${container.innerHTML.slice(0, 500)}`);
     }
+    // The card's title/type-line/etc use self-hosted @font-face fonts
+    // (src/styles/_fonts.scss). On a cold cache those can still be loading
+    // after the rAFs above resolve, so dom-to-image would capture the
+    // fallback system font instead - wait for every requested font to
+    // actually finish before rasterizing.
+    await document.fonts.ready;
     return await domtoimage.toPng(node, {
       quality: 1,
       bgcolor: '#000',

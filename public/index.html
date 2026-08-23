@@ -12,6 +12,11 @@
        reads this at crawl time regardless of user consent. Empty when
        REACT_APP_ADSENSE_PUBLISHER_ID isn't set (e.g. local dev). -->
   <meta name="google-adsense-account" content="%REACT_APP_ADSENSE_PUBLISHER_ID%" />
+  <!-- Preload the card title fonts (src/styles/_fonts.scss) so they're
+       already loading before CSS parsing kicks off @font-face requests -
+       reduces the flash of the fallback font on first paint/export. -->
+  <link rel="preload" href="%PUBLIC_URL%/fonts/beleren-bold_P1.01.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="%PUBLIC_URL%/fonts/belerensmallcaps-bold.ttf" as="font" type="font/ttf" crossorigin />
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
   <!--
       manifest.json provides metadata used when your web app is installed on a
