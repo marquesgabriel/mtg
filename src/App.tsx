@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import './App.scss';
 import TokenCard from './Card';
 import getCroppedImg, { getCroppedImgDataUrl } from './utils/cropper';
+import { waitForCaptureReady } from './utils/captureReady';
 import { parseManaSymbols } from './utils/manaSymbols';
 import { safeStorageGet, safeStorageSet, safeStorageRemove } from './utils/safeStorage';
 import { DEFAULT_TOKEN_VALUES as DEFAULT_VALUES, TOKEN_FIELD_KEYS as PERSISTED_FIELDS } from './utils/tokenFields';
@@ -116,13 +117,33 @@ function App() {
     await document.fonts.ready;
 
     const node: any = document.getElementById("card-element");
+    // Wait for the swapped-in cropped <img> (and fonts/paint) before
+    // capturing - otherwise dom-to-image can rasterize a stale/incomplete
+    // frame right after ensureCropped's DOM swap (see utils/captureReady.ts).
+    await waitForCaptureReady(node);
+    // .card-wrapper's own background-color already matches its border
+    // color (see Card/index.scss's *-border classes) - using it as the
+    // capture's bgcolor (instead of a hardcoded black) means the rounded
+    // corners outside the border-radius match the live preview instead of
+    // showing a black canvas background through them.
+    const cardBgColor = getComputedStyle(node).backgroundColor;
     const scale = PRINT_DPI / SCREEN_DPI;
     const printOptions = {
       quality: 1,
-      bgcolor: "#000",
+      bgcolor: cardBgColor,
       width: node.offsetWidth * scale,
       height: node.offsetHeight * scale,
       style: {
+        // #card-element (.card-wrapper) is box-sizing: content-box, so its
+        // border is normally added on top of the declared width/height.
+        // node.offsetWidth/offsetHeight already include that border, so
+        // without forcing border-box here, dom-to-image's clone re-adds
+        // the border on top of an already border-inclusive size - the
+        // clone ends up larger than the canvas it's captured into, and the
+        // overflow (the border itself, on the far side from
+        // transformOrigin) gets clipped off (#93-adjacent bug: golden
+        // border only visible on two sides in exports).
+        boxSizing: 'border-box',
         transform: `scale(${scale})`,
         transformOrigin: 'top left',
         width: `${node.offsetWidth}px`,
@@ -145,7 +166,7 @@ function App() {
     switch (ext) {
       case 'svg':
         // Vector output is already resolution-independent — no scaling needed.
-        domtoimage.toSvg(node, { quality: 1, bgcolor: "#000" })
+        domtoimage.toSvg(node, { quality: 1, bgcolor: cardBgColor })
           .then((dataUrl: string) => triggerDownload(dataUrl, 'exported-card.svg'));
         break;
       case 'jpeg':
