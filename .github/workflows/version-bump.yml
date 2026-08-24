@@ -22,7 +22,7 @@ jobs:
     # re-running on it instead of relying only on the classifier finding
     # nothing to bump (chore(release): commits don't match feat:/fix:
     # below, but skipping outright avoids the wasted run).
-    if: ${{ !contains(github.event.head_commit.message, 'chore(release): bump version') }}
+    if: "${{ !contains(github.event.head_commit.message, 'chore(release): bump version') }}"
 
     steps:
       - uses: actions/checkout@v7
