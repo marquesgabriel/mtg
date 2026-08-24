@@ -31,6 +31,8 @@ Prettier is configured (`.prettierrc.json`) but **not** enforced in CI yet — t
 
 This repo follows [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, `docs:`, `test:`, etc). `yarn commit` runs an interactive prompt ([git-cz](https://github.com/streamich/git-cz)) if you'd rather not write the format by hand.
 
+**This is now functionally required, not just style:** `.github/workflows/version-bump.yml` parses commit subjects since the last tag to decide the next release's version (`feat:` → minor, `fix:`/`perf:` → patch, `BREAKING CHANGE`/`!:` → major). A commit that doesn't follow the format just won't count toward any bump.
+
 ## Branching and PRs
 
 - Branch from `release/1.0.0` (the active review branch — see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for why).

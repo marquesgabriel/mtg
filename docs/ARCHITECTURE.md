@@ -34,8 +34,12 @@ Deploy: publicado via `gh-pages` (script `yarn deploy`, automatizado em
 | Monetização          | AdSense com consentimento de cookies (`SupportSidebar.tsx`) — mesma conta usada em marquesgabriel.github.io |
 
 Não há backend, API, banco de dados ou autenticação — todo o estado vive no
-componente `App` (React state + Formik). O rascunho do formulário é
-persistido em `localStorage` (ver Fluxo de dados abaixo).
+componente `App` (React state + Formik). O rascunho do formulário e o
+consentimento de cookies são persistidos em `localStorage`; a galeria de
+tokens salvos (`utils/gallery.ts`) usa IndexedDB (`utils/idbGallery.ts`)
+desde #80, já que cada entrada carrega uma imagem em base64 e ultrapassa
+facilmente a quota de `localStorage` com poucos tokens salvos (ver Fluxo de
+dados abaixo).
 
 ## Estrutura de pastas
 
