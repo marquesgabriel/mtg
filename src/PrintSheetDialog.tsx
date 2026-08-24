@@ -51,17 +51,21 @@ export default function PrintSheetDialog({
 
     if (missing.length === 0) {
       setImages(cached);
-      return () => { cancelled = true; };
+      return () => {
+        cancelled = true;
+      };
     }
 
     setRendering(true);
     (async () => {
       const rendered = await Promise.all(
-        missing.map((entry) => renderCardImage(entry.token, entry.image))
+        missing.map((entry) => renderCardImage(entry.token, entry.image)),
       );
       if (!cancelled) {
         const next = { ...cached };
-        missing.forEach((entry, index) => { next[entry.id] = rendered[index]; });
+        missing.forEach((entry, index) => {
+          next[entry.id] = rendered[index];
+        });
         setImages(next);
         setRendering(false);
       }
