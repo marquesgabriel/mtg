@@ -38,11 +38,17 @@ export async function getAllEntries(): Promise<GalleryEntry[]> {
   let db: IDBDatabase | undefined;
   try {
     db = await openDB();
-    return await new Promise<GalleryEntry[]>((resolve, reject) => {
+    const entries = await new Promise<GalleryEntry[]>((resolve, reject) => {
       const request = db!.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).getAll();
       request.onsuccess = () => resolve(request.result as GalleryEntry[]);
       request.onerror = () => reject(request.error);
     });
+    // getAll() without an explicit index returns records ordered by the
+    // primary key (id), not insertion order - and id is `${Date.now()}-…`,
+    // so two entries added within the same millisecond can come back in
+    // the wrong order. Sort by savedAt to match the old localStorage
+    // array's natural insertion order.
+    return entries.sort((a, b) => a.savedAt - b.savedAt);
   } catch {
     return [];
   } finally {

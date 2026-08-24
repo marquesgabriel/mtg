@@ -49,10 +49,21 @@ export async function loadGallery(): Promise<GalleryEntry[]> {
   return getAllEntries();
 }
 
+// Guarantees a strictly increasing savedAt even when two entries are added
+// within the same millisecond (Date.now() alone can't tell them apart) -
+// getAllEntries() sorts by savedAt to restore insertion order, since
+// IndexedDB's getAll() otherwise orders by the primary key (id) instead.
+let lastSavedAt = 0;
+function nextSavedAt(): number {
+  lastSavedAt = Math.max(Date.now(), lastSavedAt + 1);
+  return lastSavedAt;
+}
+
 export async function addToGallery(token: TokenValues, image: string): Promise<GalleryEntry[]> {
+  const savedAt = nextSavedAt();
   const entry: GalleryEntry = {
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    savedAt: Date.now(),
+    id: `${savedAt}-${Math.random().toString(36).slice(2, 8)}`,
+    savedAt,
     copies: 1,
     token,
     image,
