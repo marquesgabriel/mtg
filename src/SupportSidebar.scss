@@ -9,11 +9,22 @@
   gap: 1rem;
   padding: 1rem;
 
+  &__bmc-message {
+    text-align: center;
+  }
+
   &__bmc-link {
     text-align: center;
 
     img {
       display: inline-block;
+      // The button image is hosted on cdn.buymeacoffee.com - its intrinsic
+      // width isn't controlled by this repo, and the parent flex column
+      // uses align-items: stretch (see note above), so without a max-width
+      // the image can overflow a narrow container instead of shrinking to
+      // fit it.
+      max-width: 100%;
+      height: auto;
     }
   }
 

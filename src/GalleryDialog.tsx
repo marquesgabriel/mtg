@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -15,6 +16,45 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import PrintIcon from '@mui/icons-material/Print';
 import { GalleryEntry } from './utils/gallery';
+
+// A plain `value={entry.copies}` controlled TextField commits on every
+// keystroke - on mobile, selecting the default "1" and typing a digit sends
+// an intermediate `Number('')` (0) through onCopiesChange's clamp before the
+// browser's own select-and-replace gesture finishes, so the "1" reappears
+// and fights the new digit (#92). Keeping a local string draft while
+// focused, and only committing (parsing + clamping via onCommit) on
+// blur/Enter, lets the field be edited freely in the meantime.
+function CopiesInput({ value, onCommit }: { value: number; onCommit: (copies: number) => void }) {
+  const [draft, setDraft] = useState(String(value));
+
+  useEffect(() => {
+    setDraft(String(value));
+  }, [value]);
+
+  const commit = () => {
+    const parsed = Number(draft);
+    if (Number.isFinite(parsed)) onCommit(parsed);
+    else setDraft(String(value));
+  };
+
+  return (
+    <TextField
+      type="number"
+      size="small"
+      label="Copies"
+      value={draft}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          commit();
+          (e.target as HTMLInputElement).blur();
+        }
+      }}
+      inputProps={{ min: 1, style: { width: 56 } }}
+    />
+  );
+}
 
 export default function GalleryDialog({ open, onClose, entries, onLoad, onDelete, onCopiesChange, onPrintSheet }: {
   open: boolean;
@@ -43,13 +83,9 @@ export default function GalleryDialog({ open, onClose, entries, onLoad, onDelete
                 divider
                 secondaryAction={
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <TextField
-                      type="number"
-                      size="small"
-                      label="Copies"
+                    <CopiesInput
                       value={entry.copies}
-                      onChange={(e) => onCopiesChange(entry.id, Number(e.target.value))}
-                      inputProps={{ min: 1, style: { width: 56 } }}
+                      onCommit={(copies) => onCopiesChange(entry.id, copies)}
                     />
                     <Tooltip title="Load into form">
                       <IconButton edge="end" onClick={() => onLoad(entry)}>
