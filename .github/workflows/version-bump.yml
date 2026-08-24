@@ -1,10 +1,13 @@
 # Runs on every push to main (i.e. after a PR merges - main is protected
 # and requires passing CI, so every push here already passed the pipeline).
 # Parses commit subjects since the last tag using Conventional Commits
-# (see CONTRIBUTING.md) to compute the next semver bump, commits it to
-# package.json, and pushes - that push re-triggers deploy.yml (rebuild with
-# the new version) and release.yml (tag + GitHub Release), both already
-# idempotent. Replaces the old manual "chore: bump version" PR step.
+# (see CONTRIBUTING.md) to compute the next semver bump, then opens a PR
+# bumping package.json and merges it once its own required check passes -
+# main requires a PR for every change, including this one, so it can't
+# just push the bump directly. That merge is itself a push to main, which
+# re-triggers deploy.yml (rebuild with the new version) and release.yml
+# (tag + GitHub Release), both already idempotent. Replaces the old manual
+# "chore: bump version" PR step.
 
 name: Version Bump
 
@@ -65,10 +68,16 @@ jobs:
           esac
           echo "next=$MAJOR.$MINOR.$PATCH" >> "$GITHUB_OUTPUT"
 
-      - name: Bump package.json and push
+      - name: Bump package.json, open a PR, and merge it
         if: steps.classify.outputs.bump != 'none'
+        env:
+          # gh (pre-installed on the runner) needs a token with permission
+          # to create/merge PRs on this repo - reusing the same deploy PAT
+          # deploy.yml already uses, not the default GITHUB_TOKEN.
+          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
         run: |
           NEXT="${{ steps.next_version.outputs.next }}"
+          BRANCH="chore/version-bump-v$NEXT"
           node -e "
             const fs = require('fs');
             const pkg = require('./package.json');
@@ -77,11 +86,22 @@ jobs:
           "
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
           git add package.json
           git commit -m "chore(release): bump version to v$NEXT"
-          # Push with the deploy PAT, not the default GITHUB_TOKEN - pushes
-          # made with the default token don't trigger further workflow runs,
-          # which would leave deploy.yml/release.yml never firing for the
-          # bumped version.
+          # main is a protected branch requiring a PR (even for admins/PATs -
+          # a direct `git push` to main is rejected outright), so this can't
+          # push straight to main like the tag push in release.yml does.
+          # Push the bump to its own branch, open a PR, wait for its
+          # required check to pass, then merge - same path every other
+          # change on this repo goes through.
           git remote set-url origin "https://x-access-token:${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}@github.com/${{ github.repository }}"
-          git push origin HEAD:main
+          git push origin "$BRANCH"
+          PR_URL=$(gh pr create --base main --head "$BRANCH" --title "chore(release): bump version to v$NEXT" --body "Automated version bump - see .github/workflows/version-bump.yml.")
+          gh pr checks "$PR_URL" --watch --interval 10 --fail-fast
+          # --subject explicit (rather than gh's default "Merge pull
+          # request #N from ..." wording) so the resulting merge commit's
+          # message still contains "chore(release): bump version" - the
+          # job-level `if:` above greps for that exact phrase to skip
+          # re-running on the push this merge itself produces.
+          gh pr merge "$PR_URL" --merge --delete-branch --subject "chore(release): bump version to v$NEXT"
