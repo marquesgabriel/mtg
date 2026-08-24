@@ -1,7 +1,7 @@
 # Moves the issues a PR closes (via "Closes #123" in the PR body) on the
-# project board: "In Progress" when the PR opens/reopens, "Done" when it
-# merges. Runs on every merge target, not just the default branch — this
-# repo reviews via PRs into release/* branches, and GitHub's native
+# project board: "In Progress" when the PR opens/reopens, "Done" + archived
+# when it merges. Runs on every merge target, not just the default branch —
+# this repo reviews via PRs into release/* branches, and GitHub's native
 # "Closes #N" auto-close (and the built-in project "item closed" automation
 # that depends on it) only fires for merges into the default branch, so
 # without this step issues never leave "In Progress" until the release
@@ -32,8 +32,15 @@ jobs:
             const TARGET_STATUS = context.payload.action === "closed" ? "Done" : "In Progress";
 
             const body = context.payload.pull_request.body || "";
-            const closesRegex = /\b(close[sd]?|fix(?:es|ed)?|resolve[sd]?)\s*:?\s*#(\d+)/gi;
-            const issueNumbers = [...body.matchAll(closesRegex)].map(m => parseInt(m[2], 10));
+            // Matches a keyword followed by one or more #N references, so
+            // "Closes #56, #72, #54" picks up all three - not just the one
+            // immediately after "Closes" - since only requiring the keyword
+            // once per list (not once per number) is how PR bodies are
+            // naturally written.
+            const closesRegex = /\b(?:close[sd]?|fix(?:es|ed)?|resolve[sd]?)\s*:?\s*((?:#\d+(?:\s*,\s*|\s+and\s+)?)+)/gi;
+            const issueNumbers = [...body.matchAll(closesRegex)].flatMap(
+              (m) => [...m[1].matchAll(/#(\d+)/g)].map((n) => parseInt(n[1], 10))
+            );
 
             if (issueNumbers.length === 0) {
               console.log("No 'Closes #N' references found in PR body — nothing to do.");
@@ -91,6 +98,18 @@ jobs:
               }
             `;
 
+            // Archiving is separate from Status - a project board can
+            // otherwise accumulate "Done" items indefinitely with no
+            // built-in cleanup, so items are archived right after landing
+            // on Done instead of leaving that as a manual chore.
+            const archiveMutation = `
+              mutation($projectId: ID!, $itemId: ID!) {
+                archiveProjectV2Item(input: { projectId: $projectId, itemId: $itemId }) {
+                  item { id }
+                }
+              }
+            `;
+
             for (const issueNumber of issueNumbers) {
               const item = project.items.nodes.find(
                 n => n.content && n.content.number === issueNumber
@@ -106,4 +125,12 @@ jobs:
                 optionId: targetOption.id,
               });
               console.log(`Moved issue #${issueNumber} to "${TARGET_STATUS}".`);
+
+              if (TARGET_STATUS === "Done") {
+                await github.graphql(archiveMutation, {
+                  projectId: project.id,
+                  itemId: item.id,
+                });
+                console.log(`Archived issue #${issueNumber}.`);
+              }
             }
