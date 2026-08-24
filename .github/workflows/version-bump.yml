@@ -98,6 +98,17 @@ jobs:
           git remote set-url origin "https://x-access-token:${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}@github.com/${{ github.repository }}"
           git push origin "$BRANCH"
           PR_URL=$(gh pr create --base main --head "$BRANCH" --title "chore(release): bump version to v$NEXT" --body "Automated version bump - see .github/workflows/version-bump.yml.")
+          # gh pr checks --watch errors out immediately with "no checks
+          # reported" if called before GitHub has registered the new PR's
+          # check suite (a race, confirmed live - the check run itself
+          # started and passed within a couple seconds of the "no checks
+          # reported" error). Poll until at least one check shows up, then
+          # watch it through to completion.
+          for _ in $(seq 1 12); do
+            COUNT=$(gh pr checks "$PR_URL" --json state --jq 'length' 2>/dev/null || echo 0)
+            [ "$COUNT" != "0" ] && break
+            sleep 5
+          done
           gh pr checks "$PR_URL" --watch --interval 10 --fail-fast
           # --subject explicit (rather than gh's default "Merge pull
           # request #N from ..." wording) so the resulting merge commit's
