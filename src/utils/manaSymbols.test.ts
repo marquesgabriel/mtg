@@ -6,18 +6,16 @@ test('replaces a single mana symbol', () => {
 
 test('replaces repeated occurrences of the same symbol', () => {
   const result = parseManaSymbols('{u}{u}{u}');
-  expect(result).toBe(
-    '<i class="ms ms-u blue"></i>'.repeat(3),
-  );
+  expect(result).toBe('<i class="ms ms-u blue"></i>'.repeat(3));
 });
 
 test('replaces multiple different symbols in one string, including repeats', () => {
   const result = parseManaSymbols('{2}{u}{u}{tap}');
   expect(result).toBe(
     '<i class="ms ms-2 colorless"></i>' +
-    '<i class="ms ms-u blue"></i>' +
-    '<i class="ms ms-u blue"></i>' +
-    '<i class="ms ms-tap colorless"></i>',
+      '<i class="ms ms-u blue"></i>' +
+      '<i class="ms ms-u blue"></i>' +
+      '<i class="ms ms-tap colorless"></i>',
   );
 });
 

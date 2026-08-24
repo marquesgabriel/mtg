@@ -77,7 +77,10 @@ export async function removeFromGallery(id: string): Promise<GalleryEntry[]> {
   return getAllEntries();
 }
 
-export async function updateGalleryEntryCopies(id: string, copies: number): Promise<GalleryEntry[]> {
+export async function updateGalleryEntryCopies(
+  id: string,
+  copies: number,
+): Promise<GalleryEntry[]> {
   const safeCopies = Number.isFinite(copies) ? Math.max(1, Math.floor(copies)) : 1;
   const entries = await getAllEntries();
   const entry = entries.find((e) => e.id === id);

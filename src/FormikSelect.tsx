@@ -4,7 +4,12 @@ import InputLabel from '@mui/material/InputLabel';
 // Wraps the InputLabel + value/onChange/onBlur/error wiring shared by every
 // Formik-bound Select in the form, instead of repeating it at each call
 // site (see #60).
-export default function FormikSelect({ formik, name, label, children }: {
+export default function FormikSelect({
+  formik,
+  name,
+  label,
+  children,
+}: {
   formik: any;
   name: string;
   label: string;

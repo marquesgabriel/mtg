@@ -11,13 +11,11 @@ const appVersion = process.env.REACT_APP_VERSION ?? 'unknown';
 (window as any).APP_VERSION = appVersion;
 console.log(`App version: ${appVersion} (also available as window.APP_VERSION)`);
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

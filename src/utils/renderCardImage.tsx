@@ -67,7 +67,7 @@ export async function renderCardImage(token: TokenValues, image: string): Promis
         formik={{ values: token }}
         croppedImage={image}
         description={parseManaSymbols(token.description)}
-      />
+      />,
     );
 
     const node = await waitForNode(container, 'offscreen-print-card');
@@ -81,7 +81,7 @@ export async function renderCardImage(token: TokenValues, image: string): Promis
     // corners outside the border-radius match the live preview instead of
     // showing a black canvas background through them.
     const cardBgColor = getComputedStyle(node).backgroundColor;
-    return await domtoimage.toPng(node, {
+    return (await domtoimage.toPng(node, {
       quality: 1,
       bgcolor: cardBgColor,
       width: node.offsetWidth * SCALE,
@@ -103,7 +103,7 @@ export async function renderCardImage(token: TokenValues, image: string): Promis
         width: `${node.offsetWidth}px`,
         height: `${node.offsetHeight}px`,
       },
-    }) as string;
+    })) as string;
   } finally {
     root.unmount();
     document.body.removeChild(container);

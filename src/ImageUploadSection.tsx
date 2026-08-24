@@ -11,46 +11,53 @@ import VisuallyHiddenInput from './VisuallyHiddenInput';
 
 export default function ImageUploadSection({ formik, zoom, setZoom, handlePickedImage }: any) {
   return (
-    <div className='row pt-2 pb-2 gy-3'>
-      <div className='col-12'>
+    <div className="row pt-2 pb-2 gy-3">
+      <div className="col-12">
         <Typography variant="h4" gutterBottom>
           Image upload and edit
         </Typography>
       </div>
-      <div className='col-12'>
-        <div className='d-flex justify-content-center'>
+      <div className="col-12">
+        <div className="d-flex justify-content-center">
           <Button
             component="label"
             role={undefined}
             variant="contained"
-            size='small'
+            size="small"
             tabIndex={-1}
             startIcon={<FileUploadIcon />}
           >
             Upload file
-            <VisuallyHiddenInput accept='image/jpeg, image/png' onChange={handlePickedImage} type="file" />
+            <VisuallyHiddenInput
+              accept="image/jpeg, image/png"
+              onChange={handlePickedImage}
+              type="file"
+            />
           </Button>
         </div>
       </div>
-      <div className='col-12'>
+      <div className="col-12">
         <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
           <ZoomOut />
-          <Slider aria-label="Zoom"
+          <Slider
+            aria-label="Zoom"
             value={zoom}
-            step={.05}
+            step={0.05}
             marks
             min={1}
             max={3}
             onChange={(e: any) => {
-              setZoom(e.target.value)
+              setZoom(e.target.value);
             }}
           />
           <ZoomIn />
         </Stack>
       </div>
-      <div className='col-6'>
+      <div className="col-6">
         <FormikSelect formik={formik} name="cardImageSize" label="Image Size">
-          <MenuItem value="full-art" defaultChecked>Full Art</MenuItem>
+          <MenuItem value="full-art" defaultChecked>
+            Full Art
+          </MenuItem>
           <MenuItem value="classic">Classic</MenuItem>
         </FormikSelect>
       </div>

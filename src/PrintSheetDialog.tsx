@@ -21,7 +21,11 @@ function chunk<T>(items: T[], size: number): T[][] {
   return pages;
 }
 
-export default function PrintSheetDialog({ open, onClose, entries }: {
+export default function PrintSheetDialog({
+  open,
+  onClose,
+  entries,
+}: {
   open: boolean;
   onClose: () => void;
   entries: GalleryEntry[];
@@ -48,7 +52,9 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
     // entries is a new array reference each time the gallery changes, so
     // this intentionally re-renders images whenever the dialog opens or
     // the underlying gallery data changes - not on every parent re-render.
@@ -63,7 +69,8 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
   return (
     <Dialog open={open} onClose={onClose} fullScreen>
       <DialogTitle className="no-print">
-        Print Sheet ({cards.length} card{cards.length === 1 ? '' : 's'} across {pages.length} page{pages.length === 1 ? '' : 's'} + matching backs)
+        Print Sheet ({cards.length} card{cards.length === 1 ? '' : 's'} across {pages.length} page
+        {pages.length === 1 ? '' : 's'} + matching backs)
       </DialogTitle>
       <DialogContent>
         {cards.length === 0 ? (
@@ -90,7 +97,10 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
             {pages.map((pageCards, pageIndex) => (
               <div className="print-sheet__page" key={`back-${pageIndex}`}>
                 {pageCards.map((_entry, cardIndex) => (
-                  <div className="print-sheet__card print-sheet__card--back" key={`back-${pageIndex}-${cardIndex}`} />
+                  <div
+                    className="print-sheet__card print-sheet__card--back"
+                    key={`back-${pageIndex}-${cardIndex}`}
+                  />
                 ))}
               </div>
             ))}
@@ -98,7 +108,9 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
         )}
       </DialogContent>
       <DialogActions className="no-print">
-        <Button type="button" onClick={onClose}>Close</Button>
+        <Button type="button" onClick={onClose}>
+          Close
+        </Button>
         <Button
           type="button"
           variant="contained"

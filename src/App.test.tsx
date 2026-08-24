@@ -18,7 +18,9 @@ test('typing a mana symbol in the description renders its icon on the card previ
   // match is the visible/interactive one.
   const [descriptionInput] = screen.getAllByRole('textbox', { name: /description/i });
 
-  fireEvent.change(descriptionInput, { target: { value: 'Tap: add {u} to your mana pool. {tap}' } });
+  fireEvent.change(descriptionInput, {
+    target: { value: 'Tap: add {u} to your mana pool. {tap}' },
+  });
 
   expect(document.body.innerHTML).toContain('ms-u');
   expect(document.body.innerHTML).toContain('ms-tap');

@@ -21,7 +21,6 @@
 @import './card-colors/selesnya';
 @import './card-colors/simic';
 
-
 .card-wrapper {
   display: block;
   position: relative;
@@ -163,7 +162,6 @@
         max-width: 100%;
       }
     }
-
   }
 
   div.card-footer {
@@ -191,15 +189,15 @@
 
     &.card-name {
       position: absolute;
-      top: .25mm;
+      top: 0.25mm;
       left: 1%;
       width: 96%;
       text-align: center;
       z-index: 8;
       font-size: 12pt;
 
-      &>div {
-        padding: .15em;
+      & > div {
+        padding: 0.15em;
       }
     }
 
@@ -216,8 +214,8 @@
         bottom: 9mm;
       }
 
-      &>div {
-        padding: .15em;
+      & > div {
+        padding: 0.15em;
       }
     }
 
@@ -232,8 +230,8 @@
       text-align: left;
       font-size: 9.5pt;
 
-      &>div {
-        padding: .5em;
+      & > div {
+        padding: 0.5em;
         text-align: left;
       }
     }
@@ -250,7 +248,7 @@
 
   .card-mana-cost {
     position: absolute;
-    top: .5mm;
+    top: 0.5mm;
     right: 2%;
     z-index: 9;
     text-align: right;
@@ -258,7 +256,7 @@
     white-space: nowrap;
 
     i.ms {
-      margin-left: .1em;
+      margin-left: 0.1em;
     }
   }
 
@@ -269,9 +267,11 @@
     border-top-right-radius: 6% 42%;
     border-bottom-right-radius: 6% 42%;
 
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
 
-    &>div {
+    & > div {
       border: solid 1px black;
       border-top-left-radius: 4% 42%;
       border-bottom-left-radius: 4% 42%;
@@ -287,7 +287,7 @@
     border-top-right-radius: 14% 42%;
     border-bottom-right-radius: 14% 42%;
 
-    &>div {
+    & > div {
       border: solid 1px black;
       border-top-left-radius: 11% 42%;
       border-bottom-left-radius: 11% 42%;

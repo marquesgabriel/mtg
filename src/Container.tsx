@@ -12,7 +12,12 @@ interface PropTypes {
   barButtons?: 'full' | 'close-only';
 }
 
-export default function Container({ classes = '', children, title, barButtons = 'full' }: PropTypes) {
+export default function Container({
+  classes = '',
+  children,
+  title,
+  barButtons = 'full',
+}: PropTypes) {
   return (
     <div className={`container-wrapper ${classes}`}>
       <div className="title">

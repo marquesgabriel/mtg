@@ -2,10 +2,10 @@
   .card-inner {
     background-color: $multicolor;
 
-    &>.rounded-sides-inset {
+    & > .rounded-sides-inset {
       border-color: $multicolor;
 
-      &>div {
+      & > div {
         border-color: black;
       }
     }
@@ -22,7 +22,7 @@
   .card-name {
     background: radial-gradient(circle, black 0%, $multicolor 75%);
 
-    &>div {
+    & > div {
       color: white;
     }
   }
