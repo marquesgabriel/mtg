@@ -1,0 +1,87 @@
+# Runs on every push to main (i.e. after a PR merges - main is protected
+# and requires passing CI, so every push here already passed the pipeline).
+# Parses commit subjects since the last tag using Conventional Commits
+# (see CONTRIBUTING.md) to compute the next semver bump, commits it to
+# package.json, and pushes - that push re-triggers deploy.yml (rebuild with
+# the new version) and release.yml (tag + GitHub Release), both already
+# idempotent. Replaces the old manual "chore: bump version" PR step.
+
+name: Version Bump
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: write
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    # This workflow's own bump commit is itself a push to main - skip
+    # re-running on it instead of relying only on the classifier finding
+    # nothing to bump (chore(release): commits don't match feat:/fix:
+    # below, but skipping outright avoids the wasted run).
+    if: ${{ !contains(github.event.head_commit.message, 'chore(release): bump version') }}
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Determine last tag
+        id: last_tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Classify commits since last tag (Conventional Commits)
+        id: classify
+        run: |
+          RANGE="${{ steps.last_tag.outputs.tag }}..HEAD"
+          git rev-parse "${{ steps.last_tag.outputs.tag }}" >/dev/null 2>&1 || RANGE="HEAD"
+
+          LOG=$(git log $RANGE --pretty=format:%s)
+          BUMP="none"
+          if echo "$LOG" | grep -qE '^[a-zA-Z]+(\(.+\))?!:|BREAKING CHANGE'; then
+            BUMP="major"
+          elif echo "$LOG" | grep -qE '^feat(\(.+\))?:'; then
+            BUMP="minor"
+          elif echo "$LOG" | grep -qE '^(fix|perf)(\(.+\))?:'; then
+            BUMP="patch"
+          fi
+          echo "bump=$BUMP" >> "$GITHUB_OUTPUT"
+
+      - name: Compute next version
+        id: next_version
+        if: steps.classify.outputs.bump != 'none'
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          case "${{ steps.classify.outputs.bump }}" in
+            major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH + 1)) ;;
+          esac
+          echo "next=$MAJOR.$MINOR.$PATCH" >> "$GITHUB_OUTPUT"
+
+      - name: Bump package.json and push
+        if: steps.classify.outputs.bump != 'none'
+        run: |
+          NEXT="${{ steps.next_version.outputs.next }}"
+          node -e "
+            const fs = require('fs');
+            const pkg = require('./package.json');
+            pkg.version = '$NEXT';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore(release): bump version to v$NEXT"
+          # Push with the deploy PAT, not the default GITHUB_TOKEN - pushes
+          # made with the default token don't trigger further workflow runs,
+          # which would leave deploy.yml/release.yml never firing for the
+          # bumped version.
+          git remote set-url origin "https://x-access-token:${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}@github.com/${{ github.repository }}"
+          git push origin HEAD:main
