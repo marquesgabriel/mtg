@@ -15,19 +15,38 @@ const TokenCard = forwardRef(({ formik, image, croppedImage, crop, zoom, setCrop
   // Shrinks the description font until it fits the fixed-height box instead
   // of overflowing and breaking the card layout (measures real DOM overflow
   // rather than estimating from character count, since mana/tap icons take
-  // up space that character count alone doesn't capture).
+  // up space that character count alone doesn't capture). Re-runs once
+  // document.fonts.ready resolves because the initial pass can measure
+  // against fallback-font metrics on a cold cache, then never re-shrink
+  // once the custom @font-face swaps in and changes scrollHeight.
   useLayoutEffect(() => {
     const box = descriptionBoxRef.current;
     const content = descriptionContentRef.current;
     if (!box || !content) return;
 
-    let fontSize = DESCRIPTION_BASE_FONT_SIZE_PT;
-    content.style.fontSize = `${fontSize}pt`;
+    let cancelled = false;
 
-    while (content.scrollHeight > box.clientHeight && fontSize > DESCRIPTION_MIN_FONT_SIZE_PT) {
-      fontSize -= DESCRIPTION_FONT_STEP_PT;
+    const shrinkToFit = () => {
+      if (cancelled) return;
+      let fontSize = DESCRIPTION_BASE_FONT_SIZE_PT;
       content.style.fontSize = `${fontSize}pt`;
+
+      while (content.scrollHeight > box.clientHeight && fontSize > DESCRIPTION_MIN_FONT_SIZE_PT) {
+        fontSize -= DESCRIPTION_FONT_STEP_PT;
+        content.style.fontSize = `${fontSize}pt`;
+      }
+    };
+
+    shrinkToFit();
+    // document.fonts is unimplemented in the jsdom version this repo's test
+    // suite runs on (jsdom 16), unlike every real target browser.
+    if (document.fonts) {
+      document.fonts.ready.then(shrinkToFit);
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [description]);
 
   return (<div ref={ref} id={id} className={`card-wrapper ${formik.values.cardBorder}-border ${formik.values.cardColor}`}>
