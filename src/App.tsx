@@ -117,7 +117,7 @@ function App() {
   const downloadAs = async (ext: string) => {
     if (!(await ensureCropped())) return;
     await ensureCropped();
-    
+
     // Same self-hosted @font-face timing issue as renderCardImage.tsx - wait
     // for the title/type-line fonts to finish loading before capturing,
     // otherwise a cold cache can bake the fallback system font into the export.
@@ -228,7 +228,7 @@ function App() {
       }
     }
     const { token } = serializeToken(formik.values);
-    const croppedDataUrl = await getCroppedImgDataUrl(image, croppedArea, 0);
+    croppedDataUrl = await getCroppedImgDataUrl(image, croppedArea, 0);
     setGallery(await addToGallery(token, croppedDataUrl ?? ''));
     setFeedback({ message: 'Saved to gallery', severity: 'success' });
   };
@@ -281,7 +281,7 @@ function App() {
     // not this form. Kept as a no-op (rather than removing <form>/onSubmit
     // entirely) so formik.handleSubmit still preventDefaults an Enter-key
     // submit in a text field, avoiding a full page reload.
-    onSubmit: () => {},
+    onSubmit: () => { },
   });
 
   // Debounced auto-save of the text/selection fields (see loadDraft/saveDraft above).
