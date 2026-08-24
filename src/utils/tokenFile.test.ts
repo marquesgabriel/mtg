@@ -1,4 +1,9 @@
-import { serializeToken, isValidTokenFile, tokenValuesFromFile, TOKEN_FILE_VERSION } from './tokenFile';
+import {
+  serializeToken,
+  isValidTokenFile,
+  tokenValuesFromFile,
+  TOKEN_FILE_VERSION,
+} from './tokenFile';
 import { DEFAULT_TOKEN_VALUES, TOKEN_FIELD_KEYS } from './tokenFields';
 
 describe('serializeToken', () => {

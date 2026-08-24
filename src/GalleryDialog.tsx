@@ -56,7 +56,15 @@ function CopiesInput({ value, onCommit }: { value: number; onCommit: (copies: nu
   );
 }
 
-export default function GalleryDialog({ open, onClose, entries, onLoad, onDelete, onCopiesChange, onPrintSheet }: {
+export default function GalleryDialog({
+  open,
+  onClose,
+  entries,
+  onLoad,
+  onDelete,
+  onCopiesChange,
+  onPrintSheet,
+}: {
   open: boolean;
   onClose: () => void;
   entries: GalleryEntry[];
@@ -71,9 +79,9 @@ export default function GalleryDialog({ open, onClose, entries, onLoad, onDelete
       <DialogContent>
         {entries.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
-            No tokens saved yet. Use "Save to Gallery" to keep a token here without
-            downloading a file - you can reopen or delete it later, and set how many
-            copies of it should go on a printed sheet.
+            No tokens saved yet. Use "Save to Gallery" to keep a token here without downloading a
+            file - you can reopen or delete it later, and set how many copies of it should go on a
+            printed sheet.
           </Typography>
         ) : (
           <List>

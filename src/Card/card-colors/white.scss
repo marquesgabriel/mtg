@@ -6,10 +6,10 @@
 
     background-color: $white;
 
-    &>.rounded-sides-inset {
+    & > .rounded-sides-inset {
       border-color: $white;
 
-      &>div {
+      & > div {
         border-color: black;
       }
     }
@@ -27,7 +27,7 @@
     background: $white;
 
     // background: radial-gradient(circle, black 0%, $white 75%);
-    &>div {
+    & > div {
       color: black;
     }
   }

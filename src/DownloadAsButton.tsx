@@ -9,7 +9,11 @@ import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 
-const options = [{ label: 'Download as SVG', value: "svg" }, { label: 'Download as PNG', value: "png" }, { label: 'Download as JPG', value: "jpeg" }];
+const options = [
+  { label: 'Download as SVG', value: 'svg' },
+  { label: 'Download as PNG', value: 'png' },
+  { label: 'Download as JPG', value: 'jpeg' },
+];
 export default function DownloadAsButton({ downloadAs }: any) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
@@ -32,10 +36,7 @@ export default function DownloadAsButton({ downloadAs }: any) {
   };
 
   const handleClose = (event: Event) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
       return;
     }
 
@@ -44,13 +45,16 @@ export default function DownloadAsButton({ downloadAs }: any) {
 
   return (
     <>
-      <ButtonGroup className='pt-2'
+      <ButtonGroup
+        className="pt-2"
         variant="contained"
         ref={anchorRef}
-        size='small'
+        size="small"
         aria-label="Button group with a nested menu"
       >
-        <Button type="button" onClick={handleClick}>{options[selectedIndex].label}</Button>
+        <Button type="button" onClick={handleClick}>
+          {options[selectedIndex].label}
+        </Button>
         <Button
           type="button"
           size="small"
@@ -72,14 +76,13 @@ export default function DownloadAsButton({ downloadAs }: any) {
         role={undefined}
         transition
         disablePortal
-        placement='top'
+        placement="top"
       >
         {({ TransitionProps, placement }: any) => (
           <Grow
             {...TransitionProps}
             style={{
-              transformOrigin:
-                placement === 'top' ? 'center top' : 'center top',
+              transformOrigin: placement === 'top' ? 'center top' : 'center top',
             }}
           >
             <Paper>

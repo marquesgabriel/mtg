@@ -11,7 +11,7 @@
 export async function waitForCaptureReady(node: HTMLElement): Promise<void> {
   const images = Array.from(node.querySelectorAll('img'));
   await Promise.all(
-    images.map((img) => (img.decode ? img.decode().catch(() => undefined) : Promise.resolve()))
+    images.map((img) => (img.decode ? img.decode().catch(() => undefined) : Promise.resolve())),
   );
   await document.fonts.ready;
   await new Promise<void>((resolve) => {

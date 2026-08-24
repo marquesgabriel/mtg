@@ -6,10 +6,10 @@
 
     background-color: $colorless;
 
-    &>.rounded-sides-inset {
+    & > .rounded-sides-inset {
       border-color: $colorless;
 
-      &>div {
+      & > div {
         border-color: black;
       }
     }
@@ -26,7 +26,7 @@
   .card-name {
     background: radial-gradient(circle, black 0%, $colorless 75%);
 
-    &>div {
+    & > div {
       color: white;
     }
   }
@@ -44,5 +44,4 @@
       color: black;
     }
   }
-
 }
