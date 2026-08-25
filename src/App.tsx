@@ -9,30 +9,33 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
 import './App.scss';
-import TokenCard from './Card';
-import getCroppedImg, { getCroppedImgDataUrl } from './utils/cropper';
-import { waitForCaptureReady } from './utils/captureReady';
-import { parseManaSymbols } from './utils/manaSymbols';
-import { safeStorageGet, safeStorageSet, safeStorageRemove } from './utils/safeStorage';
 import {
+  getCroppedImg,
+  getCroppedImgDataUrl,
+  waitForCaptureReady,
+  parseManaSymbols,
+  safeStorageGet,
+  safeStorageSet,
+  safeStorageRemove,
   DEFAULT_TOKEN_VALUES as DEFAULT_VALUES,
   TOKEN_FIELD_KEYS as PERSISTED_FIELDS,
-} from './utils/tokenFields';
-import { serializeToken } from './utils/tokenFile';
-import {
+  serializeToken,
   GalleryEntry,
   loadGallery,
   addToGallery,
   removeFromGallery,
   updateGalleryEntryCopies,
-} from './utils/gallery';
-import SupportSidebar from './SupportSidebar';
-import CardStyleSection from './CardStyleSection';
-import ImageUploadSection from './ImageUploadSection';
-import CardDataSection from './CardDataSection';
-import GalleryDialog from './GalleryDialog';
-import PrintSheetDialog from './PrintSheetDialog';
-import Container from './Container';
+} from './utils';
+import {
+  TokenCard,
+  SupportSidebar,
+  CardStyleSection,
+  ImageUploadSection,
+  CardDataSection,
+  GalleryDialog,
+  PrintSheetDialog,
+  Container,
+} from './components';
 
 const DRAFT_STORAGE_KEY = 'mtg-token-generator:draft';
 const DEFAULT_IMAGE =
@@ -149,7 +152,7 @@ function App() {
     // frame right after ensureCropped's DOM swap (see utils/captureReady.ts).
     await waitForCaptureReady(node);
     // .card-wrapper's own background-color already matches its border
-    // color (see Card/index.scss's *-border classes) - using it as the
+    // color (see components/Card/index.scss's *-border classes) - using it as the
     // capture's bgcolor (instead of a hardcoded black) means the rounded
     // corners outside the border-radius match the live preview instead of
     // showing a black canvas background through them.

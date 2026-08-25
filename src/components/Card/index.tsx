@@ -1,7 +1,7 @@
 import { forwardRef, useLayoutEffect, useRef } from 'react';
 import Cropper from 'react-easy-crop';
 import moment from 'moment';
-import { parseManaSymbols } from '../utils/manaSymbols';
+import { parseManaSymbols } from '../../utils';
 import './index.scss';
 
 const DESCRIPTION_BASE_FONT_SIZE_PT = 9.5;
