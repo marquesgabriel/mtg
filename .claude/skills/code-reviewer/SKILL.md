@@ -18,11 +18,13 @@ already caused a real bug once in this repo.
    introduced in CI, docs, or scripts — `npm ci` fails outright here (this
    already happened once, see the CI workflow history).
 
-2. **Env vars must use the `REACT_APP_` prefix.** CRA only inlines
-   `REACT_APP_*` vars into the client bundle. Any new build-time config
-   needs that prefix or it silently becomes `undefined` at runtime. Values
-   consumed at build time in CI should be read from `process.env` in the
-   component, not hardcoded.
+2. **Env vars must use the `REACT_APP_` prefix.** The repo runs on Vite
+   (migrated from CRA, #20) but kept `REACT_APP_` as the `envPrefix` in
+   `vite.config.ts` on purpose, instead of switching to Vite's default
+   `VITE_`. Any new build-time config needs that prefix or it silently
+   becomes `undefined` at runtime. Values consumed at build time should be
+   read from `import.meta.env` in the component, not `process.env` (not
+   polyfilled in the browser under Vite) and not hardcoded.
 
 3. **Non-sensitive build vars go in GitHub Actions *variables*, not
    secrets.** E.g. `REACT_APP_ADSENSE_PUBLISHER_ID` is public in any
@@ -31,7 +33,7 @@ already caused a real bug once in this repo.
    secret (tokens, keys) landing in a plain var or being hardcoded.
 
 4. **No hardcoded AdSense Publisher ID.** `SupportSidebar.tsx` must read
-   `process.env.REACT_APP_ADSENSE_PUBLISHER_ID` — never a literal
+   `import.meta.env.REACT_APP_ADSENSE_PUBLISHER_ID` — never a literal
    `"ca-pub-..."` string. This was hardcoded once for local QA; check it
    didn't slip into a commit.
 
@@ -52,7 +54,8 @@ already caused a real bug once in this repo.
 
 6. **CI gate: lint, test, build, and format must all pass.** `yarn lint`
    (ESLint, via the flat `eslint.config.js`), `yarn format:check`
-   (Prettier), `yarn build`, and `yarn test` are all enforced in `ci.yml`.
+   (Prettier), `yarn build` (Vite, with a `tsc --noEmit` type-check first),
+   and `yarn test:ci` (Vitest) are all enforced in `ci.yml`.
 
 7. **Issue linkage.** A PR that closes an issue should have `Closes #N` /
    `Fixes #N` in its body (the PR template has this field). This isn't

@@ -6,8 +6,8 @@ conectam, para servir de base para futuras melhorias e novas funcionalidades.
 ## Visão geral
 
 `token-generator` é uma SPA (single-page application) client-side, sem
-backend, feita com **Create React App + TypeScript** (migração para Vite
-tracked em #20). O usuário preenche um formulário e vê, em tempo real, uma
+backend, feita com **React + TypeScript + Vite** (migrada de Create React
+App em #20). O usuário preenche um formulário e vê, em tempo real, uma
 prévia de um token de Magic: The Gathering renderizada em HTML/CSS. Ao final,
 a carta pode ser exportada como imagem (PNG, JPEG ou SVG) diretamente no
 navegador.
@@ -21,7 +21,7 @@ Deploy: publicado via `gh-pages` (script `yarn deploy`, automatizado em
 
 | Camada              | Tecnologia |
 |---------------------|------------|
-| Framework           | React 18 + TypeScript, bootstrap via `react-scripts` (CRA) |
+| Framework           | React 18 + TypeScript, bundlado com Vite (`@vitejs/plugin-react`) |
 | Formulário/validação| Formik + Yup |
 | UI Kit              | Material UI (MUI) + Bootstrap (grid/layout) |
 | Estilos             | Sass (SCSS) — cores de carta (`Card/card-colors`) + temas visuais do app shell (`styles/_win98.scss` e afins) |
@@ -29,7 +29,7 @@ Deploy: publicado via `gh-pages` (script `yarn deploy`, automatizado em
 | Exportação de imagem| `dom-to-image` |
 | Ícones de mana       | `mana-font` |
 | Datas               | `moment` (usado só para o ano do rodapé) |
-| Testes              | Jest/Testing Library (via `react-scripts test`) |
+| Testes              | Vitest/Testing Library |
 | Deploy estático      | `gh-pages` |
 | Monetização          | AdSense com consentimento de cookies (`SupportSidebar.tsx`) — mesma conta usada em marquesgabriel.github.io |
 
@@ -141,26 +141,31 @@ texto, evitando reload de página.
 
 | Script | Descrição |
 |--------|-----------|
-| `yarn start` | Sobe o servidor de desenvolvimento (CRA) |
-| `yarn build` | Build de produção em `build/` |
-| `yarn test` | Executa os testes (Jest/Testing Library via CRA) |
+| `yarn start` | Sobe o servidor de desenvolvimento (Vite) |
+| `yarn build` | `tsc --noEmit` (type-check — Vite/esbuild não checa tipos) + build de produção (Vite) em `build/` |
+| `yarn test` | Executa os testes em modo watch (Vitest/Testing Library) |
+| `yarn test:ci` | Executa os testes uma vez, não-interativo (usado no CI) |
 | `yarn lint` | ESLint sobre `src` |
-| `yarn format` | Prettier sobre `src/**/*.{ts,tsx,scss}` |
+| `yarn format` | Prettier sobre `src/**/*.{ts,tsx,scss}` e os arquivos de config na raiz |
 | `yarn deploy` | Faz `predeploy` (build) e publica `build/` no GitHub Pages via `gh-pages` |
-| `yarn eject` | Ejeta a configuração do CRA (irreversível) |
 
 ## Limitações / pontos conhecidos
 
-- Ainda em CRA, não Vite — migração tracked em #20. Do débito
+- Migração de CRA para Vite (#20) concluída — ver `vite.config.ts`.
+  `envPrefix` mantém o prefixo `REACT_APP_` das env vars (pedido explícito
+  da issue, não `VITE_`); `build.outDir: 'build'` preserva `yarn deploy`
+  sem precisar mexer em `deploy.yml`. Testes migraram para Vitest junto
+  (obrigatório: `import.meta.env`, usado pelas env vars agora, não é
+  sintaxe que o Jest do CRA consegue processar). Do débito
   `project-scaffold` cross-project (#47): ESLint flat config
-  (`eslint.config.js`, via `FlatCompat` sobre `eslint-config-react-app` —
-  o `eslintConfig` legado no `package.json` continua existindo também,
-  pois é o que o lint interno do próprio `react-scripts`, via
-  `eslint-webpack-plugin`, resolve — esse plugin não reconhece flat
-  config), Prettier no CI (`yarn format:check` em `ci.yml`) e um hook
-  de pre-commit (husky + lint-staged, roda ESLint `--fix` e Prettier
-  nos arquivos staged) já foram feitos. Ainda adiado até #20: estrutura
-  `types`/`components` com barrel.
+  (`eslint.config.js`, via `FlatCompat` sobre `eslint-config-react-app`),
+  Prettier no CI (`yarn format:check` em `ci.yml`) e um hook de pre-commit
+  (husky + lint-staged, roda ESLint `--fix` e Prettier nos arquivos
+  staged) já foram feitos; o `eslintConfig` legado no `package.json` foi
+  removido junto com a migração para Vite, já que só existia para o lint
+  interno do `react-scripts` (que não reconhecia flat config). Restante
+  do #47, agora desbloqueado pela migração: reestruturar `src/` em
+  `types`/`components` com barrel exports.
 - `description` é injetada via `dangerouslySetInnerHTML` a partir de regex
   simples sobre input do usuário; hoje o conteúdo é local (não enviado a
   nenhum servidor), mas é um ponto a considerar em qualquer evolução que
