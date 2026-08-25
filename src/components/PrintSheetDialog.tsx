@@ -7,8 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import PrintIcon from '@mui/icons-material/Print';
-import { GalleryEntry } from './utils/gallery';
-import { renderCardImage } from './utils/renderCardImage';
+import { GalleryEntry, renderCardImage } from '../utils';
 import './PrintSheet.scss';
 
 // A4 with 10mm margins fits a 3x3 grid of standard 63.5x88.9mm cards

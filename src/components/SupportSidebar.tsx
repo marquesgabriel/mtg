@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { safeStorageGet, safeStorageSet } from './utils/safeStorage';
+import { safeStorageGet, safeStorageSet } from '../utils';
 import './SupportSidebar.scss';
 
 const CONSENT_STORAGE_KEY = 'mtg-token-generator:cookie-consent';

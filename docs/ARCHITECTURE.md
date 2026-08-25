@@ -43,43 +43,73 @@ dados abaixo).
 
 ## Estrutura de pastas
 
+Segue o padrão `project-scaffold` (components/types/utils com barrel export),
+desbloqueado pela migração para Vite (#20) — ver a nota em "Limitações" sobre
+por que `types/` não existe aqui apesar de estar no padrão.
+
 ```
 src/
-  App.tsx                → componente raiz: orquestra estado/efeitos (formik, crop,
-                            draft persistence) e compõe as seções abaixo
-  App.scss               → layout geral da página
-  Container.tsx           → wrapper visual reutilizável (janela com título/botões,
-                            usado por todas as seções do form + preview + support)
-  CardStyleSection.tsx    → seção "Card border and color" (borda/cor/textura)
-  ImageUploadSection.tsx  → seção de upload + crop de imagem
-  CardDataSection.tsx     → seção "Card data" (nome, tipo, mana cost, descrição,
-                            power/toughness, artista, botões download/reset)
-  SupportSidebar.tsx/.scss→ doação (Buy Me a Coffee) + slot de anúncio AdSense
-                            com gate de consentimento de cookies
-  Card/
-    index.tsx             → componente TokenCard: renderiza a prévia da carta
-    index.scss            → estilos estruturais da carta (moldura, campos)
-    card-colors/*.scss     → um arquivo por cor/combinação de cor (white, black,
+  App.tsx                 → componente raiz: orquestra estado/efeitos (formik, crop,
+                            draft persistence) e compõe os componentes abaixo
+  App.scss                → layout geral da página
+  App.test.tsx
+  index.tsx                → bootstrap do React + expõe window.APP_VERSION
+  reportWebVitals.ts       → hook opcional de métricas (não wired a nenhum backend)
+  setupTests.ts
+  vite-env.d.ts            → referência de tipos do Vite (import.meta.env)
+
+  components/               → barrel em index.tsx; só expõe o que App.tsx consome
+                             diretamente (sub-componentes internos, como
+                             FormikSelect/FormikTextField/DownloadAsButton/
+                             Descriptiontooltip/VisuallyHiddenInput, ficam de fora
+                             do barrel — importados direto pelo componente pai)
+    index.tsx               → barrel export
+    Container.tsx           → wrapper visual reutilizável (janela com título/botões,
+                             usado por todas as seções do form + preview + support)
+    CardStyleSection.tsx    → seção "Card border and color" (borda/cor/textura)
+    ImageUploadSection.tsx  → seção de upload + crop de imagem
+    CardDataSection.tsx     → seção "Card data" (nome, tipo, mana cost, descrição,
+                             power/toughness, artista, botões download/reset)
+    SupportSidebar.tsx/.scss→ doação (Buy Me a Coffee) + slot de anúncio AdSense
+                             com gate de consentimento de cookies
+    GalleryDialog.tsx        → dialog da galeria local de tokens salvos
+    PrintSheetDialog.tsx/PrintSheet.scss → dialog de folha de impressão (grid 3x3)
+    DownloadAsButton.tsx    → botão "split button" (MUI) para escolher o formato
+                             de exportação (svg/png/jpeg) e disparar o download
+    Descriptiontooltip.tsx  → tooltip explicando a sintaxe {simbolo} da descrição
+    FormikSelect.tsx/FormikTextField.tsx → wiring compartilhado de campo Formik+MUI
+    VisuallyHiddenInput.tsx → input de arquivo acessível, oculto visualmente
+    Card/
+      index.tsx             → componente TokenCard: renderiza a prévia da carta
+      index.scss            → estilos estruturais da carta (moldura, campos)
+      card-colors/*.scss     → um arquivo por cor/combinação de cor (white, black,
                              azorius, boros, ... multicolor) definindo a paleta
                              visual daquela cor
-  DownloadAsButton.tsx   → botão "split button" (MUI) para escolher o formato
-                            de exportação (svg/png/jpeg) e disparar o download
-  Descriptiontooltip.tsx → tooltip explicando a sintaxe {simbolo} da descrição
-  utils/
-    cropper.ts             → funções puras de canvas: cria <img>, calcula bounding
+
+  utils/                    → barrel em index.ts; helpers só usados dentro do
+                             próprio módulo (idbGallery.ts, e createImage/
+                             getRadianAngle/rotateSize de cropper.ts) ficam de
+                             fora do barrel de propósito
+    index.ts                → barrel export
+    cropper.ts               → funções puras de canvas: cria <img>, calcula bounding
                              box rotacionado e recorta a imagem em um <canvas>,
                              devolvendo um blob URL
-    manaSymbols.ts          → substitui padrões `{simbolo}` por `<i class="ms ...">`
+    manaSymbols.ts            → substitui padrões `{simbolo}` por `<i class="ms ...">`
+    tokenFields.ts/tokenFile.ts/gallery.ts/idbGallery.ts/renderCardImage.tsx/
+    safeStorage.ts/captureReady.ts
+
   styles/
-    _colors.scss            → variáveis de cor compartilhadas
-    _fonts.scss              → definições de fontes
-    _textures.scss           → mapeia cada `cardTexture` (texture1..9) para uma
-                             imagem de fundo em src/assets/imgs
-    _win98.scss               → tema visual "Windows 98" do app shell (formulário,
+    _colors.scss              → variáveis de cor compartilhadas
+    _fonts.scss                → definições de fontes
+    _textures.scss             → mapeia cada `cardTexture` (texture1..9) para uma
+                             imagem de fundo em src/data/imgs
+    _win98.scss                 → tema visual "Windows 98" do app shell (formulário,
                              botões, inputs) — não toca no visual da carta em si
-  assets/imgs/             → texturas de fundo e efeitos (golden-eff, t7-b/t7-w)
-  index.tsx                → bootstrap do React + expõe window.APP_VERSION
-  reportWebVitals.ts        → hook opcional de métricas (não wired a nenhum backend)
+
+  data/imgs/, data/svg/       → texturas de fundo, efeitos (golden-eff, t7-b/t7-w)
+                             e o verso de carta para impressão (card-back.svg) —
+                             assets importados pelo código, não só servidos
+                             estaticamente (ver public/ para isso)
 ```
 
 ## Fluxo de dados (App.tsx)
@@ -109,7 +139,7 @@ src/
    de `TokenCard`.
 6. **Renderização**: todo o estado (`formik`, `image`, `croppedImage`,
    `crop`, `zoom`, `description`) é passado para `TokenCard`
-   (`src/Card/index.tsx`), que monta a estrutura visual da carta:
+   (`src/components/Card/index.tsx`), que monta a estrutura visual da carta:
    imagem/cropper, textura de fundo, nome, tipo/subtipo, descrição,
    poder/resistência e rodapé (artista + ano).
 7. **Exportação**: `downloadAs(ext)` localiza o nó DOM `#card-element`
@@ -129,9 +159,9 @@ texto, evitando reload de página.
 - **Cor** (`cardColor`): mono-cores (`white`, `black`, `green`, `blue`,
   `red`), pares de guilda (`azorius`, `boros`, `dimir`, `gruul`, `izzet`,
   `orzhov`, `rakdos`, `selesnya`, `simic`), `colorless` e `multicolor`. Cada
-  uma tem seu próprio arquivo em `src/Card/card-colors/*.scss`.
+  uma tem seu próprio arquivo em `src/components/Card/card-colors/*.scss`.
 - **Textura** (`cardTexture`): `texture1`..`texture9`, mapeadas em
-  `src/styles/_textures.scss` para imagens em `src/assets/imgs`.
+  `src/styles/_textures.scss` para imagens em `src/data/imgs`.
 - **Tamanho de arte** (`cardImageSize`): `full-art` (imagem ocupa a carta
   inteira) ou `classic` (janela de arte menor, como cartas tradicionais);
   isso também muda o aspect ratio passado ao `Cropper` (63.5/85.5 vs
@@ -163,9 +193,20 @@ texto, evitando reload de página.
   (husky + lint-staged, roda ESLint `--fix` e Prettier nos arquivos
   staged) já foram feitos; o `eslintConfig` legado no `package.json` foi
   removido junto com a migração para Vite, já que só existia para o lint
-  interno do `react-scripts` (que não reconhecia flat config). Restante
-  do #47, agora desbloqueado pela migração: reestruturar `src/` em
-  `types`/`components` com barrel exports.
+  interno do `react-scripts` (que não reconhecia flat config). Restante do
+  #47 (reestruturar `src/` em `components`/`utils` com barrel exports,
+  desbloqueado pela migração para Vite) também concluído — ver "Estrutura
+  de pastas" acima. **Sem `types/` própria, por decisão deliberada**: os
+  três tipos hoje exportados fora de seu módulo (`TokenValues`,
+  `TokenFile`, `GalleryEntry`) são cada um fortemente acoplado à lógica
+  que os produz — `TokenValues` é literalmente derivado de
+  `TOKEN_FIELD_KEYS` (`tokenFields.ts`), `TokenFile` só é consumido dentro
+  do próprio `tokenFile.ts`. Extrair só a declaração de tipo para um
+  `types/index.ts` separado exigiria ou importar de `utils/` a partir de
+  `types/` (inverte a direção usual de dependência) ou duplicar a lógica —
+  nenhuma das duas melhora o código, então a pasta não foi criada. Se um
+  tipo genuinamente compartilhado e independente de um módulo específico
+  surgir no futuro, `types/index.ts` volta a fazer sentido.
 - `description` é injetada via `dangerouslySetInnerHTML` a partir de regex
   simples sobre input do usuário; hoje o conteúdo é local (não enviado a
   nenhum servidor), mas é um ponto a considerar em qualquer evolução que
