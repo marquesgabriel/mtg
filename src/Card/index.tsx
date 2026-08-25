@@ -92,9 +92,7 @@ const TokenCard = forwardRef(
             </div>
           </div>
           <div className={`texture ${formik.values.cardTexture}`}></div>
-          <div
-            className={`card-name rounded-sides-inset ${formik.values.manaCost ? 'has-mana-cost' : ''}`}
-          >
+          <div className="card-name rounded-sides-inset">
             <div>{formik.values.name}</div>
           </div>
           {formik.values.manaCost && (
