@@ -157,9 +157,10 @@ texto, evitando reload de página.
   o `eslintConfig` legado no `package.json` continua existindo também,
   pois é o que o lint interno do próprio `react-scripts`, via
   `eslint-webpack-plugin`, resolve — esse plugin não reconhece flat
-  config) e Prettier no CI (`yarn format:check` em `ci.yml`) já foram
-  feitos. Ainda adiados até #20: estrutura `types`/`components` com
-  barrel e husky/lint-staged.
+  config), Prettier no CI (`yarn format:check` em `ci.yml`) e um hook
+  de pre-commit (husky + lint-staged, roda ESLint `--fix` e Prettier
+  nos arquivos staged) já foram feitos. Ainda adiado até #20: estrutura
+  `types`/`components` com barrel.
 - `description` é injetada via `dangerouslySetInnerHTML` a partir de regex
   simples sobre input do usuário; hoje o conteúdo é local (não enviado a
   nenhum servidor), mas é um ponto a considerar em qualquer evolução que
