@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { safeStorageGet, safeStorageSet } from './utils/safeStorage';
+import { safeStorageGet, safeStorageSet } from '../utils';
 import './SupportSidebar.scss';
 
 const CONSENT_STORAGE_KEY = 'mtg-token-generator:cookie-consent';
-const ADSENSE_PUBLISHER_ID = process.env.REACT_APP_ADSENSE_PUBLISHER_ID;
+const ADSENSE_PUBLISHER_ID = import.meta.env.REACT_APP_ADSENSE_PUBLISHER_ID;
 
 type Consent = 'accepted' | 'declined' | null;
 

@@ -18,14 +18,16 @@ yarn start
 
 ```bash
 yarn lint           # ESLint - must pass, enforced in CI
-yarn test           # Jest/Testing Library - must pass, enforced in CI
-yarn build          # production build - must succeed, enforced in CI
+yarn test:ci        # Vitest/Testing Library, one-shot - must pass, enforced in CI (yarn test alone runs it in watch mode, for local dev)
+yarn build          # production build (tsc --noEmit + Vite) - must succeed, enforced in CI
 yarn format:check   # Prettier - must pass, enforced in CI
 ```
 
 ### Formatting note
 
-Prettier is configured (`.prettierrc.json`) and enforced in CI via `yarn format:check`. Run `yarn format` before opening a PR to fix any violations.
+Prettier is configured (`.prettierrc.json`) and enforced in CI via `yarn format:check`. A husky pre-commit hook runs `lint-staged` on every commit, which auto-fixes staged `.ts`/`.tsx`/`.scss` files with ESLint (`--fix`) and Prettier before the commit completes — this normally means CI's format/lint checks just pass. It only runs once (`yarn install` triggers `prepare`), and it silently no-ops if `.git` isn't present. If you ever need to skip it (rare), `git commit --no-verify`, but then run `yarn format` by hand first.
+
+Note: `lint-staged` is pinned to `16.1.6` rather than latest — v17 raised its minimum Git version to 2.32, which some contributor machines may not have. If the hook ever errors out locally for an unrelated reason, `yarn format` covers the same ground manually.
 
 ## Commit messages
 
@@ -39,7 +41,8 @@ This repo follows [Conventional Commits](https://www.conventionalcommits.org/) (
 - Prefer batching related work into one release branch over opening a new one per PR — fewer, more stable releases beat releasing after every single change. The release branch merges to `main` once everything in it is ready, which triggers the automated version bump and release.
 - `main` and the active release branch are both protected: a PR with a passing CI check is required before merge.
 - Keep PRs scoped to one issue/concern where practical.
-- Reference the issue(s) a PR closes with `Closes #N` / `Fixes #N` in the PR body (the template already has this field) — this isn't just for GitHub's auto-close, it's what drives `.github/workflows/project-status.yml`'s sync of the [project board](https://github.com/users/marquesgabriel/projects/1) (moves the linked issue to "In Progress" on open, "Done" on merge). A PR without it leaves its issue stuck on the board even after the fix ships.
+- Reference the issue(s) a PR closes with `Closes #N` / `Fixes #N` in the PR body (the template already has this field). Don't rely on GitHub's native auto-close for this — it only fires on merges into the default branch, and most PRs here merge into a release branch first. `.github/workflows/project-status.yml` reads the same text and both moves the linked issue on the [project board](https://github.com/users/marquesgabriel/projects/1) ("In Progress" on open, "Done" + archived on merge) and closes the issue itself directly, regardless of target branch. A PR without `Closes #N` leaves its issue open and stuck on the board even after the fix ships — this happened once for real (#81).
+- If a release branch's final promotion PR into `main` doesn't itself repeat every `Closes #N` from the PRs merged into it along the way, those issues stay correctly closed (the step above already closed them directly) but won't get GitHub's "closed by #NNN" cross-reference on the promotion PR — cosmetic only, not worth blocking on.
 
 ## Project board
 

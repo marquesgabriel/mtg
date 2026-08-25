@@ -15,7 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import PrintIcon from '@mui/icons-material/Print';
-import { GalleryEntry } from './utils/gallery';
+import { GalleryEntry } from '../utils';
 
 // A plain `value={entry.copies}` controlled TextField commits on every
 // keystroke - on mobile, selecting the default "1" and typing a digit sends

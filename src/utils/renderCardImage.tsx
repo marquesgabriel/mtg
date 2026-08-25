@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import domtoimage from 'dom-to-image';
-import TokenCard from '../Card';
+import TokenCard from '../components/Card';
 import { parseManaSymbols } from './manaSymbols';
 import { TokenValues } from './tokenFields';
 import { waitForCaptureReady } from './captureReady';
@@ -76,7 +76,7 @@ export async function renderCardImage(token: TokenValues, image: string): Promis
     // wait for both (see utils/captureReady.ts) before rasterizing.
     await waitForCaptureReady(node);
     // .card-wrapper's own background-color already matches its border
-    // color (see Card/index.scss's *-border classes) - using it as the
+    // color (see components/Card/index.scss's *-border classes) - using it as the
     // capture's bgcolor (instead of a hardcoded black) means the rounded
     // corners outside the border-radius match the live preview instead of
     // showing a black canvas background through them.
