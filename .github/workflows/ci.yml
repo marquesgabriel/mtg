@@ -39,4 +39,4 @@ jobs:
           REACT_APP_ADSENSE_PUBLISHER_ID: ${{ vars.REACT_APP_ADSENSE_PUBLISHER_ID }}
 
       - name: Run tests
-        run: yarn test --watchAll=false
+        run: yarn test:ci
