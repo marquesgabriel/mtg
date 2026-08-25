@@ -25,7 +25,9 @@ yarn format:check   # Prettier - must pass, enforced in CI
 
 ### Formatting note
 
-Prettier is configured (`.prettierrc.json`) and enforced in CI via `yarn format:check`. Run `yarn format` before opening a PR to fix any violations.
+Prettier is configured (`.prettierrc.json`) and enforced in CI via `yarn format:check`. A husky pre-commit hook runs `lint-staged` on every commit, which auto-fixes staged `.ts`/`.tsx`/`.scss` files with ESLint (`--fix`) and Prettier before the commit completes — this normally means CI's format/lint checks just pass. It only runs once (`yarn install` triggers `prepare`), and it silently no-ops if `.git` isn't present. If you ever need to skip it (rare), `git commit --no-verify`, but then run `yarn format` by hand first.
+
+Note: `lint-staged` is pinned to `16.1.6` rather than latest — v17 raised its minimum Git version to 2.32, which some contributor machines may not have. If the hook ever errors out locally for an unrelated reason, `yarn format` covers the same ground manually.
 
 ## Commit messages
 
