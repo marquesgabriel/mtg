@@ -1,11 +1,17 @@
 # Moves the issues a PR closes (via "Closes #123" in the PR body) on the
 # project board: "In Progress" when the PR opens/reopens, "Done" + archived
-# when it merges. Runs on every merge target, not just the default branch —
-# this repo reviews via PRs into release/* branches, and GitHub's native
-# "Closes #N" auto-close (and the built-in project "item closed" automation
-# that depends on it) only fires for merges into the default branch, so
-# without this step issues never leave "In Progress" until the release
-# branch itself merges to main.
+# + the underlying issue closed when it merges. Runs on every merge target,
+# not just the default branch — this repo reviews via PRs into release/*
+# branches, and GitHub's native "Closes #N" auto-close only fires for
+# merges into the default branch. Without this step issues wouldn't leave
+# "In Progress" (board) or stay open (issue) until the release branch
+# itself merges to main — and if that final promotion PR's own body
+# doesn't happen to repeat every individual "Closes #N", the issue never
+# closes at all (this happened once for real: #81, shipped and marked
+# Done on the board weeks before anyone noticed the issue itself was still
+# open). Closing the issue here directly removes the dependency on native
+# auto-close entirely, instead of just working around its default-branch
+# limitation for the board half of the sync.
 #
 # Requires a PROJECT_TOKENS secret (classic PAT with `repo` + `project`
 # scopes) since the default GITHUB_TOKEN can't write to user-owned
@@ -115,22 +121,43 @@ jobs:
                 n => n.content && n.content.number === issueNumber
               );
               if (!item) {
-                console.log(`Issue #${issueNumber} not found on the project board — skipping.`);
-                continue;
-              }
-              await github.graphql(mutation, {
-                projectId: project.id,
-                itemId: item.id,
-                fieldId: statusField.id,
-                optionId: targetOption.id,
-              });
-              console.log(`Moved issue #${issueNumber} to "${TARGET_STATUS}".`);
-
-              if (TARGET_STATUS === "Done") {
-                await github.graphql(archiveMutation, {
+                console.log(`Issue #${issueNumber} not found on the project board — skipping board update.`);
+              } else {
+                await github.graphql(mutation, {
                   projectId: project.id,
                   itemId: item.id,
+                  fieldId: statusField.id,
+                  optionId: targetOption.id,
                 });
-                console.log(`Archived issue #${issueNumber}.`);
+                console.log(`Moved issue #${issueNumber} to "${TARGET_STATUS}".`);
+
+                if (TARGET_STATUS === "Done") {
+                  await github.graphql(archiveMutation, {
+                    projectId: project.id,
+                    itemId: item.id,
+                  });
+                  console.log(`Archived issue #${issueNumber}.`);
+                }
+              }
+
+              // Closes the issue directly instead of relying on GitHub's
+              // native "Closes #N" auto-close - see the header comment for
+              // why that alone isn't enough in this repo. Not gated on the
+              // item being found above: the issue should close regardless
+              // of whether it's tracked on the board. A no-op (not an
+              // error) if already closed.
+              if (TARGET_STATUS === "Done") {
+                try {
+                  await github.rest.issues.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issueNumber,
+                    state: "closed",
+                    state_reason: "completed",
+                  });
+                  console.log(`Closed issue #${issueNumber}.`);
+                } catch (err) {
+                  console.log(`Could not close issue #${issueNumber}: ${err.message}`);
+                }
               }
             }
