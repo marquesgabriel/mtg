@@ -167,6 +167,11 @@
   div.card-footer {
     width: 100%;
     font-size: 5.5pt;
+    // Explicit line-height so the line box height doesn't depend on the
+    // artist-nib icon's own (larger, 8pt) font metrics, which Chrome/Opera
+    // resolve differently than Firefox/Safari for the custom mana-font
+    // glyphs, shifting the footer text up relative to other browsers.
+    line-height: 1.4;
     position: absolute;
     bottom: -1mm;
     right: 0mm;
@@ -175,6 +180,10 @@
     p {
       margin: 0;
       text-align: right;
+    }
+
+    i.ms {
+      vertical-align: middle;
     }
   }
 
@@ -195,6 +204,12 @@
       text-align: center;
       z-index: 8;
       font-size: 12pt;
+
+      // Leaves room on the right for .card-mana-cost so a centered long name
+      // doesn't render underneath the (higher z-index) mana cost badges.
+      &.has-mana-cost {
+        width: 78%;
+      }
 
       & > div {
         padding: 0.15em;
@@ -248,7 +263,11 @@
 
   .card-mana-cost {
     position: absolute;
-    top: 0.5mm;
+    // Matches .card-name's top (0.25mm) + its 0.15em inner padding, so the
+    // mana cost badges sit on the same visual row as the card name instead
+    // of floating slightly higher.
+    top: 0.25mm;
+    padding-top: 0.15em;
     right: 2%;
     z-index: 9;
     text-align: right;
