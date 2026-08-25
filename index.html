@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <!-- AdSense site-ownership verification; unrelated to the consent-gated ad
+       script loaded by SupportSidebar (see src/SupportSidebar.tsx) - Google
+       reads this at crawl time regardless of user consent. Empty when
+       REACT_APP_ADSENSE_PUBLISHER_ID isn't set (e.g. local dev). Vite's
+       envPrefix (vite.config.ts) includes REACT_APP_, so this %VAR%
+       substitution still works the same as it did under CRA. -->
+    <meta name="google-adsense-account" content="%REACT_APP_ADSENSE_PUBLISHER_ID%" />
+    <!-- Preload the card title fonts (src/styles/_fonts.scss) so they're
+       already loading before CSS parsing kicks off @font-face requests -
+       reduces the flash of the fallback font on first paint/export. -->
+    <link
+      rel="preload"
+      href="/fonts/beleren-bold_P1.01.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/belerensmallcaps-bold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+    <!--
+      Paths above are root-absolute (no %PUBLIC_URL%) since this is now a
+      Vite index.html, not the CRA/webpack template - Vite serves everything
+      under public/ at the site root (base: '/' in vite.config.ts, the
+      default), and the app itself is deployed at a custom domain root
+      (mtg.marquesgabriel.com.br), not a GitHub Pages subpath.
+    -->
+    <title>MTG Token Generator</title>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
