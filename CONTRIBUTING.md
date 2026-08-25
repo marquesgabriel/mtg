@@ -18,8 +18,8 @@ yarn start
 
 ```bash
 yarn lint           # ESLint - must pass, enforced in CI
-yarn test           # Jest/Testing Library - must pass, enforced in CI
-yarn build          # production build - must succeed, enforced in CI
+yarn test:ci        # Vitest/Testing Library, one-shot - must pass, enforced in CI (yarn test alone runs it in watch mode, for local dev)
+yarn build          # production build (tsc --noEmit + Vite) - must succeed, enforced in CI
 yarn format:check   # Prettier - must pass, enforced in CI
 ```
 

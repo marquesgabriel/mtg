@@ -14,7 +14,7 @@
 
 ### This is a simple MTG card token generator. the goal was to provide users a straightforward UI that would enable them to create tokens, and have that ready to be printed.
 
-This app was created using Create React App, Bootstrap, Material UI and some other libraries.
+This app was originally created using Create React App, later migrated to Vite (#20), and also uses Bootstrap, Material UI and some other libraries.
 
 ### Documentation
 
