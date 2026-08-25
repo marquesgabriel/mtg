@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { Point, Area } from "react-easy-crop";
+import { Point, Area } from 'react-easy-crop';
 import { useFormik, FormikProvider } from 'formik';
-import * as yup from "yup";
+import * as yup from 'yup';
 import domtoimage from 'dom-to-image';
 import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
@@ -14,9 +14,18 @@ import getCroppedImg, { getCroppedImgDataUrl } from './utils/cropper';
 import { waitForCaptureReady } from './utils/captureReady';
 import { parseManaSymbols } from './utils/manaSymbols';
 import { safeStorageGet, safeStorageSet, safeStorageRemove } from './utils/safeStorage';
-import { DEFAULT_TOKEN_VALUES as DEFAULT_VALUES, TOKEN_FIELD_KEYS as PERSISTED_FIELDS } from './utils/tokenFields';
+import {
+  DEFAULT_TOKEN_VALUES as DEFAULT_VALUES,
+  TOKEN_FIELD_KEYS as PERSISTED_FIELDS,
+} from './utils/tokenFields';
 import { serializeToken } from './utils/tokenFile';
-import { GalleryEntry, loadGallery, addToGallery, removeFromGallery, updateGalleryEntryCopies } from './utils/gallery';
+import {
+  GalleryEntry,
+  loadGallery,
+  addToGallery,
+  removeFromGallery,
+  updateGalleryEntryCopies,
+} from './utils/gallery';
 import SupportSidebar from './SupportSidebar';
 import CardStyleSection from './CardStyleSection';
 import ImageUploadSection from './ImageUploadSection';
@@ -26,9 +35,10 @@ import PrintSheetDialog from './PrintSheetDialog';
 import Container from './Container';
 
 const DRAFT_STORAGE_KEY = 'mtg-token-generator:draft';
-const DEFAULT_IMAGE = "https://images.theconversation.com/files/123291/original/image-20160520-4451-87u0j1.jpg";
+const DEFAULT_IMAGE =
+  'https://images.theconversation.com/files/123291/original/image-20160520-4451-87u0j1.jpg';
 
-function loadDraft(): Partial<Record<typeof PERSISTED_FIELDS[number], string>> {
+function loadDraft(): Partial<Record<(typeof PERSISTED_FIELDS)[number], string>> {
   try {
     const raw = safeStorageGet(DRAFT_STORAGE_KEY);
     return raw ? JSON.parse(raw) : {};
@@ -39,7 +49,9 @@ function loadDraft(): Partial<Record<typeof PERSISTED_FIELDS[number], string>> {
 
 function saveDraft(values: Record<string, any>) {
   const toSave: Record<string, any> = {};
-  PERSISTED_FIELDS.forEach((field) => { toSave[field] = values[field]; });
+  PERSISTED_FIELDS.forEach((field) => {
+    toSave[field] = values[field];
+  });
   safeStorageSet(DRAFT_STORAGE_KEY, JSON.stringify(toSave));
 }
 
@@ -65,8 +77,13 @@ function App() {
     setCroppedArea(null);
   };
   const [image, setImage] = useState(DEFAULT_IMAGE);
-  const [description, setDescription] = useState(() => parseManaSymbols(initialDraft.description ?? ""));
-  const [feedback, setFeedback] = useState<{ message: string; severity: 'success' | 'error' } | null>(null);
+  const [description, setDescription] = useState(() =>
+    parseManaSymbols(initialDraft.description ?? ''),
+  );
+  const [feedback, setFeedback] = useState<{
+    message: string;
+    severity: 'success' | 'error';
+  } | null>(null);
   const [gallery, setGallery] = useState<GalleryEntry[]>([]);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [printSheetOpen, setPrintSheetOpen] = useState(false);
@@ -96,16 +113,19 @@ function App() {
       const croppedProduct = await getCroppedImg(
         image,
         croppedArea,
-        0 // this is the rotation value
-      )
+        0, // this is the rotation value
+      );
       flushSync(() => setCroppedImage(croppedProduct));
       return true;
     } catch (e) {
-      console.error(e)
-      setFeedback({ message: 'Could not crop the image - try adjusting the crop again', severity: 'error' });
+      console.error(e);
+      setFeedback({
+        message: 'Could not crop the image - try adjusting the crop again',
+        severity: 'error',
+      });
       return false;
     }
-  }
+  };
 
   // dom-to-image has no "scale" option — without width/height it captures
   // the element at on-screen CSS pixel size (~96dpi), which is far too low
@@ -123,7 +143,7 @@ function App() {
     // otherwise a cold cache can bake the fallback system font into the export.
     await document.fonts.ready;
 
-    const node: any = document.getElementById("card-element");
+    const node: any = document.getElementById('card-element');
     // Wait for the swapped-in cropped <img> (and fonts/paint) before
     // capturing - otherwise dom-to-image can rasterize a stale/incomplete
     // frame right after ensureCropped's DOM swap (see utils/captureReady.ts).
@@ -173,25 +193,28 @@ function App() {
     switch (ext) {
       case 'svg':
         // Vector output is already resolution-independent — no scaling needed.
-        domtoimage.toSvg(node, { quality: 1, bgcolor: cardBgColor })
+        domtoimage
+          .toSvg(node, { quality: 1, bgcolor: cardBgColor })
           .then((dataUrl: string) => triggerDownload(dataUrl, 'exported-card.svg'));
         break;
       case 'jpeg':
-        domtoimage.toJpeg(node, printOptions)
+        domtoimage
+          .toJpeg(node, printOptions)
           .then((dataUrl: string) => triggerDownload(dataUrl, 'exported-card.jpeg'));
         break;
       case 'png':
-        domtoimage.toPng(node, printOptions)
+        domtoimage
+          .toPng(node, printOptions)
           .then((dataUrl: string) => triggerDownload(dataUrl, 'exported-card.png'));
         break;
       default:
         break;
     }
-  }
+  };
 
   const parseDescription = (e: any) => {
     setDescription(parseManaSymbols(e.target.value));
-  }
+  };
 
   // JSON save/load (#6) is temporarily disabled - the underlying
   // serializeToken/tokenFields format is still used by the gallery below,
@@ -223,7 +246,10 @@ function App() {
         croppedDataUrl = null;
       }
       if (!croppedDataUrl) {
-        setFeedback({ message: 'Could not crop the image - try adjusting the crop again', severity: 'error' });
+        setFeedback({
+          message: 'Could not crop the image - try adjusting the crop again',
+          severity: 'error',
+        });
         return;
       }
     }
@@ -255,21 +281,21 @@ function App() {
   };
 
   const form = yup.object({
-    name: yup.string().required("This field is required"),
+    name: yup.string().required('This field is required'),
     superType: yup.string().nullable(),
-    type: yup.string().required("This field is required"),
+    type: yup.string().required('This field is required'),
     subType: yup.string().nullable(),
     description: yup.string().nullable(),
     manaCost: yup.string().nullable(),
     artist: yup.string().nullable(),
     power: yup.string().nullable(),
     toughness: yup.string().nullable(),
-    image: yup.string().required("This field is required"),
-    cardBorder: yup.string().required("This field is required"),
-    cardTexture: yup.string().required("This field is required"),
-    cardColor: yup.string().required("This field is required"),
-    cardImageSize: yup.string().required("This field is required")
-  })
+    image: yup.string().required('This field is required'),
+    cardBorder: yup.string().required('This field is required'),
+    cardTexture: yup.string().required('This field is required'),
+    cardColor: yup.string().required('This field is required'),
+    cardImageSize: yup.string().required('This field is required'),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -281,7 +307,7 @@ function App() {
     // not this form. Kept as a no-op (rather than removing <form>/onSubmit
     // entirely) so formik.handleSubmit still preventDefaults an Enter-key
     // submit in a text field, avoiding a full page reload.
-    onSubmit: () => { },
+    onSubmit: () => {},
   });
 
   // Debounced auto-save of the text/selection fields (see loadDraft/saveDraft above).
@@ -307,11 +333,11 @@ function App() {
   const handlePickedImage = (event: any) => {
     setCroppedImage(null);
     resetCropState();
-    setImage(URL.createObjectURL(event.target.files[0]))
-  }
+    setImage(URL.createObjectURL(event.target.files[0]));
+  };
 
   return (
-    <div className='container'>
+    <div className="container">
       <div className="row gy-4">
         <div className="card-inputs col-lg-5 col-md-12">
           <Container title="MTG Token Generator">
@@ -339,14 +365,25 @@ function App() {
             </FormikProvider>
           </Container>
         </div>
-        <div className='card-renderer col-lg-5 col-md-12'>
+        <div className="card-renderer col-lg-5 col-md-12">
           <Container title="Preview" classes="h-100">
-            <div className='d-flex p-2 justify-content-center bg-secondary h-100 align-items-center'>
-              <TokenCard formik={formik} description={description} image={image} croppedImage={croppedImage} crop={crop} zoom={zoom} setCrop={setCrop} onCropComplete={onCropComplete} setZoom={setZoom} ref={printRef} />
+            <div className="d-flex p-2 justify-content-center bg-secondary h-100 align-items-center">
+              <TokenCard
+                formik={formik}
+                description={description}
+                image={image}
+                croppedImage={croppedImage}
+                crop={crop}
+                zoom={zoom}
+                setCrop={setCrop}
+                onCropComplete={onCropComplete}
+                setZoom={setZoom}
+                ref={printRef}
+              />
             </div>
           </Container>
         </div>
-        <div className='col-lg-2 col-md-12'>
+        <div className="col-lg-2 col-md-12">
           <Container title="Support" barButtons="close-only">
             <SupportSidebar />
           </Container>
@@ -358,7 +395,11 @@ function App() {
         onClose={() => setFeedback(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert onClose={() => setFeedback(null)} severity={feedback?.severity ?? 'success'} variant="filled">
+        <Alert
+          onClose={() => setFeedback(null)}
+          severity={feedback?.severity ?? 'success'}
+          variant="filled"
+        >
           {feedback?.message}
         </Alert>
       </Snackbar>
@@ -369,7 +410,10 @@ function App() {
         onLoad={loadGalleryEntry}
         onDelete={deleteGalleryEntry}
         onCopiesChange={changeGalleryEntryCopies}
-        onPrintSheet={() => { setGalleryOpen(false); setPrintSheetOpen(true); }}
+        onPrintSheet={() => {
+          setGalleryOpen(false);
+          setPrintSheetOpen(true);
+        }}
       />
       <PrintSheetDialog
         open={printSheetOpen}

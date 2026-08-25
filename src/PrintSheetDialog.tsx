@@ -21,7 +21,11 @@ function chunk<T>(items: T[], size: number): T[][] {
   return pages;
 }
 
-export default function PrintSheetDialog({ open, onClose, entries }: {
+export default function PrintSheetDialog({
+  open,
+  onClose,
+  entries,
+}: {
   open: boolean;
   onClose: () => void;
   entries: GalleryEntry[];
@@ -35,23 +39,47 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
     if (!open || entries.length === 0) return;
     let cancelled = false;
 
+    // Reuse renders already cached from a previous time this dialog was
+    // open instead of redoing every entry from scratch on each reopen, and
+    // drop cached entries no longer in the gallery.
+    const entryIds = new Set(entries.map((entry) => entry.id));
+    const cached: Record<string, string> = {};
+    for (const [id, src] of Object.entries(images)) {
+      if (entryIds.has(id)) cached[id] = src;
+    }
+    const missing = entries.filter((entry) => !cached[entry.id]);
+
+    if (missing.length === 0) {
+      setImages(cached);
+      return () => {
+        cancelled = true;
+      };
+    }
+
     setRendering(true);
     (async () => {
-      const next: Record<string, string> = {};
-      for (const entry of entries) {
-        if (cancelled) return;
-        next[entry.id] = await renderCardImage(entry.token, entry.image);
-      }
+      const rendered = await Promise.all(
+        missing.map((entry) => renderCardImage(entry.token, entry.image)),
+      );
       if (!cancelled) {
+        const next = { ...cached };
+        missing.forEach((entry, index) => {
+          next[entry.id] = rendered[index];
+        });
         setImages(next);
         setRendering(false);
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
     // entries is a new array reference each time the gallery changes, so
     // this intentionally re-renders images whenever the dialog opens or
     // the underlying gallery data changes - not on every parent re-render.
+    // `images` is read for its cache value but deliberately excluded here:
+    // it's only ever updated by this same effect, so including it would
+    // just make the effect re-trigger itself.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, entries]);
 
@@ -63,7 +91,8 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
   return (
     <Dialog open={open} onClose={onClose} fullScreen>
       <DialogTitle className="no-print">
-        Print Sheet ({cards.length} card{cards.length === 1 ? '' : 's'} across {pages.length} page{pages.length === 1 ? '' : 's'} + matching backs)
+        Print Sheet ({cards.length} card{cards.length === 1 ? '' : 's'} across {pages.length} page
+        {pages.length === 1 ? '' : 's'} + matching backs)
       </DialogTitle>
       <DialogContent>
         {cards.length === 0 ? (
@@ -90,7 +119,10 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
             {pages.map((pageCards, pageIndex) => (
               <div className="print-sheet__page" key={`back-${pageIndex}`}>
                 {pageCards.map((_entry, cardIndex) => (
-                  <div className="print-sheet__card print-sheet__card--back" key={`back-${pageIndex}-${cardIndex}`} />
+                  <div
+                    className="print-sheet__card print-sheet__card--back"
+                    key={`back-${pageIndex}-${cardIndex}`}
+                  />
                 ))}
               </div>
             ))}
@@ -98,7 +130,9 @@ export default function PrintSheetDialog({ open, onClose, entries }: {
         )}
       </DialogContent>
       <DialogActions className="no-print">
-        <Button type="button" onClick={onClose}>Close</Button>
+        <Button type="button" onClick={onClose}>
+          Close
+        </Button>
         <Button
           type="button"
           variant="contained"

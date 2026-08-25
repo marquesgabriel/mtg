@@ -151,10 +151,15 @@ texto, evitando reload de página.
 
 ## Limitações / pontos conhecidos
 
-- Ainda em CRA, não Vite — migração tracked em #20; a maior parte do
-  `project-scaffold` cross-project (ESLint flat config, Prettier
-  enforcement no CI, estrutura `types`/`components` com barrel) fica em
-  #47, adiada até #20 estar pronta.
+- Ainda em CRA, não Vite — migração tracked em #20. Do débito
+  `project-scaffold` cross-project (#47): ESLint flat config
+  (`eslint.config.js`, via `FlatCompat` sobre `eslint-config-react-app` —
+  o `eslintConfig` legado no `package.json` continua existindo também,
+  pois é o que o lint interno do próprio `react-scripts`, via
+  `eslint-webpack-plugin`, resolve — esse plugin não reconhece flat
+  config) e Prettier no CI (`yarn format:check` em `ci.yml`) já foram
+  feitos. Ainda adiados até #20: estrutura `types`/`components` com
+  barrel e husky/lint-staged.
 - `description` é injetada via `dangerouslySetInnerHTML` a partir de regex
   simples sobre input do usuário; hoje o conteúdo é local (não enviado a
   nenhum servidor), mas é um ponto a considerar em qualquer evolução que

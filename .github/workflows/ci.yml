@@ -30,10 +30,8 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      # `yarn format:check` isn't wired in yet — the codebase predates
-      # Prettier and running --check today would fail on ~every existing
-      # file, unrelated to whatever a given PR actually changed. Enable
-      # once a dedicated full-repo reformat PR lands (see issue #15).
+      - name: Format check
+        run: yarn format:check
 
       - name: Build App
         run: yarn build

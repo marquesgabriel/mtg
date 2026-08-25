@@ -6,20 +6,20 @@
 // token gallery (#7).
 
 export const DEFAULT_TOKEN_VALUES = {
-  name: "rat",
-  superType: "token",
-  type: "creature",
-  subType: "rat",
-  description: "",
-  manaCost: "",
-  artist: "",
-  power: "1",
-  toughness: "1",
-  image: "",
-  cardBorder: "black",
-  cardTexture: "texture6",
-  cardColor: "black",
-  cardImageSize: "full-art",
+  name: 'rat',
+  superType: 'token',
+  type: 'creature',
+  subType: 'rat',
+  description: '',
+  manaCost: '',
+  artist: '',
+  power: '1',
+  toughness: '1',
+  image: '',
+  cardBorder: 'black',
+  cardTexture: 'texture6',
+  cardColor: 'black',
+  cardImageSize: 'full-art',
 };
 
 const NON_SERIALIZABLE_FIELDS = ['image'] as const;
@@ -28,4 +28,4 @@ export const TOKEN_FIELD_KEYS = (
   Object.keys(DEFAULT_TOKEN_VALUES) as (keyof typeof DEFAULT_TOKEN_VALUES)[]
 ).filter((field) => !(NON_SERIALIZABLE_FIELDS as readonly string[]).includes(field));
 
-export type TokenValues = Record<typeof TOKEN_FIELD_KEYS[number], string>;
+export type TokenValues = Record<(typeof TOKEN_FIELD_KEYS)[number], string>;

@@ -21,7 +21,6 @@
 @import './card-colors/selesnya';
 @import './card-colors/simic';
 
-
 .card-wrapper {
   display: block;
   position: relative;
@@ -163,12 +162,16 @@
         max-width: 100%;
       }
     }
-
   }
 
   div.card-footer {
     width: 100%;
     font-size: 5.5pt;
+    // Explicit line-height so the line box height doesn't depend on the
+    // artist-nib icon's own (larger, 8pt) font metrics, which Chrome/Opera
+    // resolve differently than Firefox/Safari for the custom mana-font
+    // glyphs, shifting the footer text up relative to other browsers.
+    line-height: 1.4;
     position: absolute;
     bottom: -1mm;
     right: 0mm;
@@ -177,6 +180,10 @@
     p {
       margin: 0;
       text-align: right;
+    }
+
+    i.ms {
+      vertical-align: middle;
     }
   }
 
@@ -191,15 +198,15 @@
 
     &.card-name {
       position: absolute;
-      top: .25mm;
+      top: 0.25mm;
       left: 1%;
       width: 96%;
       text-align: center;
       z-index: 8;
       font-size: 12pt;
 
-      &>div {
-        padding: .15em;
+      & > div {
+        padding: 0.15em;
       }
     }
 
@@ -216,8 +223,8 @@
         bottom: 9mm;
       }
 
-      &>div {
-        padding: .15em;
+      & > div {
+        padding: 0.15em;
       }
     }
 
@@ -232,8 +239,8 @@
       text-align: left;
       font-size: 9.5pt;
 
-      &>div {
-        padding: .5em;
+      & > div {
+        padding: 0.5em;
         text-align: left;
       }
     }
@@ -250,15 +257,19 @@
 
   .card-mana-cost {
     position: absolute;
-    top: .5mm;
-    right: 2%;
+    // Matches .card-name's top (0.25mm) + its 0.15em inner padding, so the
+    // mana cost badges sit on the same visual row as the card name instead
+    // of floating slightly higher.
+    top: 1.25mm;
+    padding-top: 0.15em;
+    right: 3%;
     z-index: 9;
     text-align: right;
     font-size: 11pt;
     white-space: nowrap;
 
     i.ms {
-      margin-left: .1em;
+      margin-left: 0.1em;
     }
   }
 
@@ -269,9 +280,11 @@
     border-top-right-radius: 6% 42%;
     border-bottom-right-radius: 6% 42%;
 
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
 
-    &>div {
+    & > div {
       border: solid 1px black;
       border-top-left-radius: 4% 42%;
       border-bottom-left-radius: 4% 42%;
@@ -287,7 +300,7 @@
     border-top-right-radius: 14% 42%;
     border-bottom-right-radius: 14% 42%;
 
-    &>div {
+    & > div {
       border: solid 1px black;
       border-top-left-radius: 11% 42%;
       border-bottom-left-radius: 11% 42%;
