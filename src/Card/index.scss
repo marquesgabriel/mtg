@@ -191,6 +191,7 @@
   .card-description,
   .card-type,
   .card-pw {
+
     &.card-name,
     &.card-type {
       text-transform: capitalize;
@@ -205,16 +206,12 @@
       z-index: 8;
       font-size: 12pt;
 
-      // Leaves room on the right for .card-mana-cost so a centered long name
-      // doesn't render underneath the (higher z-index) mana cost badges.
-      &.has-mana-cost {
-        width: 78%;
-      }
-
-      & > div {
+      &>div {
         padding: 0.15em;
       }
     }
+
+
 
     &.card-type {
       position: absolute;
@@ -229,7 +226,7 @@
         bottom: 9mm;
       }
 
-      & > div {
+      &>div {
         padding: 0.15em;
       }
     }
@@ -245,7 +242,7 @@
       text-align: left;
       font-size: 9.5pt;
 
-      & > div {
+      &>div {
         padding: 0.5em;
         text-align: left;
       }
@@ -266,9 +263,9 @@
     // Matches .card-name's top (0.25mm) + its 0.15em inner padding, so the
     // mana cost badges sit on the same visual row as the card name instead
     // of floating slightly higher.
-    top: 0.25mm;
+    top: 1.25mm;
     padding-top: 0.15em;
-    right: 2%;
+    right: 3%;
     z-index: 9;
     text-align: right;
     font-size: 11pt;
@@ -290,7 +287,7 @@
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
 
-    & > div {
+    &>div {
       border: solid 1px black;
       border-top-left-radius: 4% 42%;
       border-bottom-left-radius: 4% 42%;
@@ -306,7 +303,7 @@
     border-top-right-radius: 14% 42%;
     border-bottom-right-radius: 14% 42%;
 
-    & > div {
+    &>div {
       border: solid 1px black;
       border-top-left-radius: 11% 42%;
       border-bottom-left-radius: 11% 42%;
