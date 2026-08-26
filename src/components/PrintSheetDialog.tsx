@@ -96,7 +96,7 @@ export default function PrintSheetDialog({
       <DialogContent>
         {cards.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
-            The gallery is empty - save at least one token first.
+            The gallery is empty - save at least one custom card first.
           </Typography>
         ) : !ready ? (
           <div className="print-sheet__loading no-print">
@@ -109,7 +109,7 @@ export default function PrintSheetDialog({
               <div className="print-sheet__page" key={`front-${pageIndex}`}>
                 {pageCards.map((entry, cardIndex) => (
                   <div className="print-sheet__card" key={`front-${pageIndex}-${cardIndex}`}>
-                    <img src={images[entry.id]} alt={entry.token.name || 'Token card'} />
+                    <img src={images[entry.id]} alt={entry.token.name || 'Custom card'} />
                   </div>
                 ))}
               </div>
