@@ -139,4 +139,6 @@ const TokenCard = forwardRef(
   },
 );
 
+TokenCard.displayName = 'TokenCard';
+
 export default TokenCard;

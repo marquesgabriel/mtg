@@ -96,7 +96,7 @@ export default async function getCroppedImg(
   const croppedCanvas = await buildCroppedCanvas(imageSrc, pixelCrop, rotation, flip);
   if (!croppedCanvas) return null;
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _reject) => {
     croppedCanvas.toBlob((file: any) => {
       resolve(URL.createObjectURL(file));
     }, 'image/jpeg');

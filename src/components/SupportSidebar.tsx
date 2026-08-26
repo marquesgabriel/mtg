@@ -62,7 +62,7 @@ export default function SupportSidebar() {
   return (
     <div className="support-sidebar">
       <Typography variant="body2" className="support-sidebar__bmc-message">
-        Enjoying the token generator? Consider buying me a coffee ☕
+        Enjoying the custom card generator? Consider buying me a coffee ☕
       </Typography>
       <a
         href="https://buymeacoffee.com/marquesgabriel"

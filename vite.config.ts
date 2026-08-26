@@ -1,5 +1,8 @@
+import { readFileSync } from 'fs';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+
+const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf-8'));
 
 // envPrefix keeps REACT_APP_* as the app's env var convention (see #20 -
 // "preservando formato de env vars REACT_APP_") instead of switching to
@@ -10,6 +13,16 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   envPrefix: ['VITE_', 'REACT_APP_'],
+  // Exposes package.json's version as a build-time constant (see
+  // src/index.tsx, which sets it on window.APP_VERSION) instead of the old
+  // scripts/inject-version.js + .env.local + REACT_APP_VERSION relay (#127)
+  // - one less script/file in the chain, and the value is available
+  // anywhere in the bundle without depending on an env var resolved at
+  // runtime. Ported from the same pattern already used in
+  // marquesgabriel.github.io.
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   build: {
     outDir: 'build',
   },
@@ -17,5 +30,33 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],
     globals: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/index.tsx',
+        'src/reportWebVitals.ts',
+        'src/setupTests.ts',
+        'src/components/index.tsx',
+        'src/utils/index.ts',
+        'src/**/*.d.ts',
+        'src/**/*.test.{ts,tsx}',
+      ],
+      // Set from actual measured coverage (#128), not copied from the
+      // portfolio's 80% - this repo has far fewer tests (32 vs. 50) and
+      // almost no component-level coverage yet (most dialogs sit under
+      // 30%). These numbers sit a few points below the measured baseline
+      // as a regression floor: a PR that meaningfully drops coverage
+      // fails CI, but the gate doesn't demand new tests just to land
+      // unrelated work. Ratchet these up as component tests get added -
+      // don't just raise the number without the coverage to back it.
+      thresholds: {
+        branches: 35,
+        functions: 35,
+        lines: 45,
+        statements: 45,
+      },
+    },
   },
 });
