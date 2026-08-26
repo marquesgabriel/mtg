@@ -29,9 +29,7 @@
     "yup": "^1.4.0"
   },
   "scripts": {
-    "prestart": "node scripts/inject-version.js",
     "start": "vite",
-    "prebuild": "node scripts/inject-version.js",
     "build": "tsc --noEmit && vite build",
     "test": "vitest",
     "test:ci": "vitest run",
