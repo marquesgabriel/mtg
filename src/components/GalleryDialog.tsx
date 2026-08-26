@@ -79,9 +79,9 @@ export default function GalleryDialog({
       <DialogContent>
         {entries.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
-            No custom cards saved yet. Use "Save to Gallery" to keep a custom card here without
-            downloading a file - you can reopen or delete it later, and set how many copies of it
-            should go on a printed sheet.
+            No custom cards saved yet. Use &quot;Save to Gallery&quot; to keep a custom card here
+            without downloading a file - you can reopen or delete it later, and set how many copies
+            of it should go on a printed sheet.
           </Typography>
         ) : (
           <List>
