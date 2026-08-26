@@ -93,9 +93,19 @@ function App() {
 
   // Gallery is now IndexedDB-backed (#80), so the initial load is async -
   // this also runs the one-time migration of any pre-existing localStorage
-  // gallery data (see utils/gallery.ts's migrateFromLocalStorage).
+  // gallery data (see utils/gallery.ts's migrateFromLocalStorage). Guarded
+  // against setState firing after unmount (same cancelled-flag pattern as
+  // GalleryDialog/PrintSheetDialog's async effects) - without it, this
+  // occasionally surfaced as an unhandled rejection in tests when a test's
+  // jsdom environment tore down before the IndexedDB read resolved.
   useEffect(() => {
-    loadGallery().then(setGallery);
+    let cancelled = false;
+    loadGallery().then((entries) => {
+      if (!cancelled) setGallery(entries);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Applies the current crop/zoom selection, replacing the interactive
