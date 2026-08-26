@@ -187,9 +187,12 @@ texto, evitando reload de página.
   sem precisar mexer em `deploy.yml`. Testes migraram para Vitest junto
   (obrigatório: `import.meta.env`, usado pelas env vars agora, não é
   sintaxe que o Jest do CRA consegue processar). Do débito
-  `project-scaffold` cross-project (#47): ESLint flat config
-  (`eslint.config.js`, via `FlatCompat` sobre `eslint-config-react-app`),
-  Prettier no CI (`yarn format:check` em `ci.yml`) e um hook de pre-commit
+  `project-scaffold` cross-project (#47): ESLint flat config nativo
+  (`eslint.config.js`, sem `FlatCompat`/`eslint-config-react-app` desde
+  #129 — `eslint-plugin-react`/`react-hooks`/`jsx-a11y`/`@typescript-eslint`
+  direto, mais `eslint-plugin-testing-library` só em arquivos de teste e
+  `eslint-config-prettier` por último), Prettier no CI (`yarn format:check`
+  em `ci.yml`) e um hook de pre-commit
   (husky + lint-staged, roda ESLint `--fix` e Prettier nos arquivos
   staged) já foram feitos; o `eslintConfig` legado no `package.json` foi
   removido junto com a migração para Vite, já que só existia para o lint
