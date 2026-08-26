@@ -38,5 +38,5 @@ jobs:
         env:
           REACT_APP_ADSENSE_PUBLISHER_ID: ${{ vars.REACT_APP_ADSENSE_PUBLISHER_ID }}
 
-      - name: Run tests
-        run: yarn test:ci
+      - name: Run tests (with coverage)
+        run: yarn test:coverage
