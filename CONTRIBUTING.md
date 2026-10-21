@@ -47,3 +47,7 @@ This repo follows [Conventional Commits](https://www.conventionalcommits.org/) (
 ## Project board
 
 Work is tracked as GitHub Issues on the [project board](https://github.com/users/marquesgabriel/projects/1), prioritized Alta/Média/Baixa. Check there before starting something to avoid duplicate work.
+
+## Reviewing a PR
+
+Read [`docs/REVIEW-CONVENTIONS.md`](docs/REVIEW-CONVENTIONS.md) before reviewing: it lists the conventions specific to this repo, on top of the general checks. With Claude Code, run `/code-review` and point it at that file. `.claude/settings.json` also enables the [Grimoire](https://github.com/marquesgabriel/grimoire) plugin, with the requirements and user-story skills.
