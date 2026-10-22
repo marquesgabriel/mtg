@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "grimoire": {
+      "source": { "source": "github", "repo": "marquesgabriel/grimoire" }
+    }
+  },
+  "enabledPlugins": {
+    "grimoire@grimoire": true
+  }
+}

@@ -43,7 +43,7 @@ dados abaixo).
 
 ## Estrutura de pastas
 
-Segue o padrão `project-scaffold` (components/types/utils com barrel export),
+Segue o padrão da skill `scaffolding-projects` do [Grimoire](https://github.com/marquesgabriel/grimoire) (components/types/utils com barrel export),
 desbloqueado pela migração para Vite (#20) — ver a nota em "Limitações" sobre
 por que `types/` não existe aqui apesar de estar no padrão.
 
